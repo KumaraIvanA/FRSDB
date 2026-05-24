@@ -88,6 +88,22 @@ public class HelloFX extends Application {
                         "-fx-background-radius: 8px;" // Kelengkungan latar belakang (HARUS SAMA dengan border-radius)
         );
 
+        Button button2 = new Button();
+        button2.setPrefHeight(25);
+        button2.setPrefWidth(100);
+        button2.setText("INSERT");
+        button2.setBackground(null);
+        button2.setCursor(Cursor.HAND);
+
+        button2.setStyle(
+                "-fx-background-color: #A8D5E3;" + // Warna latar belakang tombol
+                        "-fx-text-fill: black;" + // Warna tulisan
+                        "-fx-border-color: #4A90E2;" + // Warna garis tepi (border)
+                        "-fx-border-width: 2px;" + // Ketebalan garis tepi
+                        "-fx-border-radius: 8px;" + // Kelengkungan garis tepi
+                        "-fx-background-radius: 8px;" // Kelengkungan latar belakang (HARUS SAMA dengan border-radius)
+        );
+
         TableColumn<MataKuliah, String> colNama = new TableColumn<>("Nama MK");
         colNama.setCellValueFactory(new PropertyValueFactory<>("namaMK"));
         colNama.setPrefWidth(200);
@@ -113,7 +129,13 @@ public class HelloFX extends Application {
             tableView.setVisible(true);
         });
 
-        hBox4.getChildren().addAll(button);
+        button.setOnAction(e -> {
+            ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
+            tableView.setItems(data);
+            tableView.setVisible(true);
+        });
+
+        hBox4.getChildren().addAll(button, button2);
         hBox3.setAlignment(Pos.CENTER);
 
         rootUtama.setTop(vBox);

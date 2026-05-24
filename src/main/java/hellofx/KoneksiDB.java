@@ -3,6 +3,7 @@ package hellofx;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,22 +16,18 @@ public class KoneksiDB {
     public static Connection hubungkan() {
         Connection conn = null;
 
-        String url = "jdbc:sqlserver://localhost:1433;"
-					 + "database=master;"
-					 + "user=sa;"
-					 + "password=Physics_Code5;"
-					 + "encrypt=true;"
-					 + "trustServerCertificate=true;"
-					 + "loginTimeout=30;";
-        String user = "sa";
-        String pass = "Physics_Code5";
+       String url = "jdbc:sqlserver://localhost:1433;"
+                + "database=Testing;"
+                + "user=sa;"
+                + "password=Rahasia123;"
+                + "encrypt=true;"
+                + "trustServerCertificate=true;"
+                + "loginTimeout=30;";
 
         try {
-            // Mendaftarkan Driver Microsoft SQL Server
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-            // Mencoba tersambung
-            conn = DriverManager.getConnection(url, user, pass);
+            conn = DriverManager.getConnection(url);
             System.out.println("Berhasil");
 
         } catch (ClassNotFoundException e) {
@@ -69,5 +66,22 @@ public class KoneksiDB {
         return list;
     }
     
-    
+    public static void insertMataKuliah(String namaMK, String jurusan, int jumlahSKS) {
+        String query = "INSERT INTO MATA_KULIAH (Nama_MK, Jurusan, JumlahSKS) VALUES(?, ?, ?)";
+
+        try {
+            Connection c = hubungkan();
+            PreparedStatement ps = c.prepareStatement(query);
+
+            ps.setString(1, namaMK);
+            ps.setString(2, jurusan);
+            ps.setInt(3, jumlahSKS);
+
+            ps.executeUpdate();
+            System.out.println("berhasil insert");
+        } catch (SQLException e) {
+            System.out.println("gagal insert");
+            e.printStackTrace();
+        }
+    }
 }

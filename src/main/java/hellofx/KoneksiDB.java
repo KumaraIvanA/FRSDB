@@ -144,4 +144,78 @@ public class KoneksiDB {
             return -1;
         }
     }
+
+    public static int getKodeMkByNamaMK(String namaMK) {
+        String query = "SELECT kodeMK FROM MataKuliah WHERE namaMK = ?";
+
+        try (Connection c = hubungkan();
+                PreparedStatement ps = c.prepareStatement(query)) {
+
+            ps.setString(1, namaMK);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("kodeMK");
+            } else {
+                System.out.println("Mata kuliah tidak ditemukan : " + namaMK);
+                return -1;
+            }
+        } catch (SQLException e) {
+            System.out.println("Gagal mengambil Kode MK");
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
+    public static void insertEnroll(String npm, int kodeMK, String kodeSemester, int idFRS, String tanggalFRS) {
+        String query = """
+                INSERT INTO Enroll (npm, kodeMK, kodeSemester, idFRS, tanggalFRS)
+                VALUES(?, ?, ?, ?, ?)
+                """;
+
+        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, npm);
+            ps.setInt(2, kodeMK);
+            ps.setString(3, kodeSemester);
+            ps.setInt(4, idFRS);
+            ps.setString(5, tanggalFRS);
+
+            ps.executeUpdate();
+            System.out.println("Berhasil insert");
+        } catch (SQLException e) {
+            System.out.println("gagal menambahkan");
+        }
+    }
+    
+
+    //Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
+    public static String getNamaMKByKodeMK(int kodeMK) {
+        String query = """
+                SELECT
+                    m.namaMK,
+                    m.jumlahSKS,
+                FROM Enroll m
+                JOIN MataKuliah j ON m.kodeMK = j.kodeMK
+                WHERE kodeMK = ?
+                """;
+
+        try(Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setInt(1, kodeMK);
+
+            ResultSet result = ps.executeQuery();
+
+            if (result.next()) {
+                return result.getString("namaMK");
+            } else {
+                System.out.println("Nama MK tidak ditemukan: " + kodeMK);
+                return null;
+            }
+
+        } catch (SQLException e) {
+            // TODO: handle exception
+            System.out.println("gagal mencari kodeMK");
+            return null;
+        }
+    }
 }

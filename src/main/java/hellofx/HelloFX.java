@@ -57,7 +57,7 @@ public class HelloFX extends Application {
         vBox.getChildren().addAll(hBox, hBox2);
 
         HBox hBox3 = new HBox();
-        hBox3.setStyle("-fx-background-color: #FF78AC");
+        hBox3.setStyle("-fx-background-color: #F2F0EA");
         hBox3.setPrefHeight(190);
 
         HBox hBox4 = new HBox();
@@ -83,7 +83,7 @@ public class HelloFX extends Application {
         Button button2 = new Button();
         button2.setPrefHeight(25);
         button2.setPrefWidth(100);
-        button2.setText("INSERT");
+        button2.setText("SUBMIT");
         button2.setBackground(null);
         button2.setCursor(Cursor.HAND);
 
@@ -98,15 +98,15 @@ public class HelloFX extends Application {
 
         TableColumn<MataKuliah, String> colNama = new TableColumn<>("Nama MK");
         colNama.setCellValueFactory(new PropertyValueFactory<>("namaMK"));
-        colNama.setPrefWidth(200);
+        colNama.setPrefWidth(100);
 
         TableColumn<MataKuliah, String> colJurusan = new TableColumn<>("Jurusan");
         colJurusan.setCellValueFactory(new PropertyValueFactory<>("jurusan"));
-        colJurusan.setPrefWidth(200);
+        colJurusan.setPrefWidth(100);
 
         TableColumn<MataKuliah, Integer> colSKS = new TableColumn<>("Jumlah SKS");
         colSKS.setCellValueFactory(new PropertyValueFactory<>("jumlahSKS"));
-        colSKS.setPrefWidth(150);
+        colSKS.setPrefWidth(75);
 
         TableColumn<MataKuliah, Boolean> colCheck = new TableColumn<>();
         colCheck.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
@@ -128,43 +128,71 @@ public class HelloFX extends Application {
             colCheck.setEditable(true);
         });
 
-        TextField txtNamaMK = new TextField();
-        txtNamaMK.setPromptText("Nama Mata Kuliah");
+        // TextField txtNamaMK = new TextField();
+        // txtNamaMK.setPromptText("Nama Mata Kuliah");
 
-        TextField txtNamaJurusan = new TextField();
-        txtNamaJurusan.setPromptText("Nama Jurusan");
+        // TextField txtNamaJurusan = new TextField();
+        // txtNamaJurusan.setPromptText("Nama Jurusan");
 
-        TextField txtJumlahSKS = new TextField();
-        txtJumlahSKS.setPromptText("Jumlah SKS");
+        // TextField txtJumlahSKS = new TextField();
+        // txtJumlahSKS.setPromptText("Jumlah SKS");
 
-        HBox formInput = new HBox(10);
-        formInput.setAlignment(Pos.CENTER);
-        formInput.getChildren().addAll(txtNamaMK, txtNamaJurusan, txtJumlahSKS, button2);
+        // HBox formInput = new HBox(10);
+        // formInput.setAlignment(Pos.CENTER);
+        // formInput.getChildren().addAll(txtNamaMK, txtNamaJurusan, txtJumlahSKS, button2);
+
+        TableColumn<MataKuliah, String> colNama2 = new TableColumn<>("Nama MK");
+        colNama2.setCellValueFactory(new PropertyValueFactory<>("namaMK"));
+        colNama2.setPrefWidth(100);
+
+        TableColumn<MataKuliah, String> colJurusan2 = new TableColumn<>("Jurusan");
+        colJurusan2.setCellValueFactory(new PropertyValueFactory<>("jurusan"));
+        colJurusan2.setPrefWidth(100);
+
+        TableColumn<MataKuliah, Integer> colSKS2= new TableColumn<>("Jumlah SKS");
+        colSKS2.setCellValueFactory(new PropertyValueFactory<>("jumlahSKS"));
+        colSKS2.setPrefWidth(75);
+
+        TableView<MataKuliah> matkulDipilih = new TableView<>();
+        matkulDipilih.getColumns().addAll(colNama2, colJurusan2, colSKS2);
+        matkulDipilih.setVisible(false);
 
         button2.setOnAction(e -> {
-            try {
-                String namaMK = txtNamaMK.getText();
-                String namaJurusan = txtNamaJurusan.getText();
-                int jumlahSKS = Integer.parseInt(txtJumlahSKS.getText());
-
-                KoneksiDB.insertMataKuliah(namaMK, namaJurusan, jumlahSKS);
-
-                ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
-                tableView.setItems(data);
-                tableView.setVisible(true);
-
-                txtNamaMK.clear();
-                txtNamaJurusan.clear();
-                txtJumlahSKS.clear();
-
-                System.out.println("Data berhasil dimasukkan");
-
-            } catch (NumberFormatException ex) {
-                System.out.println("Jumlah SKS harus berupa angka");
+            matkulDipilih.getItems().clear();
+            for (MataKuliah mk : tableView.getItems()) {
+                if (mk.isSelected()) {
+                    matkulDipilih.getItems().add(mk);
+                    System.out.println(KoneksiDB.getKodeMkByNamaMK(mk.getNamaMK()));
+                    System.out.println("Dipilih: " + mk.getNamaMK());
+                }
             }
+
+            matkulDipilih.setVisible(true);
+
+            // try {
+            //     String namaMK = txtNamaMK.getText();
+            //     String namaJurusan = txtNamaJurusan.getText();
+            //     int jumlahSKS = Integer.parseInt(txtJumlahSKS.getText());
+
+            //     KoneksiDB.insertMataKuliah(namaMK, namaJurusan, jumlahSKS);
+
+            //     ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
+            //     tableView.setItems(data);
+            //     tableView.setVisible(true);
+
+            //     txtNamaMK.clear();
+            //     txtNamaJurusan.clear();
+            //     txtJumlahSKS.clear();
+
+            //     System.out.println("Data berhasil dimasukkan");
+
+            // } catch (NumberFormatException ex) {
+            //     System.out.println("Jumlah SKS harus berupa angka");
+            // }
         });
 
-        hBox4.getChildren().addAll(button, formInput);
+        hBox4.getChildren().addAll(button, button2);
+        hBox3.getChildren().addAll(matkulDipilih);
 
         hBox4.setSpacing(20);
         hBox4.setPadding(new Insets(20));

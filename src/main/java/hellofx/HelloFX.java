@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -125,7 +126,49 @@ public class HelloFX extends Application {
             tableView.setVisible(true);
         });
 
-        hBox4.getChildren().addAll(button, button2);
+        TextField txtNamaMK = new TextField();
+        txtNamaMK.setPromptText("Nama Mata Kuliah");
+
+        TextField txtNamaJurusan = new TextField();
+        txtNamaJurusan.setPromptText("Nama Jurusan");
+
+        TextField txtJumlahSKS = new TextField();
+        txtJumlahSKS.setPromptText("Jumlah SKS");
+
+        HBox formInput = new HBox(10);
+        formInput.setAlignment(Pos.CENTER);
+        formInput.getChildren().addAll(txtNamaMK, txtNamaJurusan, txtJumlahSKS, button2);
+
+        button2.setOnAction(e -> {
+            try {
+                String namaMK = txtNamaMK.getText();
+                String namaJurusan = txtNamaJurusan.getText();
+                int jumlahSKS = Integer.parseInt(txtJumlahSKS.getText());
+
+                KoneksiDB.insertMataKuliah(namaMK, namaJurusan, jumlahSKS);
+
+                ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
+                tableView.setItems(data);
+                tableView.setVisible(true);
+
+                txtNamaMK.clear();
+                txtNamaJurusan.clear();
+                txtJumlahSKS.clear();
+
+                System.out.println("Data berhasil dimasukkan");
+
+            } catch (NumberFormatException ex) {
+                System.out.println("Jumlah SKS harus berupa angka");
+            }
+        });
+
+        hBox4.getChildren().addAll(button, formInput);
+
+        hBox4.setSpacing(20);
+        hBox4.setPadding(new Insets(20));
+        hBox4.setAlignment(Pos.CENTER);
+
+        // hBox4.getChildren().addAll(button, button2);
         hBox3.setAlignment(Pos.CENTER);
 
         rootUtama.setTop(vBox);

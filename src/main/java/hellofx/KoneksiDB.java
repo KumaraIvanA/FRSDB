@@ -41,36 +41,74 @@ public class KoneksiDB {
     }
 
     public static ObservableList<MataKuliah> getAllMataKuliah() {
-        ObservableList<MataKuliah> list = FXCollections.observableArrayList();
+       ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String query = "SELECT Nama_MK, Jurusan, jumlahSKS FROM MATA_KULIAH";
+    String query = """
+        SELECT 
+            m.namaMK,
+            j.namaJurusan,
+            m.jumlahSKS
+        FROM MataKuliah m
+        JOIN Jurusan j ON m.idJurusan = j.idJurusan
+        """;
 
-        try {
-            Connection c = hubungkan();
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+    try (Connection c = hubungkan();
+         Statement stmt = c.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
 
-            while (rs.next()) {
-                String nama = rs.getString("Nama_mk");
-                String jurusan = rs.getString("Jurusan");
-                int jumlahSKS = rs.getInt("jumlahSKS");
+        while (rs.next()) {
+            String nama = rs.getString("namaMK");
+            String jurusan = rs.getString("namaJurusan");
+            int jumlahSKS = rs.getInt("jumlahSKS");
 
-                list.add(new MataKuliah(nama, jurusan, jumlahSKS));
-            }
-        } catch (SQLException e) {
-            System.out.println("gagal mengambil data");
-            e.printStackTrace();
+            list.add(new MataKuliah(nama, jurusan, jumlahSKS));
         }
 
-        return list;
+    } catch (SQLException e) {
+        System.out.println("gagal mengambil data");
+        e.printStackTrace();
     }
+
+    return list;
+    }
+
+    public static String getNamaJurusanById(int idJurusan) {
+    String query = "SELECT namaJurusan FROM Jurusan WHERE idJurusan = ?";
+
+    try (Connection c = hubungkan();
+         PreparedStatement ps = c.prepareStatement(query)) {
+
+        ps.setInt(1, idJurusan);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getString("namaJurusan");
+        } else {
+            return null;
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Gagal mengambil nama jurusan");
+        e.printStackTrace();
+        return null;
+    }
+}
     
-   public static void insertMataKuliah(String namaMK, int idJurusan, int jumlahSKS) {
+   public static void insertMataKuliah(String namaMK, String namaJurusan, int jumlahSKS) {
+    int idJurusan = getIdJurusanByNama(namaJurusan);
+    if (idJurusan == -1){
+        System.out.println("gagal");
+        return;
+    }
+
     String query = "INSERT INTO MataKuliah (kodeMK, namaMK, idJurusan, jumlahSKS) " +
                    "VALUES (NEXT VALUE FOR seq_kode_mk, ?, ?, ?)";
 
     try (Connection c = hubungkan();
          PreparedStatement ps = c.prepareStatement(query)) {
+
+
 
         ps.setString(1, namaMK);
         ps.setInt(2, idJurusan);
@@ -82,6 +120,30 @@ public class KoneksiDB {
     } catch (SQLException e) {
         System.out.println("gagal insert");
         e.printStackTrace();
+    }
+}
+
+   public static int getIdJurusanByNama(String namaJurusan) {
+    String query = "SELECT idJurusan FROM Jurusan WHERE namaJurusan = ?";
+
+    try (Connection c = hubungkan();
+         PreparedStatement ps = c.prepareStatement(query)) {
+
+        ps.setString(1, namaJurusan);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("idJurusan");
+        } else {
+            System.out.println("Jurusan tidak ditemukan: " + namaJurusan);
+            return -1;
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Gagal mengambil id jurusan");
+        e.printStackTrace();
+        return -1;
     }
 }
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -107,25 +108,24 @@ public class HelloFX extends Application {
         colSKS.setCellValueFactory(new PropertyValueFactory<>("jumlahSKS"));
         colSKS.setPrefWidth(150);
 
+        TableColumn<MataKuliah, Boolean> colCheck = new TableColumn<>();
+        colCheck.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
+        colCheck.setCellFactory(CheckBoxTableCell.forTableColumn(colCheck));
+        colCheck.setPrefWidth(60);
+
         TableView<MataKuliah> tableView = new TableView<>();
-        tableView.getColumns().addAll(colNama, colJurusan, colSKS);
+        tableView.getColumns().addAll(colNama, colJurusan, colSKS, colCheck);
         tableView.setVisible(false);
 
         hBox3.getChildren().addAll(tableView);
         HBox.setHgrow(tableView, Priority.ALWAYS);
 
-        button2.setOnAction(e -> {
-            KoneksiDB.insertMataKuliah("DAA", "Informatika", 4);
-
-            ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
-            tableView.setItems(data);
-            tableView.setVisible(true);
-        });
-
         button.setOnAction(e -> {
             ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
             tableView.setItems(data);
             tableView.setVisible(true);
+            tableView.setEditable(true);
+            colCheck.setEditable(true);
         });
 
         TextField txtNamaMK = new TextField();
@@ -170,7 +170,6 @@ public class HelloFX extends Application {
         hBox4.setPadding(new Insets(20));
         hBox4.setAlignment(Pos.CENTER);
 
-        // hBox4.getChildren().addAll(button, button2);
         hBox3.setAlignment(Pos.CENTER);
 
         rootUtama.setTop(vBox);

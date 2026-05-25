@@ -123,7 +123,9 @@ public class HelloFX extends Application {
         hBox3.getChildren().addAll(tableView);
         HBox.setHgrow(tableView, Priority.ALWAYS);
 
-        button.setOnAction(e -> {
+        button2.setOnAction(e -> {
+            KoneksiDB.insertMataKuliah("DAA", "Informatika", 4);
+
             ObservableList<MataKuliah> data = KoneksiDB.getAllMataKuliah();
             tableView.setItems(data);
             tableView.setVisible(true);

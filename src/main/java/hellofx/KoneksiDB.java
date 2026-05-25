@@ -1,13 +1,12 @@
 package hellofx;
 
-import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -66,22 +65,23 @@ public class KoneksiDB {
         return list;
     }
     
-    public static void insertMataKuliah(String namaMK, String jurusan, int jumlahSKS) {
-        String query = "INSERT INTO MATA_KULIAH (Nama_MK, Jurusan, JumlahSKS) VALUES(?, ?, ?)";
+   public static void insertMataKuliah(String namaMK, int idJurusan, int jumlahSKS) {
+    String query = "INSERT INTO MataKuliah (kodeMK, namaMK, idJurusan, jumlahSKS) " +
+                   "VALUES (NEXT VALUE FOR seq_kode_mk, ?, ?, ?)";
 
-        try {
-            Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
+    try (Connection c = hubungkan();
+         PreparedStatement ps = c.prepareStatement(query)) {
 
-            ps.setString(1, namaMK);
-            ps.setString(2, jurusan);
-            ps.setInt(3, jumlahSKS);
+        ps.setString(1, namaMK);
+        ps.setInt(2, idJurusan);
+        ps.setInt(3, jumlahSKS);
 
-            ps.executeUpdate();
-            System.out.println("berhasil insert");
-        } catch (SQLException e) {
-            System.out.println("gagal insert");
-            e.printStackTrace();
-        }
+        ps.executeUpdate();
+        System.out.println("berhasil insert");
+
+    } catch (SQLException e) {
+        System.out.println("gagal insert");
+        e.printStackTrace();
     }
+}
 }

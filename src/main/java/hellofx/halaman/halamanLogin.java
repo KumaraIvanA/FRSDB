@@ -138,6 +138,6 @@ public class HalamanLogin {
                 mainLayout.setStyle("-fx-background-color: #F2F2F2;");
                 mainLayout.getChildren().addAll(pageTitle, whiteArea);
 
-                return new Scene(mainLayout, 400, 300);
+                return new Scene(mainLayout, 650, 650);
         }
 }

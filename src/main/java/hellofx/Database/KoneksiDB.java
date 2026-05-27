@@ -168,7 +168,7 @@ public class KoneksiDB {
             return -1;
         }
     }
-    
+
     public static void insertEnroll(String npm, int kodeMK, String kodeSemester, int idFRS, String tanggalFRS) {
         String query = """
                 INSERT INTO Enroll (npm, kodeMK, kodeSemester, idFRS, tanggalFRS)
@@ -188,9 +188,8 @@ public class KoneksiDB {
             System.out.println("gagal menambahkan");
         }
     }
-    
 
-    //Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
+    // Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
     public static String getNamaMKByKodeMK(int kodeMK) {
         String query = """
                 SELECT
@@ -201,7 +200,7 @@ public class KoneksiDB {
                 WHERE kodeMK = ?
                 """;
 
-        try(Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
+        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
             ps.setInt(1, kodeMK);
 
             ResultSet result = ps.executeQuery();
@@ -217,6 +216,23 @@ public class KoneksiDB {
             // TODO: handle exception
             System.out.println("gagal mencari kodeMK");
             return null;
+        }
+    }
+
+    public static boolean checkLogin(String username, String password) {
+        String sql = "SELECT * FROM MAHASISWA WHERE email = ? AND password = ?";
+
+        try (Connection connection = hubungkan();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            return false;
         }
     }
 }

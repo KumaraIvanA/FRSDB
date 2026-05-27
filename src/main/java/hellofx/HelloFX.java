@@ -1,5 +1,7 @@
 package hellofx;
 
+import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.MataKuliah;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -162,7 +164,8 @@ public class HelloFX extends Application {
             for (MataKuliah mk : tableView.getItems()) {
                 if (mk.isSelected()) {
                     matkulDipilih.getItems().add(mk);
-                    System.out.println(KoneksiDB.getKodeMkByNamaMK(mk.getNamaMK()));
+                    int kodeMK = KoneksiDB.getKodeMkByNamaMK(mk.getNamaMK());
+                    // KoneksiDB.insertEnroll("6182401010", kodeMK, "20251", 1, "2025-12-31");
                     System.out.println("Dipilih: " + mk.getNamaMK());
                 }
             }

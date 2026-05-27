@@ -10,7 +10,6 @@ public class HelloFX extends Application {
     @Override
     public void start(Stage stage) {
         HalamanLogin login = new HalamanLogin(stage);
-        HalamanBeranda beranda = new HalamanBeranda(stage);
         stage.setScene(login.getScene());
         stage.setTitle("FRS App");
         stage.show();

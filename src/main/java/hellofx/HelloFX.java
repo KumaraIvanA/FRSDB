@@ -1,6 +1,5 @@
 package hellofx;
 
-import hellofx.halaman.HalamanBeranda;
 import hellofx.halaman.HalamanLogin;
 import javafx.application.Application;
 import javafx.stage.Stage;

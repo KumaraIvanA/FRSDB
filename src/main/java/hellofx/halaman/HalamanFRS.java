@@ -3,6 +3,9 @@ package hellofx.halaman;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.MataKuliah;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -164,7 +167,8 @@ public class HalamanFRS {
 
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
-
+        
+        loadMataKuliahFromDB(courseList);
 
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
@@ -180,6 +184,25 @@ public class HalamanFRS {
         center.getChildren().addAll(semesterBox, scrollPane);
 
         return center;
+    }
+
+    private void loadMataKuliahFromDB(VBox courselist){
+        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliah();
+
+        int semesterSebelumnya = -1;
+
+        for (MataKuliah mk : list){
+            int semesterSekarang = mk.getIdSemester();
+
+            if (semesterSekarang != semesterSebelumnya){
+                addSemesterHeader(courselist, "Semester " + semesterSekarang);
+                semesterSebelumnya = semesterSekarang;
+            }
+
+            Course course = new Course(mk.getNamaMK(), String.valueOf(mk.getkodeMK()), mk.getJumlahSKS(), false);
+            addCourseRow(courselist, course);
+        }
+
     }
 
     private void addSemesterHeader(VBox parent, String title) {

@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import hellofx.kelasData.MataKuliah;
 import javafx.collections.FXCollections;
@@ -39,38 +38,6 @@ public class KoneksiDB {
         }
 
         return conn;
-    }
-
-    public static ObservableList<MataKuliah> getAllMataKuliah() {
-        ObservableList<MataKuliah> list = FXCollections.observableArrayList();
-
-        String query = """
-                SELECT
-                    m.namaMK,
-                    j.namaJurusan,
-                    m.jumlahSKS
-                FROM MataKuliah m
-                JOIN Jurusan j ON m.idJurusan = j.idJurusan
-                """;
-
-        try (Connection c = hubungkan();
-                Statement stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                String nama = rs.getString("namaMK");
-                String jurusan = rs.getString("namaJurusan");
-                int jumlahSKS = rs.getInt("jumlahSKS");
-
-                list.add(new MataKuliah(nama, jurusan, jumlahSKS));
-            }
-
-        } catch (SQLException e) {
-            System.out.println("gagal mengambil data");
-            e.printStackTrace();
-        }
-
-        return list;
     }
 
     public static String getNamaJurusanById(int idJurusan) {
@@ -219,20 +186,48 @@ public class KoneksiDB {
         }
     }
 
-    public static boolean checkLogin(String username, String password) {
-        String sql = "SELECT * FROM MAHASISWA WHERE email = ? AND password = ?";
+    public static boolean checkLogin(String email, String password) {
+        String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 
         try (Connection connection = hubungkan();
                 PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setString(1, username);
+            ps.setString(1, email);
             ps.setString(2, password);
 
-            ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
 
-            return rs.next();
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
+    }
+
+    public static ObservableList<MataKuliah> getAllMatakuliah(){
+        ObservableList<MataKuliah> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM Matakuliah";
+
+        try (Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+                ResultSet rs = ps.executeQuery();
+
+                while(rs.next()){
+                    int kodeMk = rs.getInt("kodeMK");
+                    String namaMK = rs.getString("namaMK");
+                    int jumlahSKS = rs.getInt("jumlahSKS");
+                    int idSemester = rs.getInt("idSemester");
+
+                    MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idSemester);
+                    list.add(mk);
+                };
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

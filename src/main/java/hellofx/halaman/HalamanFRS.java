@@ -165,7 +165,6 @@ public class HalamanFRS {
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
 
-        loadDummyMataKuliah(courseList);
 
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
@@ -181,21 +180,6 @@ public class HalamanFRS {
         center.getChildren().addAll(semesterBox, scrollPane);
 
         return center;
-    }
-
-    private void loadDummyMataKuliah(VBox courseList) {
-        addSemesterHeader(courseList, "Semester 1");
-        addCourseRow(courseList, new Course("Matematika Dasar", "AIF202425", 4, true));
-        addCourseRow(courseList, new Course("Matematika Diskret", "AIF202612", 4, false));
-        addCourseRow(courseList, new Course("Dasar Pemrograman", "AIF24125", 4, false));
-        addCourseRow(courseList, new Course("Logika Dasar", "MKU24102", 2, true));
-
-        addSemesterHeader(courseList, "Semester 2");
-        addCourseRow(courseList, new Course("Algoritma Pemrograman", "AIF202512", 4, true));
-        addCourseRow(courseList, new Course("Logika Informatika", "AIF202516", 3, false));
-
-        addSemesterHeader(courseList, "Semester 3");
-        addCourseRow(courseList, new Course("Sistem Operasi", "AIF202516", 3, true));
     }
 
     private void addSemesterHeader(VBox parent, String title) {

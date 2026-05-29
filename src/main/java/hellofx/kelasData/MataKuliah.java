@@ -7,12 +7,14 @@ public class MataKuliah {
     private SimpleIntegerProperty kodeMk;
     private SimpleStringProperty namaMk;
     private SimpleIntegerProperty jumlahSKS;
+    private SimpleIntegerProperty idJurusan;
     private SimpleIntegerProperty idSemester;
 
-    public MataKuliah(int kodeMK, String namaMk, int jumlahSKS, int idSemester) {
+    public MataKuliah(int kodeMK, String namaMk, int jumlahSKS, int idJurusan, int idSemester) {
         this.namaMk = new SimpleStringProperty(namaMk);
         this.jumlahSKS = new SimpleIntegerProperty(jumlahSKS);
         this.kodeMk = new SimpleIntegerProperty(kodeMK);
+        this.idJurusan = new SimpleIntegerProperty(idJurusan);
         this.idSemester = new SimpleIntegerProperty(idSemester);
     }
 
@@ -30,6 +32,10 @@ public class MataKuliah {
 
     public int getIdSemester(){
         return this.idSemester.get();
+    }
+
+    public int getIdJurusan(){
+        return this.idJurusan.get();
     }
 
     public SimpleStringProperty namaMKProperty() { return namaMk; }

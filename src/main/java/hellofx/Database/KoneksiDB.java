@@ -208,7 +208,7 @@ public class KoneksiDB {
     public static ObservableList<MataKuliah> getAllMatakuliah(){
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM Matakuliah";
+        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM Matakuliah ORDER BY idSemester, kodeMK" ;
 
         try (Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(sql)){
@@ -219,8 +219,9 @@ public class KoneksiDB {
                     String namaMK = rs.getString("namaMK");
                     int jumlahSKS = rs.getInt("jumlahSKS");
                     int idSemester = rs.getInt("idSemester");
+                    int idJurusan = rs.getInt("idJurusan");
 
-                    MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idSemester);
+                    MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
                     list.add(mk);
                 };
 

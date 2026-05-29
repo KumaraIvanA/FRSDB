@@ -167,7 +167,7 @@ public class HalamanFRS {
 
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
-        
+
         loadMataKuliahFromDB(courseList);
 
         ScrollPane scrollPane = new ScrollPane(courseList);
@@ -199,7 +199,7 @@ public class HalamanFRS {
                 semesterSebelumnya = semesterSekarang;
             }
 
-            Course course = new Course(mk.getNamaMK(), String.valueOf(mk.getkodeMK()), mk.getJumlahSKS(), false);
+            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false);
             addCourseRow(courselist, course);
         }
 
@@ -336,7 +336,7 @@ public class HalamanFRS {
         int sks;
         boolean selected;
 
-        Course(String namaMK, String kodeMK, int sks, boolean selected) {
+        Course(String namaMK, int sks, boolean selected) {
             this.namaMK = namaMK;
             this.kodeMK = kodeMK;
             this.sks = sks;

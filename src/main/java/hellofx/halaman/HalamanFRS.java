@@ -101,7 +101,8 @@ public class HalamanFRS {
         sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setPrefWidth(105);
 
-        VBox beranda = createSidebarButton("⌂", "Beranda", false);
+        VBox beranda = createSidebarButton("⌂", "Beranda", true);
+
         VBox frs = createSidebarButton("▤", "FRS", true);
         VBox profile = createSidebarButton("●", "Profile", false);
         VBox jadwal = createSidebarButton("▦", "Jadwal", false);

@@ -13,10 +13,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class HalamanLogin {
+public class halamanLogin {
         private Stage stage;
 
-        public HalamanLogin(Stage stage) {
+        public halamanLogin(Stage stage) {
                 this.stage = stage;
         }
 

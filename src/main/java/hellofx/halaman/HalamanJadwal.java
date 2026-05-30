@@ -36,7 +36,7 @@ public class HalamanJadwal {
 
         VBox menu = new VBox();
         menu.setPadding(new Insets(10, 0, 10, 0));
-        menu.setSpacing(50);
+        menu.setSpacing(25);
         menu.setPrefWidth(200);
 
         Button tombolProfil = new Button("Profil");
@@ -105,7 +105,7 @@ public class HalamanJadwal {
 
         layout.getChildren().addAll(header, bagianTengah, bagianBawah);
 
-        return new Scene(layout, 1440, 1024);
+        return new Scene(layout, 1200, 750);
     }
 
     private VBox kolomHari(String hari) {

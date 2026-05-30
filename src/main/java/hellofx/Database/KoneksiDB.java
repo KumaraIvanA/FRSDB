@@ -13,9 +13,9 @@ import javafx.collections.ObservableList;
 public class KoneksiDB {
     private static Connection conn = null;
     public static Connection hubungkan() {
-		if (conn != null) {
-			return conn;
-		}
+		// if (conn != null) {
+		// 	return conn;
+		// }
 
 		String url = "jdbc:sqlserver://localhost:1433;"
 					 + "database=FRS;"
@@ -209,7 +209,7 @@ public class KoneksiDB {
     public static ObservableList<MataKuliah> getAllMatakuliah(){
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM Matakuliah ORDER BY idSemester, kodeMK" ;
+        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK" ;
 
         try (Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(sql)){
@@ -226,7 +226,9 @@ public class KoneksiDB {
                     list.add(mk);
                 };
 
-        }catch(Exception e){
+            } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("gagal");
             e.printStackTrace();
         }
 

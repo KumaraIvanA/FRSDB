@@ -8,6 +8,7 @@ import hellofx.kelasData.MataKuliah;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -33,36 +34,35 @@ public class HalamanFRS {
     }
 
     public Scene getScene() {
-    courseMap.clear();
+        courseMap.clear();
 
-    BorderPane root = new BorderPane();
-    root.setStyle(
-            "-fx-background-color: white;" +
-            "-fx-font-family: Arial;"
-    );
+        BorderPane root = new BorderPane();
+        root.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-font-family: Arial;");
 
-    root.setTop(createTopBar());
+        root.setTop(createTopBar());
 
-    HBox body = new HBox(20);
-    body.setPadding(new Insets(15, 30, 20, 0));
-    body.setAlignment(Pos.TOP_CENTER);
-    body.setStyle("-fx-background-color: white;");
+        HBox body = new HBox(20);
+        body.setPadding(new Insets(15, 30, 20, 0));
+        body.setAlignment(Pos.TOP_CENTER);
+        body.setStyle("-fx-background-color: white;");
 
-    VBox sidebar = createSidebar();
-    VBox centerContent = createCenterContent();
-    VBox rightContent = createRightContent();
+        VBox sidebar = createSidebar();
+        VBox centerContent = createCenterContent();
+        VBox rightContent = createRightContent();
 
-    HBox.setHgrow(centerContent, Priority.ALWAYS);
+        HBox.setHgrow(centerContent, Priority.ALWAYS);
 
-    body.getChildren().addAll(sidebar, centerContent, rightContent);
+        body.getChildren().addAll(sidebar, centerContent, rightContent);
 
-    root.setCenter(body);
+        root.setCenter(body);
 
-    updateTotalSks();
+        updateTotalSks();
 
-    Scene scene = new Scene(root, 1200, 750);
-    return scene;
-}
+        Scene scene = new Scene(root, 1200, 750);
+        return scene;
+    }
 
     private HBox createTopBar() {
         HBox topBar = new HBox(25);
@@ -74,9 +74,8 @@ public class HalamanFRS {
         Label title = new Label("FRS");
         title.setStyle(
                 "-fx-font-size: 24px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: white;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -84,15 +83,13 @@ public class HalamanFRS {
         Label notification = new Label("🔔");
         notification.setStyle(
                 "-fx-font-size: 28px;" +
-                "-fx-text-fill: white;"
-        );
+                        "-fx-text-fill: white;");
 
         Label profile = new Label("●");
         profile.setAlignment(Pos.CENTER);
         profile.setStyle(
                 "-fx-font-size: 32px;" +
-                "-fx-text-fill: #E6E6E6;"
-        );
+                        "-fx-text-fill: #E6E6E6;");
 
         topBar.getChildren().addAll(title, spacer, notification, profile);
 
@@ -104,44 +101,53 @@ public class HalamanFRS {
         sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setPrefWidth(105);
 
-        VBox beranda = createSidebarButton("⌂", "Beranda", true);
+        Button tombolBeranda = new Button("Beranda");
+        tombolBeranda.setCursor(Cursor.HAND);
+        tombolBeranda.setStyle(styleTombol());
 
-        VBox frs = createSidebarButton("▤", "FRS", true);
-        VBox profile = createSidebarButton("●", "Profile", false);
-        VBox jadwal = createSidebarButton("▦", "Jadwal", false);
+        Button tombolFrs = new Button("FRS");
+        tombolFrs.setCursor(Cursor.HAND);
+        tombolFrs.setStyle(styleTombol());
 
-        sidebar.getChildren().addAll(beranda, frs, profile, jadwal);
+        Button tombolProfil = new Button("Profil");
+        tombolProfil.setCursor(Cursor.HAND);
+        tombolProfil.setStyle(styleTombol());
+
+        Button tombolJadwal = new Button("Jadwal");
+        tombolJadwal.setCursor(Cursor.HAND);
+        tombolJadwal.setStyle(styleTombol());
+
+        tombolProfil.setOnAction(e -> {
+            HalamanProfil profil = new HalamanProfil(stage);
+            stage.setScene(profil.getScene());
+            stage.setTitle("FRS");
+        });
+
+        tombolFrs.setOnAction(e -> {
+            HalamanFRS frs = new HalamanFRS(stage);
+            stage.setScene(frs.getScene());
+            stage.setTitle("FRS");
+        });
+
+        tombolBeranda.setOnAction(e -> {
+            HalamanBeranda beranda = new HalamanBeranda(stage);
+            stage.setScene(beranda.getScene());
+            stage.setTitle("FRS");
+        });
+
+        tombolJadwal.setOnAction(e -> {
+            HalamanJadwal jadwal = new HalamanJadwal(stage);
+            stage.setScene(jadwal.getScene());
+            stage.setTitle("FRS");
+        });
+
+        sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolFrs, tombolJadwal);
 
         return sidebar;
     }
 
-    private VBox createSidebarButton(String icon, String text, boolean active) {
-        Label iconLabel = new Label(icon);
-        iconLabel.setStyle(
-                "-fx-font-size: 31px;" +
-                "-fx-text-fill: white;"
-        );
-
-        Label textLabel = new Label(text);
-        textLabel.setUnderline(active);
-        textLabel.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: white;"
-        );
-
-        VBox button = new VBox(5);
-        button.setAlignment(Pos.CENTER);
-        button.setPrefSize(75, 82);
-        button.setStyle(
-                "-fx-background-color: #243F91;" +
-                "-fx-background-radius: 10;" +
-                "-fx-cursor: hand;"
-        );
-
-        button.getChildren().addAll(iconLabel, textLabel);
-
-        return button;
+    private String styleTombol() {
+        return "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : white; -fx-font-weight : bold; -fx-background-radius: 10;";
     }
 
     private VBox createCenterContent() {
@@ -153,18 +159,16 @@ public class HalamanFRS {
         semesterBox.getItems().addAll(
                 "Semester Ganjil 2024",
                 "Semester Genap 2024",
-                "Semester Ganjil 2025"
-        );
+                "Semester Ganjil 2025");
         semesterBox.setValue("Semester Ganjil 2024");
         semesterBox.setPrefWidth(350);
         semesterBox.setStyle(
                 "-fx-font-size: 18px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-color: #F8F3F3;" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-color: #D6D0D0;" +
-                "-fx-border-radius: 10;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-color: #F8F3F3;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #D6D0D0;" +
+                        "-fx-border-radius: 10;");
 
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
@@ -178,24 +182,23 @@ public class HalamanFRS {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle(
                 "-fx-background-color: transparent;" +
-                "-fx-background: transparent;" +
-                "-fx-border-color: transparent;"
-        );
+                        "-fx-background: transparent;" +
+                        "-fx-border-color: transparent;");
 
         center.getChildren().addAll(semesterBox, scrollPane);
 
         return center;
     }
 
-    private void loadMataKuliahFromDB(VBox courselist){
+    private void loadMataKuliahFromDB(VBox courselist) {
         ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliah();
 
         int semesterSebelumnya = -1;
 
-        for (MataKuliah mk : list){
+        for (MataKuliah mk : list) {
             int semesterSekarang = mk.getIdSemester();
 
-            if (semesterSekarang != semesterSebelumnya){
+            if (semesterSekarang != semesterSebelumnya) {
                 addSemesterHeader(courselist, "Semester " + semesterSekarang);
                 semesterSebelumnya = semesterSekarang;
             }
@@ -213,11 +216,10 @@ public class HalamanFRS {
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle(
                 "-fx-background-color: #AFC2D9;" +
-                "-fx-background-radius: 7;" +
-                "-fx-font-size: 19px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: black;"
-        );
+                        "-fx-background-radius: 7;" +
+                        "-fx-font-size: 19px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: black;");
 
         VBox.setMargin(header, new Insets(8, 0, 0, 0));
         parent.getChildren().add(header);
@@ -230,32 +232,28 @@ public class HalamanFRS {
         row.setPadding(new Insets(0, 20, 0, 16));
         row.setStyle(
                 "-fx-background-color: #F8F3F3;" +
-                "-fx-border-color: #E8E8E8;" +
-                "-fx-border-width: 0 0 1 0;"
-        );
+                        "-fx-border-color: #E8E8E8;" +
+                        "-fx-border-width: 0 0 1 0;");
 
         Label nameLabel = new Label(course.namaMK + " (" + course.sks + " SKS)");
         nameLabel.setPrefWidth(330);
         nameLabel.setStyle(
                 "-fx-font-size: 18px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #1D1D1D;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #1D1D1D;");
 
         Label kodeLabel = new Label(course.kodeMK);
         kodeLabel.setPrefWidth(105);
         kodeLabel.setStyle(
                 "-fx-font-size: 18px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #1D1D1D;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #1D1D1D;");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(course.selected);
         checkBox.setStyle(
                 "-fx-mark-color: #6C5EB5;" +
-                "-fx-cursor: hand;"
-        );
+                        "-fx-cursor: hand;");
 
         courseMap.put(checkBox, course);
 
@@ -276,27 +274,24 @@ public class HalamanFRS {
         Label totalLabel = new Label("Total sks :");
         totalLabel.setStyle(
                 "-fx-font-size: 21px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: black;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: black;");
 
         totalSksValue = new Label("0");
         totalSksValue.setStyle(
                 "-fx-font-size: 21px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: black;"
-        );
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: black;");
 
         Button submitButton = new Button("Submit");
         submitButton.setPrefWidth(120);
         submitButton.setPrefHeight(46);
         submitButton.setStyle(
                 "-fx-background-color: #243F91;" +
-                "-fx-background-radius: 10;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 18px;" +
-                "-fx-cursor: hand;"
-        );
+                        "-fx-background-radius: 10;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 18px;" +
+                        "-fx-cursor: hand;");
 
         submitButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

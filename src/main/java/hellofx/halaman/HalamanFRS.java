@@ -16,6 +16,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -80,18 +82,16 @@ public class HalamanFRS {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label notification = new Label("🔔");
-        notification.setStyle(
-                "-fx-font-size: 28px;" +
-                        "-fx-text-fill: white;");
+        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
+        notif.setFitWidth(28);
+        notif.setFitHeight(28);
+        notif.setPreserveRatio(true);
 
-        Label profile = new Label("●");
-        profile.setAlignment(Pos.CENTER);
-        profile.setStyle(
-                "-fx-font-size: 32px;" +
-                        "-fx-text-fill: #E6E6E6;");
-
-        topBar.getChildren().addAll(title, spacer, notification, profile);
+        ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
+        profile.setFitWidth(28);
+        profile.setFitHeight(28);
+        profile.setPreserveRatio(true);
+        topBar.getChildren().addAll(title, spacer, notif, profile);
 
         return topBar;
     }
@@ -101,21 +101,10 @@ public class HalamanFRS {
         sidebar.setAlignment(Pos.TOP_CENTER);
         sidebar.setPrefWidth(105);
 
-        Button tombolBeranda = new Button("Beranda");
-        tombolBeranda.setCursor(Cursor.HAND);
-        tombolBeranda.setStyle(styleTombol());
-
-        Button tombolFrs = new Button("FRS");
-        tombolFrs.setCursor(Cursor.HAND);
-        tombolFrs.setStyle(styleTombol());
-
-        Button tombolProfil = new Button("Profil");
-        tombolProfil.setCursor(Cursor.HAND);
-        tombolProfil.setStyle(styleTombol());
-
-        Button tombolJadwal = new Button("Jadwal");
-        tombolJadwal.setCursor(Cursor.HAND);
-        tombolJadwal.setStyle(styleTombol());
+        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
+        Button tombolFrs = tombolIcon("google-docs (1).png", "FRS");
+        Button tombolProfil = tombolIcon("user (1).png", "Profil");
+        Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
 
         tombolProfil.setOnAction(e -> {
             HalamanProfil profil = new HalamanProfil(stage);
@@ -145,11 +134,7 @@ public class HalamanFRS {
 
         return sidebar;
     }
-
-    private String styleTombol() {
-        return "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : white; -fx-font-weight : bold; -fx-background-radius: 10;";
-    }
-
+    
     private VBox createCenterContent() {
         VBox center = new VBox(12);
         center.setAlignment(Pos.TOP_CENTER);
@@ -307,6 +292,29 @@ public class HalamanFRS {
         right.getChildren().addAll(totalLabel, totalSksValue, submitButton);
 
         return right;
+    }
+
+     private Button tombolIcon(String pathIcon, String teks) {
+        ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/" + pathIcon)));
+        
+        image.setFitWidth(35);
+        image.setFitHeight(35);
+        image.setPreserveRatio(true);
+
+        Label label = new Label(teks);
+        label.setStyle("-fx-font-size: 11px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;");
+
+        VBox isi = new VBox(5);
+        isi.setAlignment(Pos.CENTER);
+        isi.getChildren().addAll(image, label);
+
+        Button button = new Button();
+        button.setGraphic(isi);
+        button.setCursor(Cursor.HAND);
+        button.setStyle(
+                "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
+
+        return button;
     }
 
     private void updateTotalSks() {

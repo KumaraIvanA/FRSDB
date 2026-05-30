@@ -3,6 +3,9 @@ package hellofx.halaman;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.MataKuliah;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -165,7 +168,7 @@ public class HalamanFRS {
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
 
-        loadDummyMataKuliah(courseList);
+        loadMataKuliahFromDB(courseList);
 
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
@@ -183,19 +186,23 @@ public class HalamanFRS {
         return center;
     }
 
-    private void loadDummyMataKuliah(VBox courseList) {
-        addSemesterHeader(courseList, "Semester 1");
-        addCourseRow(courseList, new Course("Matematika Dasar", "AIF202425", 4, true));
-        addCourseRow(courseList, new Course("Matematika Diskret", "AIF202612", 4, false));
-        addCourseRow(courseList, new Course("Dasar Pemrograman", "AIF24125", 4, false));
-        addCourseRow(courseList, new Course("Logika Dasar", "MKU24102", 2, true));
+    private void loadMataKuliahFromDB(VBox courselist){
+        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliah();
 
-        addSemesterHeader(courseList, "Semester 2");
-        addCourseRow(courseList, new Course("Algoritma Pemrograman", "AIF202512", 4, true));
-        addCourseRow(courseList, new Course("Logika Informatika", "AIF202516", 3, false));
+        int semesterSebelumnya = -1;
 
-        addSemesterHeader(courseList, "Semester 3");
-        addCourseRow(courseList, new Course("Sistem Operasi", "AIF202516", 3, true));
+        for (MataKuliah mk : list){
+            int semesterSekarang = mk.getIdSemester();
+
+            if (semesterSekarang != semesterSebelumnya){
+                addSemesterHeader(courselist, "Semester " + semesterSekarang);
+                semesterSebelumnya = semesterSekarang;
+            }
+
+            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false);
+            addCourseRow(courselist, course);
+        }
+
     }
 
     private void addSemesterHeader(VBox parent, String title) {
@@ -329,7 +336,7 @@ public class HalamanFRS {
         int sks;
         boolean selected;
 
-        Course(String namaMK, String kodeMK, int sks, boolean selected) {
+        Course(String namaMK, int sks, boolean selected) {
             this.namaMK = namaMK;
             this.kodeMK = kodeMK;
             this.sks = sks;

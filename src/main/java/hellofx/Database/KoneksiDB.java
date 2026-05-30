@@ -12,29 +12,31 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class KoneksiDB {
-
+    private static Connection conn = null;
     public static Connection hubungkan() {
-        Connection conn = null;
+		if (conn != null) {
+			return conn;
+		}
 
-        String url = "jdbc:sqlserver://localhost:1433;"
-                + "database=FRS;"
-                + "user=sa;"
-                + "password=Rahasia123;"
-                + "encrypt=true;"
-                + "trustServerCertificate=true;"
-                + "loginTimeout=30;";
+		String url = "jdbc:sqlserver://localhost:1433;"
+					 + "database=FRS;"
+					 + "user=sa;"
+					 + "password=Rahasia123;"
+					 + "encrypt=true;"
+					 + "trustServerCertificate=true;"
+					 + "loginTimeout=30;";
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
             conn = DriverManager.getConnection(url);
-            System.out.println("Berhasil");
+            System.out.println("Connected to the database");
 
         } catch (ClassNotFoundException e) {
-            System.out.println("Gagal");
+            System.out.println("Failed to connect to the database");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("Gagal");
+            System.out.println("Failed to connect to the database");
             e.printStackTrace();
         }
 
@@ -213,7 +215,6 @@ public class KoneksiDB {
             }
 
         } catch (SQLException e) {
-            // TODO: handle exception
             System.out.println("gagal mencari kodeMK");
             return null;
         }

@@ -37,6 +37,8 @@ public class HalamanBeranda {
 
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
 
+        Button tombolLogout = tombolIcon("logout.png", "Logout");
+
         tombolProfil.setOnAction(e -> {
             HalamanProfil profil = new HalamanProfil(stage);
             stage.setScene(profil.getScene());
@@ -56,15 +58,22 @@ public class HalamanBeranda {
             stage.setTitle("FRS");
         });
 
+        tombolLogout.setOnAction(e -> {
+            HalamanLogin login = new HalamanLogin(stage);
+            stage.setScene(login.getScene());
+            stage.setTitle("Login");
+        });
+
         HBox tombolMenu = new HBox(50);
         tombolMenu.setAlignment(Pos.CENTER);
-        tombolMenu.getChildren().addAll(tombolProfil, tombolJadwal, tombolFrs);
+        tombolMenu.getChildren().addAll(tombolProfil, tombolJadwal, tombolFrs, tombolLogout);
 
         VBox bagianMenu = new VBox(30);
         bagianMenu.setAlignment(Pos.CENTER);
         bagianMenu.setPadding(new Insets(40));
         bagianMenu.getChildren().addAll(welcome, tombolMenu);
         VBox.setVgrow(bagianMenu, Priority.ALWAYS);
+        HBox.setHgrow(bagianMenu, Priority.ALWAYS);
 
         // Bagian bawah
         Label namaUniv = new Label("Unirvesitas Jaya Jaya");

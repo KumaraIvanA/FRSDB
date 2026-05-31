@@ -22,13 +22,6 @@ public class HalamanLogin {
 
         public Scene getScene() {
                 VBox layout = new VBox();
-
-                Label pageTitle = new Label("Halaman Login");
-                pageTitle.setStyle(
-                                "-fx-font-size: 16px;" +
-                                                "-fx-text-fill: #B8B8B8;" +
-                                                "-fx-font-weight: bold;");
-
                 Label loginTitle = new Label("Login");
                 loginTitle.setStyle(
                                 "-fx-font-size: 20px;" +
@@ -94,12 +87,17 @@ public class HalamanLogin {
                         }
 
                         boolean loginberhasil = KoneksiDB.checkLogin(email, password);
+                        boolean loginDosenberhail = KoneksiDB.checkLoginDosen(email, password);
 
                         if (loginberhasil) {
                                 HalamanBeranda beranda = new HalamanBeranda(stage);
                                 stage.setScene(beranda.getScene());
                                 stage.setTitle("FRS");
-                        } else {
+                        } else if (loginDosenberhail){
+                                HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
+                                stage.setScene(berandaDosen.getScene());
+                                stage.setTitle("FRS");
+                        }else{
                                 messageLabel.setText("Salah email atau password");
                                 messageLabel.setStyle("-fx-text-fill: red;");
                         }
@@ -132,9 +130,9 @@ public class HalamanLogin {
                 StackPane.setAlignment(loginCard, Pos.TOP_CENTER);
 
                 VBox mainLayout = new VBox(10);
-                mainLayout.setPadding(new Insets(15, 18, 18, 18));
-                mainLayout.setStyle("-fx-background-color: #F2F2F2;");
-                mainLayout.getChildren().addAll(pageTitle, whiteArea);
+                mainLayout.setPadding(new Insets(0));
+                mainLayout.setStyle("-fx-background-color: white;");
+                mainLayout.getChildren().addAll(whiteArea);
 
                 return new Scene(mainLayout, 650, 650);
         }

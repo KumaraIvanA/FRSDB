@@ -30,7 +30,7 @@ VALUES (4)
 INSERT INTO MataKuliah (namaMK, jumlahSKS, idJurusan, idSemester)
 VALUES
 	('Manajemen Informasi dan Basis Data', 4, 1, 4),
-	('Analisis Data dengan Statistika dan R', 3, 1, 4),
+	('Analisis Data dengan Statistika dan R', 3, 1, 4),cu
 	('Analisis dan Desain Perangkat Lunak', 2, 1, 4)
 
 

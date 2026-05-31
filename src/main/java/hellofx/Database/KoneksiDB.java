@@ -206,6 +206,25 @@ public class KoneksiDB {
         }
     }
 
+    public static boolean checkLoginDosen(String email, String password) {
+        String sql = "SELECT 1 FROM Dosen WHERE email = ? AND password = ?";
+
+        try (Connection connection = hubungkan();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static ObservableList<MataKuliah> getAllMatakuliah(){
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 

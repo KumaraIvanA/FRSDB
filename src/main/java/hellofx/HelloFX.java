@@ -1,9 +1,9 @@
 package hellofx;
 
-import hellofx.halaman.HalamanBeranda;
-import hellofx.halaman.HalamanJadwal;
 import hellofx.halaman.HalamanLogin;
-import hellofx.halaman.HalamanProfil;
+import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
+import hellofx.halaman.HalamanMahasiswa.HalamanJadwal;
+import hellofx.halaman.HalamanMahasiswa.HalamanProfil;
 import hellofx.halaman.HalamanLogin;
 import javafx.application.Application;
 import javafx.stage.Stage;

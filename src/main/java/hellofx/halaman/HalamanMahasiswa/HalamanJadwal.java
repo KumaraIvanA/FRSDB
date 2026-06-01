@@ -1,4 +1,4 @@
-package hellofx.halaman;
+package hellofx.halaman.HalamanMahasiswa;
 
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;

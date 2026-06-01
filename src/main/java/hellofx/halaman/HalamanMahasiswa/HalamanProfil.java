@@ -1,4 +1,4 @@
-package hellofx.halaman;
+package hellofx.halaman.HalamanMahasiswa;
 
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
@@ -15,43 +15,34 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class HalamanBeranda {
+public class HalamanProfil {
     private Stage stage;
     private Mahasiswa mahasiswa;
 
-    public HalamanBeranda(Stage stage, Mahasiswa mahasiswa) {
+    public HalamanProfil(Stage stage, Mahasiswa mahasiswa) {
         this.stage = stage;
         this.mahasiswa = mahasiswa;
     }
 
     public Scene getScene() {
         VBox layout = new VBox();
+        layout.setStyle("-fx-background-color: #ffffff;");
 
         HBox header = createTopBar();
-        
-        Label welcome = new Label("SELAMAT DATANG DI\nPORTAL MAHASISWA");
-        welcome.setStyle(
-                "-fx-font-size : 20; -fx-font-weight : bold; -fx-text-fill : #0B20A7; -fx-text-alignment : center;");
-        welcome.setAlignment(Pos.CENTER);
 
-        Button tombolProfil = tombolIcon("user (1).png", "Profil");
+        VBox menu = new VBox();
+        menu.setPadding(new Insets(30, 0, 10, 0));
+        menu.setSpacing(25);
+        menu.setPrefWidth(100);
 
+        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolFrs = tombolIcon("google-docs (1).png", "FRS");
-
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
 
-        Button tombolLogout = tombolIcon("logout.png", "Logout");
-
-        tombolProfil.setOnAction(e -> {
-            HalamanProfil profil = new HalamanProfil(stage, mahasiswa);
-            stage.setScene(profil.getScene());
-            stage.setTitle("Profil");
-        });
-
-        tombolJadwal.setOnAction(e -> {
-            HalamanJadwal jadwal = new HalamanJadwal(stage, mahasiswa);
-            stage.setScene(jadwal.getScene());
-            stage.setTitle("Jadwal");
+        tombolBeranda.setOnAction(e -> {
+            HalamanBeranda beranda = new HalamanBeranda(stage, mahasiswa);
+            stage.setScene(beranda.getScene());
+            stage.setTitle("Beranda");
         });
 
         tombolFrs.setOnAction(e -> {
@@ -60,33 +51,40 @@ public class HalamanBeranda {
             stage.setTitle("FRS");
         });
 
-        tombolLogout.setOnAction(e -> {
-            HalamanLogin login = new HalamanLogin(stage);
-            stage.setScene(login.getScene());
-            stage.setTitle("Login");
+        tombolJadwal.setOnAction(e -> {
+            HalamanJadwal jadwal = new HalamanJadwal(stage, mahasiswa);
+            stage.setScene(jadwal.getScene());
+            stage.setTitle("Jadwal");
+
         });
 
-        HBox tombolMenu = new HBox(50);
-        tombolMenu.setAlignment(Pos.CENTER);
-        tombolMenu.getChildren().addAll(tombolProfil, tombolJadwal, tombolFrs, tombolLogout);
+        menu.getChildren().addAll(tombolBeranda, tombolFrs, tombolJadwal);
 
-        VBox bagianMenu = new VBox(30);
-        bagianMenu.setAlignment(Pos.CENTER);
-        bagianMenu.setPadding(new Insets(40));
-        bagianMenu.getChildren().addAll(welcome, tombolMenu);
-        VBox.setVgrow(bagianMenu, Priority.ALWAYS);
-        HBox.setHgrow(bagianMenu, Priority.ALWAYS);
+        VBox profil = new VBox();
+        profil.setSpacing(15);
+        profil.setAlignment(Pos.TOP_CENTER);
+        profil.setPadding(new Insets(100, 40, 30, 40));
+        HBox.setHgrow(profil, Priority.ALWAYS);
 
-        // Bagian bawah
-        Label namaUniv = new Label("Unirvesitas Jaya Jaya");
-        namaUniv.setStyle("-fx-font-size : 15px; -fx-text-fill : #0B20A7;");
+        ImageView fotoProfil = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
+        fotoProfil.setFitWidth(200);
+        fotoProfil.setFitHeight(200);
+        fotoProfil.setPreserveRatio(true);
 
-        HBox bagianBawah = new HBox();
-        bagianBawah.setPrefHeight(100);
-        bagianBawah.setAlignment(Pos.BOTTOM_RIGHT);
-        bagianBawah.getChildren().addAll(namaUniv);
+        Label nama = new Label("Nama : " + mahasiswa.getNama());
+        nama.setStyle(setStyle());
+        Label npm = new Label("NPM : " + mahasiswa.getNPM());
+        npm.setStyle(setStyle());
 
-        layout.getChildren().addAll(header, bagianMenu, bagianBawah);
+        Label jurusan = new Label("Jurusan : " + mahasiswa.getNamaJurusan());
+        jurusan.setStyle(setStyle());
+
+        profil.getChildren().addAll(fotoProfil, nama, npm, jurusan);
+
+        HBox bagianTengah = new HBox();
+        bagianTengah.getChildren().addAll(menu, profil);
+
+        layout.getChildren().addAll(header, bagianTengah);
 
         return new Scene(layout, 1200, 750);
     }
@@ -98,7 +96,7 @@ public class HalamanBeranda {
         topBar.setPrefHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
-        Label title = new Label("BERANDA");
+        Label title = new Label("PROFIL");
         title.setStyle(
                 "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;" +
@@ -142,5 +140,9 @@ public class HalamanBeranda {
                 "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
 
         return button;
+    }
+
+    private String setStyle() {
+        return "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: black;";
     }
 }

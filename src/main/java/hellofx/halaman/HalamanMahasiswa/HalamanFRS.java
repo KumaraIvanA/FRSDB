@@ -1,4 +1,4 @@
-package hellofx.halaman;
+package hellofx.halaman.HalamanMahasiswa;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

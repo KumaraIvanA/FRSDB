@@ -1,6 +1,7 @@
 package hellofx.halaman;
 
 import hellofx.Database.KoneksiDB;
+import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

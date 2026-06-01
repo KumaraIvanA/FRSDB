@@ -42,14 +42,13 @@ public class HalamanBeranda {
         tombolProfil.setOnAction(e -> {
             HalamanProfil profil = new HalamanProfil(stage);
             stage.setScene(profil.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Profil");
         });
 
         tombolJadwal.setOnAction(e -> {
             HalamanJadwal jadwal = new HalamanJadwal(stage);
             stage.setScene(jadwal.getScene());
-            stage.setTitle("FRS");
-
+            stage.setTitle("Jadwal");
         });
 
         tombolFrs.setOnAction(e -> {
@@ -86,7 +85,7 @@ public class HalamanBeranda {
 
         layout.getChildren().addAll(header, bagianMenu, bagianBawah);
 
-        return new Scene(layout, 800, 500);
+        return new Scene(layout, 1200, 750);
     }
 
     private HBox createTopBar() {

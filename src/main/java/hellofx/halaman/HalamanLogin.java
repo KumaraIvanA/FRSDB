@@ -23,12 +23,6 @@ public class HalamanLogin {
         public Scene getScene() {
                 VBox layout = new VBox();
 
-                Label pageTitle = new Label("Halaman Login");
-                pageTitle.setStyle(
-                                "-fx-font-size: 16px;" +
-                                                "-fx-text-fill: #B8B8B8;" +
-                                                "-fx-font-weight: bold;");
-
                 Label loginTitle = new Label("Login");
                 loginTitle.setStyle(
                                 "-fx-font-size: 20px;" +
@@ -133,9 +127,9 @@ public class HalamanLogin {
 
                 VBox mainLayout = new VBox(10);
                 mainLayout.setPadding(new Insets(15, 18, 18, 18));
-                mainLayout.setStyle("-fx-background-color: #F2F2F2;");
-                mainLayout.getChildren().addAll(pageTitle, whiteArea);
+                mainLayout.setStyle("-fx-background-color: #FFFFFF;");
+                mainLayout.getChildren().addAll(whiteArea);
 
-                return new Scene(mainLayout, 650, 650);
+                return new Scene(mainLayout, 1200, 750);
         }
 }

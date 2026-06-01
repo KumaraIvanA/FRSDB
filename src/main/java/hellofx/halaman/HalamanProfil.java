@@ -39,7 +39,7 @@ public class HalamanProfil {
         tombolBeranda.setOnAction(e -> {
             HalamanBeranda beranda = new HalamanBeranda(stage);
             stage.setScene(beranda.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Beranda");
         });
 
         tombolFrs.setOnAction(e -> {
@@ -51,7 +51,7 @@ public class HalamanProfil {
         tombolJadwal.setOnAction(e -> {
             HalamanJadwal jadwal = new HalamanJadwal(stage);
             stage.setScene(jadwal.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Jadwal");
 
         });
 

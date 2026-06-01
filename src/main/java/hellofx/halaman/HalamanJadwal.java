@@ -43,7 +43,7 @@ public class HalamanJadwal {
         tombolProfil.setOnAction(e -> {
             HalamanProfil profil = new HalamanProfil(stage);
             stage.setScene(profil.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Profil");
         });
 
         tombolFrs.setOnAction(e -> {
@@ -55,7 +55,7 @@ public class HalamanJadwal {
         tombolBeranda.setOnAction(e -> {
             HalamanBeranda beranda = new HalamanBeranda(stage);
             stage.setScene(beranda.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Beranda");
         });
 
         menu.getChildren().addAll(tombolBeranda, tombolFrs, tombolProfil);

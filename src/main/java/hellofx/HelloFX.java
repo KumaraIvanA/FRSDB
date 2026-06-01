@@ -1,6 +1,7 @@
 package hellofx;
 
 import hellofx.halaman.HalamanLogin;
+import hellofx.halaman.HalamanDosen.HalamanBerandaDosen;
 import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
 import hellofx.halaman.HalamanMahasiswa.HalamanJadwal;
 import hellofx.halaman.HalamanMahasiswa.HalamanProfil;
@@ -13,7 +14,8 @@ public class HelloFX extends Application {
     @Override
     public void start(Stage stage) {
         HalamanLogin login = new HalamanLogin(stage);
-        stage.setScene(login.getScene());
+        HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
+        stage.setScene(berandaDosen.getScene());
         stage.setTitle("FRS App");
         stage.show();
     }

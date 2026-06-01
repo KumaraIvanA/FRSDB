@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -206,32 +207,59 @@ public class KoneksiDB {
         }
     }
 
-    public static ObservableList<MataKuliah> getAllMatakuliah(){
+    public static ObservableList<MataKuliah> getAllMatakuliah() {
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK" ;
+        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK";
 
         try (Connection conn = hubungkan();
-            PreparedStatement ps = conn.prepareStatement(sql)){
-                ResultSet rs = ps.executeQuery();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
 
-                while(rs.next()){
-                    int kodeMk = rs.getInt("kodeMK");
-                    String namaMK = rs.getString("namaMK");
-                    int jumlahSKS = rs.getInt("jumlahSKS");
-                    int idSemester = rs.getInt("idSemester");
-                    int idJurusan = rs.getInt("idJurusan");
+            while (rs.next()) {
+                int kodeMk = rs.getInt("kodeMK");
+                String namaMK = rs.getString("namaMK");
+                int jumlahSKS = rs.getInt("jumlahSKS");
+                int idSemester = rs.getInt("idSemester");
+                int idJurusan = rs.getInt("idJurusan");
 
-                    MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
-                    list.add(mk);
-                };
+                MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
+                list.add(mk);
+            }
+            ;
 
-            } catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("gagal");
             e.printStackTrace();
         }
 
         return list;
+    }
+    
+    public static Mahasiswa getDataMahasiswa(String email) {
+        String query = "SELECT nama, npm, namaJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
+
+        try (Connection connection = hubungkan();
+                PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nama = rs.getString("nama");
+                String npm = rs.getString("npm");
+                String namaJurusan = rs.getString("namaJurusan");
+
+                return new Mahasiswa(npm, nama, email, namaJurusan);
+            } else {
+                System.out.println("Mahasiswa Tidak Ditemukan");
+                return null;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

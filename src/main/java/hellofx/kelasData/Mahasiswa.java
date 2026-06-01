@@ -7,13 +7,13 @@ public class Mahasiswa {
     private SimpleStringProperty npm;
     private SimpleStringProperty nama;
     private SimpleStringProperty email;
-    private SimpleIntegerProperty idJurusan;
+    private SimpleStringProperty namaJurusan;
 
-    public Mahasiswa(String npm, String nama, String email, int idJurusan) {
+    public Mahasiswa(String npm, String nama, String email, String namaJurusan) {
         this.npm = new SimpleStringProperty(npm);
         this.nama = new SimpleStringProperty(nama);
         this.email = new SimpleStringProperty(email);
-        this.idJurusan = new SimpleIntegerProperty(idJurusan);
+        this.namaJurusan = new SimpleStringProperty(namaJurusan);
     }
 
     public String getNPM() {
@@ -28,13 +28,13 @@ public class Mahasiswa {
         return this.email.get();
     }
 
-    public int getIDJurusan() {
-        return this.idJurusan.get();
+    public String getNamaJurusan() {
+        return this.namaJurusan.get();
     }
 
     public SimpleStringProperty npmProperty(){ return npm;}
     public SimpleStringProperty namaProperty(){ return nama;}
     public SimpleStringProperty emailProperty(){ return email;}
-    public SimpleIntegerProperty idJurusanProperty(){ return idJurusan;}
+    public SimpleStringProperty namaJurusanProperty(){return namaJurusan;}
 
 }

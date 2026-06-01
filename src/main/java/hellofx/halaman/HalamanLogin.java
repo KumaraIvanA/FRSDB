@@ -1,6 +1,7 @@
 package hellofx.halaman;
 
 import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -90,7 +91,9 @@ public class HalamanLogin {
                         boolean loginberhasil = KoneksiDB.checkLogin(email, password);
 
                         if (loginberhasil) {
-                                HalamanBeranda beranda = new HalamanBeranda(stage);
+                                Mahasiswa mahasiswa = KoneksiDB.getDataMahasiswa(email);
+
+                                HalamanBeranda beranda = new HalamanBeranda(stage, mahasiswa);
                                 stage.setScene(beranda.getScene());
                                 stage.setTitle("FRS");
                         } else {

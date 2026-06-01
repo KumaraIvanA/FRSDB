@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -28,11 +29,13 @@ import javafx.stage.Stage;
 public class HalamanFRS {
     private Stage stage;
     private Label totalSksValue;
+    private Mahasiswa mahasiswa;
 
     private final Map<CheckBox, Course> courseMap = new LinkedHashMap<>();
 
-    public HalamanFRS(Stage stage) {
+    public HalamanFRS(Stage stage, Mahasiswa mahasiswa) {
         this.stage = stage;
+        this.mahasiswa = mahasiswa;
     }
 
     public Scene getScene() {
@@ -107,25 +110,25 @@ public class HalamanFRS {
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
 
         tombolProfil.setOnAction(e -> {
-            HalamanProfil profil = new HalamanProfil(stage);
+            HalamanProfil profil = new HalamanProfil(stage, mahasiswa);
             stage.setScene(profil.getScene());
             stage.setTitle("FRS");
         });
 
         tombolFrs.setOnAction(e -> {
-            HalamanFRS frs = new HalamanFRS(stage);
+            HalamanFRS frs = new HalamanFRS(stage, mahasiswa);
             stage.setScene(frs.getScene());
             stage.setTitle("FRS");
         });
 
         tombolBeranda.setOnAction(e -> {
-            HalamanBeranda beranda = new HalamanBeranda(stage);
+            HalamanBeranda beranda = new HalamanBeranda(stage, mahasiswa);
             stage.setScene(beranda.getScene());
             stage.setTitle("FRS");
         });
 
         tombolJadwal.setOnAction(e -> {
-            HalamanJadwal jadwal = new HalamanJadwal(stage);
+            HalamanJadwal jadwal = new HalamanJadwal(stage, mahasiswa);
             stage.setScene(jadwal.getScene());
             stage.setTitle("FRS");
         });

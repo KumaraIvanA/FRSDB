@@ -85,8 +85,9 @@ CREATE TABLE Teaches
     kodeMK int FOREIGN KEY REFERENCES MataKuliah (kodeMK) NOT NULL,
     nip char(18) FOREIGN KEY REFERENCES Dosen (nip) NOT NULL,
     kelas varchar(10) NOT NULL,
+	waktuMulai time,
     durasi int NULL,
-    tanggalWaktu datetime NULL,
+	hari varchar(10),
     jenisPertemuan varchar(50) NULL,
     metodePertemuan varchar(50) NULL,
 	PRIMARY KEY (idSemester, kodeMK, nip, kelas)

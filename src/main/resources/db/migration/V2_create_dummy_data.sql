@@ -30,7 +30,7 @@ VALUES (4)
 INSERT INTO MataKuliah (namaMK, jumlahSKS, idJurusan, idSemester)
 VALUES
 	('Manajemen Informasi dan Basis Data', 4, 1, 4),
-	('Analisis Data dengan Statistika dan R', 3, 1, 4),cu
+	('Analisis Data dengan Statistika dan R', 3, 1, 4),
 	('Analisis dan Desain Perangkat Lunak', 2, 1, 4)
 
 
@@ -43,4 +43,4 @@ VALUES
 
 INSERT INTO Teaches
 VALUES
-	(4, 1, '196502201992031002', 'A', 90, '2026-05-29 18:00:00', 'Daring', 'Praktikum')
+	(4, 1, '196502201992031002', 'A', '18:00:00', 90, 'senin', 'Daring', 'Praktikum')

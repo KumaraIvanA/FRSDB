@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 
 public class KoneksiDB {
     private static Connection conn = null;
+    
     public static Connection hubungkan() {
 		// if (conn != null) {
 		// 	return conn;

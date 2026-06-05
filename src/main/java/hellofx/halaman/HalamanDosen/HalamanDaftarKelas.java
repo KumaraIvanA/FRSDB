@@ -1,6 +1,7 @@
 package hellofx.halaman.HalamanDosen;
 
 import hellofx.halaman.HalamanLogin;
+import hellofx.kelasData.Dosen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -17,9 +18,11 @@ import javafx.stage.Stage;
 
 public class HalamanDaftarKelas {
     private Stage stage;
+    private Dosen dosen;
 
-    public HalamanDaftarKelas(Stage stage) {
+    public HalamanDaftarKelas(Stage stage, Dosen dosen) {
         this.stage = stage;
+        this.dosen = dosen;
     }
 
     public Scene getScene() {
@@ -32,20 +35,20 @@ public class HalamanDaftarKelas {
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
       
         tombolProfil.setOnAction(e -> {
-            HalamanProfilDosen profil = new HalamanProfilDosen(stage);
+            HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
             stage.setScene(profil.getScene());
             stage.setTitle("FRS");
         });
 
         tombolJadwal.setOnAction(e -> {
-            HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage);
+            HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage, dosen);
             stage.setScene(jadwal.getScene());
             stage.setTitle("FRS");
 
         });
 
         tombolBeranda.setOnAction(e -> {
-            HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
+            HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage, dosen);
             stage.setScene(berandaDosen.getScene());
             stage.setTitle("FRS");
         });

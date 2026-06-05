@@ -3,6 +3,7 @@ package hellofx.halaman;
 import hellofx.Database.KoneksiDB;
 import hellofx.halaman.HalamanDosen.HalamanBerandaDosen;
 import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
+import hellofx.kelasData.Dosen;
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -99,9 +100,11 @@ public class HalamanLogin {
                                 stage.setScene(beranda.getScene());
                                 stage.setTitle("FRS");
                         } else if (loginDosenberhail){
-                                HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
+                                Dosen dosen = KoneksiDB.getDataDosen(email);
+
+                                HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage, dosen);
                                 stage.setScene(berandaDosen.getScene());
-                                stage.setTitle("FRS");
+                                stage.setTitle("Beranda Dosen");
                         }else{
                                 messageLabel.setText("Salah email atau password");
                                 messageLabel.setStyle("-fx-text-fill: red;");

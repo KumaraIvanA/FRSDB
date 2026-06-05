@@ -258,12 +258,13 @@ public class KoneksiDB {
         return list;
     }
     
-    public static ObservableList<JadwalKelas> getAllJadwal() {
+    public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk";
+        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
 
         try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idSemester);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -363,7 +364,7 @@ public class KoneksiDB {
                     ORDER BY tahunAjaran,
                              CASE
                                 WHEN jenis = 'Ganjil' THEN 1
-                                WHEN jenis = 'Genap' THEN 2
+                                WHEN jenis = 'Genap' THEN 2 
                                 ELSE 3
                              END
                 """;

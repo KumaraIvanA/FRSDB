@@ -31,7 +31,14 @@ INSERT INTO MataKuliah (namaMK, jumlahSKS, idJurusan, idSemester)
 VALUES
 	('Manajemen Informasi dan Basis Data', 4, 1, 4),
 	('Analisis Data dengan Statistika dan R', 3, 1, 4),
-	('Analisis dan Desain Perangkat Lunak', 2, 1, 4)
+	('Analisis dan Desain Perangkat Lunak', 2, 1, 4),
+	('Dasar Pemograman',4, 1, 1 ),
+	('Matematika Dasar',4, 1, 1 ),
+	('Matematika Diskret',4, 1, 1 ),
+	('Algoritma Pemograman',4, 1, 2 ),
+	('Logika Informatika',3, 1, 2 ),
+	('Struktur Diskret',3, 1, 3),
+	('Algoritma Struktur Data',4, 1, 3)
 
 
 INSERT INTO Enroll
@@ -43,7 +50,7 @@ VALUES
 
 INSERT INTO Teaches
 VALUES
-	(4, 1, '196502201992031002', 'A', '18:00:00', 90, 'senin', 'Daring', 'Praktikum')
+	(4, 1, '196502201992031002', 'A', '10:00:00', 90, 'senin', 'Daring', 'Praktikum')
 
 INSERT INTO Teaches
 VALUES
@@ -52,3 +59,64 @@ VALUES
 INSERT INTO Teaches
 VALUES
 	(4, 2, '196502201992031002', 'A', '15:00:00', 90, 'rabu', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(1, 4, '196502201992031002', 'A', '08:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(1, 5, '196502201992031002', 'A', '10:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(1, 6, '196502201992031002', 'A', '15:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(1, 4, '196502201992031002', 'A', '15:00:00', 90, 'Rabu', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(1, 5, '196502201992031002', 'A', '08:00:00', 90, 'Rabu', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(1, 6, '196502201992031002', 'A', '10:00:00', 90, 'Rabu', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(1, 4, '196502201992031002', 'A', '08:00:00', 90, 'Jumat', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(2, 7, '196502201992031002', 'A', '08:00:00', 90, 'Senin', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(2, 8, '196502201992031002', 'A', '10:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(2, 9, '196502201992031002', 'A', '15:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(2, 7, '196502201992031002', 'A', '15:00:00', 90, 'Rabu', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(2, 7, '196502201992031002', 'A', '08:00:00', 90, 'Jumat', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(3, 10, '196502201992031002', 'A', '10:00:00', 90, 'Senin', 'Daring', 'Kelas')
+
+INSERT INTO Teaches
+VALUES
+	(3, 10, '196502201992031002', 'A', '15:00:00', 90, 'Rabu', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(3, 10, '196502201992031002', 'A', '08:00:00', 90, 'Jumat', 'Daring', 'Praktikum')
+

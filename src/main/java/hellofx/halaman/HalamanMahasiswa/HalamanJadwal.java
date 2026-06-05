@@ -131,7 +131,6 @@ public class HalamanJadwal {
 
         jadwal.setItems(data);
 
-
         HBox bagianTengah = new HBox();
         bagianTengah.setStyle("-fx-background-color : #ffffff");
         bagianTengah.setPadding(new Insets(35, 0, 0, 0));

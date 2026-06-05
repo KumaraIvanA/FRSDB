@@ -33,7 +33,7 @@ public class HalamanDaftarKelas {
         Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
-      
+
         tombolProfil.setOnAction(e -> {
             HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
             stage.setScene(profil.getScene());
@@ -53,7 +53,20 @@ public class HalamanDaftarKelas {
             stage.setTitle("FRS");
         });
 
-        layout.getChildren().addAll(header);
+        VBox menu = new VBox();
+        menu.setPadding(new Insets(10, 0, 10, 0));
+        menu.setSpacing(25);
+        menu.setPrefWidth(200);
+
+        menu.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal);
+
+        HBox bagianTengah = new HBox();
+        bagianTengah.setStyle("-fx-background-color : #ffffff");
+        bagianTengah.setPadding(new Insets(35, 0, 0, 0));
+        VBox.setVgrow(bagianTengah, Priority.ALWAYS);
+        bagianTengah.getChildren().addAll(menu);
+
+        layout.getChildren().addAll(header, bagianTengah);
 
         return new Scene(layout, 1200, 750);
     }
@@ -65,7 +78,7 @@ public class HalamanDaftarKelas {
         topBar.setPrefHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
-        Label title = new Label("BERANDA");
+        Label title = new Label("DAFTAR KELAS");
         title.setStyle(
                 "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;" +

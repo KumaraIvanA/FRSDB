@@ -29,7 +29,42 @@ public class HalamanJadwalDosen {
 
         HBox header = createTopBar();
 
-        layout.getChildren().addAll(header);
+        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
+        Button tombolProfil = tombolIcon("user (1).png", "Profil");
+        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
+
+        tombolBeranda.setOnAction(e -> {
+            HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage, dosen);
+            stage.setScene(berandaDosen.getScene());
+            stage.setTitle("FRS");
+        });
+
+        tombolProfil.setOnAction(e -> {
+            HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
+            stage.setScene(profil.getScene());
+            stage.setTitle("FRS");
+        });
+
+        tombolDaftarKelas.setOnAction(e -> {
+            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage, dosen);
+            stage.setScene(daftarKelas.getScene());
+            stage.setTitle("FRS");
+        });
+
+        VBox menu = new VBox();
+        menu.setPadding(new Insets(10, 0, 10, 0));
+        menu.setSpacing(25);
+        menu.setPrefWidth(200);
+
+        menu.getChildren().addAll(tombolBeranda, tombolProfil, tombolDaftarKelas);
+
+        HBox bagianTengah = new HBox();
+        bagianTengah.setStyle("-fx-background-color : #ffffff");
+        bagianTengah.setPadding(new Insets(35, 0, 0, 0));
+        VBox.setVgrow(bagianTengah, Priority.ALWAYS);
+        bagianTengah.getChildren().addAll(menu);
+
+        layout.getChildren().addAll(header, bagianTengah);
 
         return new Scene(layout, 1200, 750);
     }
@@ -41,7 +76,7 @@ public class HalamanJadwalDosen {
         topBar.setPrefHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
-        Label title = new Label("BERANDA");
+        Label title = new Label("JADWAL");
         title.setStyle(
                 "-fx-font-size: 24px;" +
                         "-fx-font-weight: bold;" +

@@ -53,9 +53,8 @@ public class HalamanProfilDosen {
         container.setAlignment(Pos.TOP_CENTER);
         container.setStyle(
                 "-fx-background-color: white;"
-                + "-fx-background-radius: 18;"
-                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);"
-        );
+                        + "-fx-background-radius: 18;"
+                        + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);");
 
         ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         avatar.setFitWidth(120);
@@ -77,17 +76,15 @@ public class HalamanProfilDosen {
         dataCard.setMaxWidth(650);
         dataCard.setStyle(
                 "-fx-background-color: #F8FAFC;"
-                + "-fx-background-radius: 14;"
-                + "-fx-border-color: #E2E8F0;"
-                + "-fx-border-radius: 14;"
-        );
+                        + "-fx-background-radius: 14;"
+                        + "-fx-border-color: #E2E8F0;"
+                        + "-fx-border-radius: 14;");
 
         dataCard.getChildren().addAll(
                 createInfoRow("NIP", dosen.getNip()),
                 createInfoRow("Nama", dosen.getNama()),
                 createInfoRow("Email", dosen.getEmail()),
-                createInfoRow("Jurusan", dosen.getNamaJurusan())
-        );
+                createInfoRow("Jurusan", dosen.getNamaJurusan()));
 
         container.getChildren().addAll(avatar, identityBox, dataCard);
 
@@ -118,16 +115,16 @@ public class HalamanProfilDosen {
         Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
+        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
 
         tombolProfil.setStyle(
                 "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #0F2D7A;"
-                + "-fx-background-radius: 12;"
-                + "-fx-border-color: #60A5FA;"
-                + "-fx-border-width: 7;"
-                + "-fx-border-radius: 12;"
-        );
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #0F2D7A;"
+                        + "-fx-background-radius: 12;"
+                        + "-fx-border-color: #60A5FA;"
+                        + "-fx-border-width: 7;"
+                        + "-fx-border-radius: 12;");
 
         // Nanti aktifkan kalau class-nya sudah ada
         tombolBeranda.setOnAction(e -> {
@@ -136,12 +133,19 @@ public class HalamanProfilDosen {
             stage.setTitle("Beranda Dosen");
         });
 
-        // tombolJadwal.setOnAction(e -> {
-        //     HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage);
-        //     stage.setScene(jadwal.getScene());
-        //     stage.setTitle("Jadwal Dosen");
-        // });
-        menu.getChildren().addAll(tombolBeranda, tombolJadwal, tombolProfil);
+        tombolJadwal.setOnAction(e -> {
+            HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage, dosen);
+            stage.setScene(jadwal.getScene());
+            stage.setTitle("Jadwal Dosen");
+        });
+
+        tombolDaftarKelas.setOnAction(e -> {
+            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage, dosen);
+            stage.setScene(daftarKelas.getScene());
+            stage.setTitle("FRS");
+        });
+
+        menu.getChildren().addAll(tombolBeranda, tombolJadwal,tombolDaftarKelas,  tombolProfil);
         return menu;
     }
 
@@ -155,9 +159,8 @@ public class HalamanProfilDosen {
         Label title = new Label("PROFIL DOSEN");
         title.setStyle(
                 "-fx-font-size: 26px;"
-                + "-fx-font-weight: bold;"
-                + "-fx-text-fill: white;"
-        );
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -194,11 +197,10 @@ public class HalamanProfilDosen {
         button.setCursor(Cursor.HAND);
         button.setStyle(
                 "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #1E3A8A;"
-                + "-fx-text-fill: white;"
-                + "-fx-background-radius: 12;"
-        );
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #1E3A8A;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-background-radius: 12;");
 
         return button;
     }

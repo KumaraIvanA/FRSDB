@@ -1,5 +1,6 @@
 package hellofx.halaman.HalamanDosen;
 
+import hellofx.kelasData.Dosen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -17,9 +18,11 @@ import javafx.stage.Stage;
 public class HalamanProfilDosen {
 
     private Stage stage;
+    private Dosen dosen;
 
-    public HalamanProfilDosen(Stage stage) {
+    public HalamanProfilDosen(Stage stage, Dosen dosen) {
         this.stage = stage;
+        this.dosen = dosen;
     }
 
     public Scene getScene() {
@@ -59,7 +62,7 @@ public class HalamanProfilDosen {
         avatar.setFitHeight(120);
         avatar.setPreserveRatio(true);
 
-        Label nama = new Label("Nama Dosen");
+        Label nama = new Label(dosen.getNama());
         nama.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
 
         Label role = new Label("Dosen Universitas Jaya Jaya");
@@ -80,10 +83,10 @@ public class HalamanProfilDosen {
         );
 
         dataCard.getChildren().addAll(
-                createInfoRow("NIP", "197001012005011001"),
-                createInfoRow("Nama", "Nama Dosen"),
-                createInfoRow("Email", "dosen@email.com"),
-                createInfoRow("Jurusan", "Informatika")
+                createInfoRow("NIP", dosen.getNip()),
+                createInfoRow("Nama", dosen.getNama()),
+                createInfoRow("Email", dosen.getEmail()),
+                createInfoRow("Jurusan", dosen.getNamaJurusan())
         );
 
         container.getChildren().addAll(avatar, identityBox, dataCard);
@@ -119,16 +122,16 @@ public class HalamanProfilDosen {
         tombolProfil.setStyle(
                 "-fx-pref-width: 100;"
                 + "-fx-pref-height: 100;"
-                + "-fx-background-color: #162F75;"
-                + "-fx-text-fill: white;"
+                + "-fx-background-color: #0F2D7A;"
                 + "-fx-background-radius: 12;"
-                + "-fx-border-color: white;"
-                + "-fx-border-width: 0 0 0 5;"
+                + "-fx-border-color: #60A5FA;"
+                + "-fx-border-width: 7;"
+                + "-fx-border-radius: 12;"
         );
 
         // Nanti aktifkan kalau class-nya sudah ada
         tombolBeranda.setOnAction(e -> {
-            HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage);
+            HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage, dosen);
             stage.setScene(beranda.getScene());
             stage.setTitle("Beranda Dosen");
         });

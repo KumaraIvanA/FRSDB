@@ -1,5 +1,6 @@
 package hellofx.halaman.HalamanDosen;
 
+import hellofx.kelasData.Dosen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -16,9 +17,11 @@ import javafx.stage.Stage;
 
 public class HalamanJadwalDosen {
     private Stage stage;
+    private Dosen dosen;
 
-    public HalamanJadwalDosen(Stage stage) {
-        this.stage = new Stage();
+    public HalamanJadwalDosen(Stage stage, Dosen dosen) {
+        this.stage = stage;
+        this.dosen = dosen;
     }
 
     public Scene getScene() {

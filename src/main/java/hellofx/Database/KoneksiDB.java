@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import hellofx.kelasData.JadwalKelas;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import javafx.collections.FXCollections;
@@ -227,7 +228,7 @@ public class KoneksiDB {
         }
     }
 
-    public static ObservableList<MataKuliah> getAllMatakuliah(){
+    public static ObservableList<MataKuliah> getAllMatakuliah() {
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
         String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK";
@@ -250,6 +251,32 @@ public class KoneksiDB {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.out.println("gagal");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    public static ObservableList<JadwalKelas> getAllJadwal() {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk";
+
+        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String namaMk = rs.getString("namaMk");
+                String kelas = rs.getString("kelas");
+                String waktuMulai = rs.getString("waktuMulai");
+                int durasi = rs.getInt("durasi");
+                String hari = rs.getString("hari");
+
+                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                list.add(jadwal);
+            }
+        } catch (Exception e) {
             System.out.println("gagal");
             e.printStackTrace();
         }

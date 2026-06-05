@@ -44,3 +44,11 @@ VALUES
 INSERT INTO Teaches
 VALUES
 	(4, 1, '196502201992031002', 'A', '18:00:00', 90, 'senin', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(4, 2, '196502201992031002', 'A', '15:00:00', 90, 'senin', 'Daring', 'Praktikum')
+
+INSERT INTO Teaches
+VALUES
+	(4, 2, '196502201992031002', 'A', '15:00:00', 90, 'rabu', 'Daring', 'Praktikum')

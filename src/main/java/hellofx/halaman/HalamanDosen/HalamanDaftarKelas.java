@@ -27,11 +27,10 @@ public class HalamanDaftarKelas {
 
         HBox header = createTopBar();
 
+        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
-        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
-        Button tombolLogout = tombolIcon("logout.png", "Logout");
-
+      
         tombolProfil.setOnAction(e -> {
             HalamanProfilDosen profil = new HalamanProfilDosen(stage);
             stage.setScene(profil.getScene());
@@ -45,16 +44,10 @@ public class HalamanDaftarKelas {
 
         });
 
-        tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage);
-            stage.setScene(daftarKelas.getScene());
+        tombolBeranda.setOnAction(e -> {
+            HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
+            stage.setScene(berandaDosen.getScene());
             stage.setTitle("FRS");
-        });
-
-        tombolLogout.setOnAction(e -> {
-            HalamanLogin login = new HalamanLogin(stage);
-            stage.setScene(login.getScene());
-            stage.setTitle("Login");
         });
 
         layout.getChildren().addAll(header);

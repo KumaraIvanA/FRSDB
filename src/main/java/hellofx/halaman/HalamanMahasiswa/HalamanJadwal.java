@@ -1,12 +1,22 @@
 package hellofx.halaman.HalamanMahasiswa;
 
+import hellofx.kelasData.JadwalKelas;
 import hellofx.kelasData.Mahasiswa;
+import hellofx.Database.KoneksiDB;
+import hellofx.kelasData.Jadwal;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -16,6 +26,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HalamanJadwal {
     private Stage stage;
@@ -63,52 +77,56 @@ public class HalamanJadwal {
 
         menu.getChildren().addAll(tombolBeranda, tombolFrs, tombolProfil);
 
-        VBox kolomSenin = kolomHari("Senin");
-        VBox kolomSelasa = kolomHari("Selasa");
-        VBox kolomRabu = kolomHari("Rabu");
-        VBox kolomKamis = kolomHari("Kamis");
-        VBox kolomJumat = kolomHari("Jumat");
-        VBox kolomSabtu = kolomHari("Sabtu");
+        TableView<Jadwal> jadwal = new TableView<>();
+        jadwal.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        TableColumn<Jadwal, String> jam = new TableColumn<>("Jam");
+        jam.setCellValueFactory(new PropertyValueFactory<>("jam"));
+        TableColumn<Jadwal, String> senin = new TableColumn<>("Senin");
+        senin.setCellValueFactory(new PropertyValueFactory<>("senin"));
+        TableColumn<Jadwal, String> selasa = new TableColumn<>("Selasa");
+        selasa.setCellValueFactory(new PropertyValueFactory<>("selasa"));
+        TableColumn<Jadwal, String> rabu = new TableColumn<>("Rabu");
+        rabu.setCellValueFactory(new PropertyValueFactory<>("rabu"));
+        TableColumn<Jadwal, String> kamis = new TableColumn<>("Kamis");
+        kamis.setCellValueFactory(new PropertyValueFactory<>("kamis"));
+        TableColumn<Jadwal, String> jumat = new TableColumn<>("Jumat");
+        jumat.setCellValueFactory(new PropertyValueFactory<>("jumat"));
+        TableColumn<Jadwal, String> sabtu = new TableColumn<>("Sabtu");
+        sabtu.setCellValueFactory(new PropertyValueFactory<>("sabtu"));
 
-        HBox jadwal = new HBox();
-        jadwal.setStyle("-fx-background-color : #ffffff");
-        jadwal.setFillHeight(true);
-        jadwal.setPadding(new Insets(0));
-        VBox.setVgrow(jadwal, Priority.ALWAYS);
-        HBox.setHgrow(jadwal, Priority.ALWAYS);
+        jadwal.getColumns().addAll(jam, senin, selasa, rabu, kamis, jumat, sabtu);
 
-        jadwal.setSpacing(10);
-        jadwal.setPadding(new Insets(0, 5, 10, 5));
-        jadwal.getChildren().addAll(kolomSenin, kolomSelasa, kolomRabu, kolomKamis, kolomJumat, kolomSabtu);
+        LinkedHashMap<String, Jadwal> data2 = new LinkedHashMap<>();
 
-        for (var kolom : jadwal.getChildren()) {
-            HBox.setHgrow((VBox) kolom, Priority.ALWAYS);
+        for (int i = 7; i <= 18; i++) {
+            String jamValue = String.format("%02d:00", i);
+            data2.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
         }
 
-        VBox kontenJadwal = new VBox();
-        kontenJadwal.setStyle("-fx-background-color : #ffffff");
-        VBox.setVgrow(kontenJadwal, Priority.ALWAYS);
-        HBox.setHgrow(kontenJadwal, Priority.ALWAYS);
+        ObservableList<JadwalKelas> list = KoneksiDB.getAllJadwal();
 
-        kontenJadwal.getChildren().addAll(jadwal);
+        for (JadwalKelas x : list) {
+            ambilJadwal(data2, x);
+            int jamSekarang = Integer.parseInt(x.getWaktuMulai().substring(0, 2));
+            int durasi = x.getDurasi();
+            int ct = 60;
 
-        kolomSenin.getChildren().add(
-                buatKotakJadwal("Bahasa Indonesia", "Ruangan 08.101", "Kelas C", "08:00", "11:00", "#AAAAAA"));
+            while (ct < durasi) {
+                jamSekarang++;
+                
+            }
+        }
 
-        kolomSenin.getChildren().add(
-                buatKotakJadwal("Matematika Dasar", "Ruangan 10.109", "Kelas B", "12:00", "14:00", "#C040A0"));
+        ObservableList<Jadwal> data = FXCollections.observableArrayList(data2.values());
 
-        kolomKamis.getChildren().add(
-                buatKotakJadwal("Pemrograman Kompetitif", "Ruangan 09.0.01", "Kelas A", "09:00", "11:00", "#00BCD4"));
+        jadwal.setItems(data);
 
-        kolomJumat.getChildren().add(
-                buatKotakJadwal("Dasar Pemrograman", "Ruangan 10.130", "Kelas C", "08:00", "11:00", "#8BC34A"));
 
         HBox bagianTengah = new HBox();
         bagianTengah.setStyle("-fx-background-color : #ffffff");
         bagianTengah.setPadding(new Insets(35, 0, 0, 0));
         VBox.setVgrow(bagianTengah, Priority.ALWAYS);
-        bagianTengah.getChildren().addAll(menu, kontenJadwal);
+        bagianTengah.getChildren().addAll(menu, jadwal);
 
         HBox bagianBawah = new HBox();
         bagianBawah.setPrefHeight(100);
@@ -147,6 +165,37 @@ public class HalamanJadwal {
         topBar.getChildren().addAll(title, spacer, notif, profile);
 
         return topBar;
+    }
+
+    private void ambilJadwal(Map<String, Jadwal> map, JadwalKelas mk) {
+        Jadwal temp = map.get(mk.getWaktuMulai().substring(0, 5));
+
+        if (temp == null) {
+            return;
+        }
+
+        switch (mk.getHari().toLowerCase()) {
+            case "senin":
+                temp.setSenin(mk);
+                break;
+            case "selasa":
+                temp.setSelasa(mk);;
+                break;
+            case "rabu":
+                temp.setRabu(mk);
+                break;
+            case "kamis":
+                temp.setKamis(mk);
+                break;
+            case "jumat":
+                temp.setJumat(mk);
+                break;
+            case "sabtu":
+                temp.setSabtu(mk);
+                break;
+            default:
+                break;
+        }
     }
 
     private VBox kolomHari(String hari) {
@@ -188,31 +237,5 @@ public class HalamanJadwal {
                 "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
 
         return button;
-    }
-
-    private VBox buatKotakJadwal(String namaMK, String ruangan, String kelas, String jamMulai, String jamSelesai,
-            String warna) {
-        Label lblJam = new Label(jamMulai + " - " + jamSelesai);
-        lblJam.setStyle("-fx-font-size: 10px; -fx-text-fill: white; -fx-font-weight: bold;");
-
-        Label lblNama = new Label(namaMK);
-        lblNama.setWrapText(true);
-        lblNama.setStyle("-fx-font-size: 11px; -fx-text-fill: white; -fx-font-weight: bold;");
-
-        Label lblRuangan = new Label(ruangan);
-        lblRuangan.setStyle("-fx-font-size: 10px; -fx-text-fill: white;");
-
-        Label lblKelas = new Label(kelas);
-        lblKelas.setStyle("-fx-font-size: 10px; -fx-text-fill: white;");
-
-        VBox kotak = new VBox(3);
-        kotak.setPadding(new Insets(6));
-        kotak.setMaxWidth(Double.MAX_VALUE);
-        kotak.setStyle(
-                "-fx-background-color: " + warna + ";" +
-                        "-fx-background-radius: 6;");
-        kotak.getChildren().addAll(lblJam, lblNama, lblRuangan, lblKelas);
-
-        return kotak;
     }
 }

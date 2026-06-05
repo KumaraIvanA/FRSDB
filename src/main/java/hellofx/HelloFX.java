@@ -15,7 +15,7 @@ public class HelloFX extends Application {
     public void start(Stage stage) {
         HalamanLogin login = new HalamanLogin(stage);
         HalamanBerandaDosen berandaDosen = new HalamanBerandaDosen(stage);
-        stage.setScene(berandaDosen.getScene());
+        stage.setScene(login.getScene());
         stage.setTitle("FRS App");
         stage.show();
     }

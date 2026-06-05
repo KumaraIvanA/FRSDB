@@ -90,5 +90,5 @@ CREATE TABLE Teaches
 	hari varchar(10),
     jenisPertemuan varchar(50) NULL,
     metodePertemuan varchar(50) NULL,
-	PRIMARY KEY (idSemester, kodeMK, nip, kelas)
+	PRIMARY KEY (idSemester, kodeMK, nip, kelas, hari)
 )

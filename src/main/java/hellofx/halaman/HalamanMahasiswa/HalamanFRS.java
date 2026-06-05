@@ -1,11 +1,13 @@
 package hellofx.halaman.HalamanMahasiswa;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import hellofx.Database.KoneksiDB;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
+import hellofx.kelasData.Semester;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,6 +32,7 @@ public class HalamanFRS {
     private Stage stage;
     private Label totalSksValue;
     private Mahasiswa mahasiswa;
+    private ComboBox<Semester> semesterBox;
 
     private final Map<CheckBox, Course> courseMap = new LinkedHashMap<>();
 
@@ -137,31 +140,38 @@ public class HalamanFRS {
 
         return sidebar;
     }
-    
+
     private VBox createCenterContent() {
         VBox center = new VBox(12);
         center.setAlignment(Pos.TOP_CENTER);
         center.setPrefWidth(560);
 
-        ComboBox<String> semesterBox = new ComboBox<>();
-        semesterBox.getItems().addAll(
-                "Semester Ganjil 2024",
-                "Semester Genap 2024",
-                "Semester Ganjil 2025");
-        semesterBox.setValue("Semester Ganjil 2024");
-        semesterBox.setPrefWidth(350);
-        semesterBox.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-color: #F8F3F3;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-color: #D6D0D0;" +
-                        "-fx-border-radius: 10;");
+        semesterBox = new ComboBox<>();
+        semesterBox.setItems(KoneksiDB.getAllSemester());
+
+        if (!semesterBox.getItems().isEmpty()) {
+            semesterBox.setValue(semesterBox.getItems().get(0));
+        }
 
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
 
-        loadMataKuliahFromDB(courseList);
+        if (semesterBox.getValue() != null) {
+            loadMataKuliahFromDB(courseList);
+        }
+
+        semesterBox.setOnAction(e -> {
+            courseList.getChildren().clear();
+            courseMap.clear();
+
+            Semester selectedSemester = semesterBox.getValue();
+
+            if (selectedSemester != null) {
+                loadMataKuliahFromDB(courseList);
+            }
+
+            updateTotalSks();
+        });
 
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
@@ -191,7 +201,7 @@ public class HalamanFRS {
                 semesterSebelumnya = semesterSekarang;
             }
 
-            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false);
+            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false, mk.getkodeMK());
             addCourseRow(courselist, course);
         }
 
@@ -230,12 +240,12 @@ public class HalamanFRS {
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #1D1D1D;");
 
-        Label kodeLabel = new Label(course.kodeMK);
-        kodeLabel.setPrefWidth(105);
-        kodeLabel.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #1D1D1D;");
+        // Label kodeLabel = new Label(course.kodeMK);
+        // kodeLabel.setPrefWidth(105);
+        // kodeLabel.setStyle(
+        // "-fx-font-size: 18px;" +
+        // "-fx-font-weight: bold;" +
+        // "-fx-text-fill: #1D1D1D;");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(course.selected);
@@ -249,7 +259,7 @@ public class HalamanFRS {
             updateTotalSks();
         });
 
-        row.getChildren().addAll(nameLabel, kodeLabel, checkBox);
+        row.getChildren().addAll(nameLabel, checkBox);
         parent.getChildren().add(row);
     }
 
@@ -282,6 +292,38 @@ public class HalamanFRS {
                         "-fx-cursor: hand;");
 
         submitButton.setOnAction(e -> {
+            Semester semesterRN = semesterBox.getValue();
+
+            ArrayList<Course> selectedCourse = new ArrayList<>();
+            for (Map.Entry<CheckBox, Course> entry : courseMap.entrySet()) {
+                if (entry.getKey().isSelected()) {
+                    selectedCourse.add(entry.getValue());
+                }
+            }
+
+            if (selectedCourse.isEmpty()) {
+                Alert warn = new Alert(Alert.AlertType.WARNING);
+                warn.initOwner(stage);
+                warn.setHeaderText("Belum ada mata kuliah yang dipilih");
+                warn.showAndWait();
+                return;
+            }
+
+            // dia akan membuat idBaru pada setiap kali submit dipencet
+            int idFRS = KoneksiDB.makeNewIdFRS(semesterRN.getIdSemester());
+
+            // kalo dia gagal
+            if (idFRS == -1) {
+                Alert err = new Alert(Alert.AlertType.ERROR);
+                err.initOwner(stage);
+                err.setHeaderText("Gagal membuat FRS baru");
+                err.setContentText("Data tidak dapat disimpan. Coba lagi.");
+                err.showAndWait();
+                return;
+            }
+
+            KoneksiDB.isiDataEnroll(selectedCourse, mahasiswa.getNPM(), semesterRN.getIdSemester(), idFRS);
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.initOwner(stage);
             alert.setTitle("Submit FRS");
@@ -297,9 +339,9 @@ public class HalamanFRS {
         return right;
     }
 
-     private Button tombolIcon(String pathIcon, String teks) {
+    private Button tombolIcon(String pathIcon, String teks) {
         ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/" + pathIcon)));
-        
+
         image.setFitWidth(35);
         image.setFitHeight(35);
         image.setPreserveRatio(true);
@@ -337,17 +379,29 @@ public class HalamanFRS {
         }
     }
 
-    private static class Course {
+    public static class Course {
+        int kodeMK;
         String namaMK;
-        String kodeMK;
         int sks;
         boolean selected;
 
-        Course(String namaMK, int sks, boolean selected) {
-            this.namaMK = namaMK;
+        Course(String namaMK, int sks, boolean selected, int kodeMK) {
             this.kodeMK = kodeMK;
+            this.namaMK = namaMK;
             this.sks = sks;
             this.selected = selected;
+        }
+
+        public String getNamaMK() {
+            return namaMK;
+        }
+
+        public int getSks() {
+            return sks;
+        }
+
+        public int getKodeMK() {
+            return kodeMK;
         }
     }
 }

@@ -8,11 +8,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-<<<<<<< HEAD
 import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
-=======
 import hellofx.kelasData.Dosen;
->>>>>>> 637297dc11c6f3cd92f02fb225f38b300ad70a23
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import hellofx.kelasData.Semester;
@@ -30,7 +27,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
                 + "user=sa;"
-                + "password=passowrd;"
+                + "password=password;"
                 + "encrypt=true;"
                 + "trustServerCertificate=true;"
                 + "loginTimeout=30;";

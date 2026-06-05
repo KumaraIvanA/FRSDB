@@ -8,7 +8,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
+=======
+import hellofx.kelasData.Dosen;
+>>>>>>> 637297dc11c6f3cd92f02fb225f38b300ad70a23
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import hellofx.kelasData.Semester;
@@ -281,7 +285,33 @@ public class KoneksiDB {
 
                 return new Mahasiswa(npm, nama, email, namaJurusan);
             } else {
-                System.out.println("Mahasiswa Tidak Ditemukan");
+                System.out.println("Data Mahasiswa Tidak Ditemukan");
+                return null;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public  static Dosen getDataDosen(String email) {
+        String query = "SELECT nama, nip, namaJurusan FROM Dosen JOIN Jurusan ON Dosen.idJurusan = Jurusan.idJurusan WHERE email = ?";
+
+        try (Connection connection = hubungkan();
+                PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nama = rs.getString("nama");
+                String nip = rs.getString("nip");
+                String namaJurusan = rs.getString("namaJurusan");
+
+                return new Dosen(nip, nama, email, namaJurusan);
+            } else {
+                System.out.println("Data Dosen Tidak Ditemukan");
                 return null;
             }
 

@@ -38,6 +38,10 @@ public class JadwalKelas {
         return this.hari.get();
     }
 
+    public void setJam(String jam) {
+        this.waktuMulai = new SimpleStringProperty(jam);
+    }
+
     public SimpleStringProperty NamaMkProperty(){return namaMk;}
     public SimpleStringProperty kelasProperty(){return kelas;}
     public SimpleStringProperty waktuMulaiProperty(){return waktuMulai;}

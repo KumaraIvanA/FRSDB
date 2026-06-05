@@ -78,6 +78,7 @@ public class HalamanJadwal {
         menu.getChildren().addAll(tombolBeranda, tombolFrs, tombolProfil);
 
         TableView<Jadwal> jadwal = new TableView<>();
+        jadwal.setFixedCellSize(35);
         jadwal.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         TableColumn<Jadwal, String> jam = new TableColumn<>("Jam");
         jam.setCellValueFactory(new PropertyValueFactory<>("jam"));
@@ -96,6 +97,11 @@ public class HalamanJadwal {
 
         jadwal.getColumns().addAll(jam, senin, selasa, rabu, kamis, jumat, sabtu);
 
+        HBox.setHgrow(jadwal, Priority.ALWAYS);
+        VBox.setVgrow(jadwal, Priority.ALWAYS);
+        jadwal.setMaxHeight(Double.MAX_VALUE);
+        jadwal.setMaxWidth(Double.MAX_VALUE);
+
         LinkedHashMap<String, Jadwal> data2 = new LinkedHashMap<>();
 
         for (int i = 7; i <= 18; i++) {
@@ -113,7 +119,11 @@ public class HalamanJadwal {
 
             while (ct < durasi) {
                 jamSekarang++;
-                
+                ct += 60;
+
+                String nextJam = String.format("%02d:00", jamSekarang);
+                x.setJam(nextJam);
+                ambilJadwal(data2, x);
             }
         }
 

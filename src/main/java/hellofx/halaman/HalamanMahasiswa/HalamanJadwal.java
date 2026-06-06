@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -86,6 +87,10 @@ public class HalamanJadwal {
 
     private HBox center() {
         HBox center = new HBox();
+        center.setPadding(new Insets(25, 35, 25, 0));
+        center.setSpacing(30);
+        center.setStyle("-fx-background-color: #F7F9FC;");
+        VBox.setVgrow(center, Priority.ALWAYS);
 
         VBox menu = createSideBar();
 
@@ -108,6 +113,32 @@ public class HalamanJadwal {
         sabtu.setCellValueFactory(new PropertyValueFactory<>("sabtu"));
 
         jadwal.getColumns().addAll(jam, senin, selasa, rabu, kamis, jumat, sabtu);
+        jadwal.setFixedCellSize(70);
+
+        jam.setStyle("-fx-alignment: CENTER;");
+        senin.setStyle("-fx-alignment: CENTER;");
+        selasa.setStyle("-fx-alignment: CENTER;");
+        rabu.setStyle("-fx-alignment: CENTER;");
+        kamis.setStyle("-fx-alignment: CENTER;");
+        jumat.setStyle("-fx-alignment: CENTER;");
+        sabtu.setStyle("-fx-alignment: CENTER;");
+
+        jam.setMaxWidth(80);
+        jam.setMinWidth(80);
+
+        senin.setMinWidth(150);
+        selasa.setMinWidth(150);
+        rabu.setMinWidth(150);
+        kamis.setMinWidth(150);
+        jumat.setMinWidth(150);
+        sabtu.setMinWidth(150);
+
+        setWrapColumn(senin);
+        setWrapColumn(selasa);
+        setWrapColumn(rabu);
+        setWrapColumn(kamis);
+        setWrapColumn(jumat);
+        setWrapColumn(sabtu);
 
         HBox.setHgrow(jadwal, Priority.ALWAYS);
         VBox.setVgrow(jadwal, Priority.ALWAYS);
@@ -128,17 +159,28 @@ public class HalamanJadwal {
             }
         });
 
-        VBox isi = new VBox();
-        isi.setAlignment(Pos.CENTER);
-        isi.setPadding(new Insets(0, 10, 30, 10));
-        isi.setSpacing(30);
-        isi.getChildren().addAll(semesterBox, jadwal);
-        HBox.setHgrow(isi, Priority.ALWAYS);
-        VBox.setVgrow(isi, Priority.ALWAYS);
+        Label title = new Label("Jadwal Kuliah");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
 
-        center.setStyle("-fx-background-color : #ffffff");
-        center.setPadding(new Insets(35, 0, 0, 0));
-        center.getChildren().addAll(menu, isi);
+        HBox topContent = new HBox();
+        topContent.setAlignment(Pos.CENTER_LEFT);
+        topContent.getChildren().addAll(title, new Region(), semesterBox);
+        HBox.setHgrow(topContent.getChildren().get(1), Priority.ALWAYS);
+
+        VBox cardJadwal = new VBox(20);
+        cardJadwal.setPadding(new Insets(35));
+        cardJadwal.setStyle(
+                "-fx-background-color: #ffffff;"
+                        + "-fx-background-radius: 18;"
+                        + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);");
+        cardJadwal.getChildren().addAll(topContent, jadwal);
+
+        VBox.setVgrow(cardJadwal, Priority.ALWAYS);
+        VBox.setVgrow(jadwal, Priority.ALWAYS);
+
+        HBox.setHgrow(cardJadwal, Priority.ALWAYS);
+
+        center.getChildren().addAll(menu, cardJadwal);
         VBox.setVgrow(center, Priority.ALWAYS);
 
         return center;
@@ -267,5 +309,29 @@ public class HalamanJadwal {
                 "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
 
         return button;
+    }
+
+    private void setWrapColumn(TableColumn<Jadwal, String> column) {
+        column.setCellFactory(tc -> new TableCell<Jadwal, String>() {
+            private final Label label = new Label();
+
+            {
+                label.setWrapText(true);
+                label.setAlignment(Pos.CENTER);
+                label.setMaxWidth(Double.MAX_VALUE);
+            }
+
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    label.setText(item);
+                    setGraphic(label);
+                    setAlignment(Pos.CENTER);
+                }
+            };
+        });
     }
 }

@@ -257,7 +257,7 @@ public class KoneksiDB {
 
         return list;
     }
-    
+
     public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
@@ -284,7 +284,7 @@ public class KoneksiDB {
 
         return list;
     }
-    
+
     public static Mahasiswa getDataMahasiswa(String email) {
         String query = "SELECT nama, npm, namaJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
@@ -359,9 +359,12 @@ public class KoneksiDB {
         ObservableList<Semester> list = FXCollections.observableArrayList();
 
         String sql = """
-                    SELECT idSemester, tahunAjaran, jenis
-                    FROM Semester
-                    ORDER BY tahunAjaran,
+                    SELECT 
+                        idSemester, tahunAjaran, jenis
+                    FROM 
+                        Semester
+                    ORDER BY 
+                        tahunAjaran,
                              CASE
                                 WHEN jenis = 'Ganjil' THEN 1
                                 WHEN jenis = 'Genap' THEN 2 
@@ -451,5 +454,50 @@ public class KoneksiDB {
         } catch (SQLException e) {
             System.out.println("gagal menambahkan");
         }
+    }
+
+    public static ObservableList<JadwalKelas> getJadwalDosen(int idSemester, String nip) {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = """
+        SELECT 
+            mk.namaMK,
+            t.kelas,
+            t.hari,
+            t.waktuMulai,
+            t.durasi
+        FROM Teaches t
+        JOIN MataKuliah mk 
+            ON t.kodeMK = mk.kodeMK
+        WHERE 
+            t.idSemester = ? AND t.nip = ?
+        ORDER BY 
+            t.hari, t.waktuMulai
+        """;
+
+        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idSemester);
+            ps.setString(2, nip);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                JadwalKelas jadwal = new JadwalKelas(
+                        rs.getString("namaMK"),
+                        rs.getString("kelas"),
+                        rs.getString("waktuMulai"),
+                        rs.getInt("durasi"),
+                        rs.getString("hari")
+                );
+
+                list.add(jadwal);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

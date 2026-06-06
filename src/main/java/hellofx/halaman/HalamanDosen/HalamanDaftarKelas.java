@@ -1,6 +1,5 @@
 package hellofx.halaman.HalamanDosen;
 
-import hellofx.halaman.HalamanLogin;
 import hellofx.kelasData.Dosen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,7 +32,9 @@ public class HalamanDaftarKelas {
         Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
+        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
 
+        
         tombolProfil.setOnAction(e -> {
             HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
             stage.setScene(profil.getScene());
@@ -58,7 +59,7 @@ public class HalamanDaftarKelas {
         menu.setSpacing(25);
         menu.setPrefWidth(200);
 
-        menu.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal);
+        menu.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
 
         HBox bagianTengah = new HBox();
         bagianTengah.setStyle("-fx-background-color : #ffffff");

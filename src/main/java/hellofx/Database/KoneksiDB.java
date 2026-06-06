@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
 import hellofx.kelasData.Dosen;
 import hellofx.kelasData.JadwalKelas;
+import hellofx.kelasData.KelasAjar;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import hellofx.kelasData.Semester;
@@ -499,5 +500,59 @@ public class KoneksiDB {
         }
 
         return list;
+    }
+
+    public static ArrayList<KelasAjar> getKelasAjarByDosen(String nip, int idSemester) {
+        ArrayList<KelasAjar> daftarKelas = new ArrayList<>();
+
+        String query = """
+            SELECT
+                mk.namaMK,
+                mk.jumlahSKS,
+                t.kelas,
+                t.hari,
+                t.waktuMulai,
+                t.durasi,
+                t.jenisPertemuan,
+                t.metodePertemuan
+            FROM 
+                Teaches t
+            JOIN 
+                MataKuliah mk 
+            ON 
+                t.kodeMK = mk.kodeMK
+            WHERE 
+                t.nip = ? AND t.idSemester = ?
+            ORDER BY 
+                t.hari, t.waktuMulai
+            """;
+
+        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, nip);
+            ps.setInt(2, idSemester);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                KelasAjar kelas = new KelasAjar(
+                        rs.getString("namaMK"),
+                        rs.getInt("jumlahSKS"),
+                        rs.getString("kelas"),
+                        rs.getString("hari"),
+                        rs.getString("waktuMulai"),
+                        rs.getInt("durasi"),
+                        rs.getString("jenisPertemuan"),
+                        rs.getString("metodePertemuan")
+                );
+
+                daftarKelas.add(kelas);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return daftarKelas;
     }
 }

@@ -49,7 +49,7 @@ public class HalamanBerandaDosen {
         tombolJadwal.setOnAction(e -> {
             HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage, dosen);
             stage.setScene(jadwal.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Jadwal");
 
         });
 

@@ -235,9 +235,7 @@ public class KoneksiDB {
 
         try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            System.out.println("Server : " + conn.getMetaData().getURL());
-            System.out.println("DB     : " + conn.getCatalog());
-
+            
             while (rs.next()) {
                 int kodeMk = rs.getInt("kodeMK");
                 String namaMK = rs.getString("namaMK");

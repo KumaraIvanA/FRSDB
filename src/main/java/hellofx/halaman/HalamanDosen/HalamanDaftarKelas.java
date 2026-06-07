@@ -198,6 +198,16 @@ public class HalamanDaftarKelas {
             stage.setTitle("FRS");
         });
 
+          tombolJadwal.setOnAction(e -> {
+            HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage, dosen);
+            stage.setScene(jadwal.getScene());
+            stage.setTitle("Jadwal");
+
+        });
+
+
+
+
         sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
 
         return sidebar;

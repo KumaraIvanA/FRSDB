@@ -30,12 +30,13 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
                 + "user=sa;"
-                + "password=passowrd;"
+                + "password=Rahasia123;"
                 + "encrypt=true;"
                 + "trustServerCertificate=true;"
                 + "loginTimeout=30;";
 
         try {
+            System.out.println("Mencoba konek...");
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
             conn = DriverManager.getConnection(url);
@@ -48,7 +49,6 @@ public class KoneksiDB {
             System.out.println("Failed to connect to the database");
             e.printStackTrace();
         }
-
         return conn;
     }
 
@@ -143,26 +143,7 @@ public class KoneksiDB {
             return -1;
         }
     }
-
-    // public static void insertEnroll(String npm, int kodeMK, String kodeSemester,
-    // int idFRS, String tanggalFRS) {
-    // String query = """
-    // INSERT INTO Enroll (npm, kodeMK, kodeSemester, idFRS, tanggalFRS)
-    // VALUES(?, ?, ?, ?, ?)
-    // """;
-    // try (Connection c = hubungkan(); PreparedStatement ps =
-    // c.prepareStatement(query)) {
-    // ps.setString(1, npm);
-    // ps.setInt(2, kodeMK);
-    // ps.setString(3, kodeSemester);
-    // ps.setInt(4, idFRS);
-    // ps.setString(5, tanggalFRS);
-    // ps.executeUpdate();
-    // System.out.println("Berhasil insert");
-    // } catch (SQLException e) {
-    // System.out.println("gagal menambahkan");
-    // }
-    // }
+    
     // Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
     public static String getNamaMKByKodeMK(int kodeMK) {
         String query = """

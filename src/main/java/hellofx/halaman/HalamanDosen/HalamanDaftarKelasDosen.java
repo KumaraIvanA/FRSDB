@@ -22,12 +22,12 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class HalamanDaftarKelas {
+public class HalamanDaftarKelasDosen {
 
     private Stage stage;
     private Dosen dosen;
 
-    public HalamanDaftarKelas(Stage stage, Dosen dosen) {
+    public HalamanDaftarKelasDosen(Stage stage, Dosen dosen) {
         this.stage = stage;
         this.dosen = dosen;
     }
@@ -54,50 +54,52 @@ public class HalamanDaftarKelas {
         return new Scene(layout, 1200, 750);
     }
 
-   private VBox createContent() {
-    VBox content = new VBox(20);
-    content.setPadding(new Insets(35));
-    content.setStyle(
-            "-fx-background-color: white;"
-            + "-fx-background-radius: 18;"
-            + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);"
-    );
+    private VBox createContent() {
+        VBox content = new VBox(20);
+        content.setMaxWidth(Double.MAX_VALUE);
+        content.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(content, Priority.ALWAYS);
+        HBox.setHgrow(content, Priority.ALWAYS);
+        content.setPadding(new Insets(35));
+        content.setStyle(
+                "-fx-background-color: white;"
+                        + "-fx-background-radius: 18;"
+                        + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);");
 
-    Label title = new Label("Daftar Kelas Ajar");
-    title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+        Label title = new Label("Daftar Kelas Ajar");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
 
-    ComboBox<Semester> semesterBox = new ComboBox<>();
-    semesterBox.setItems(KoneksiDB.getAllSemester());
+        ComboBox<Semester> semesterBox = new ComboBox<>();
+        semesterBox.setItems(KoneksiDB.getAllSemester());
 
-    VBox daftarCard = new VBox(20);
+        VBox daftarCard = new VBox(20);
 
-    ScrollPane scrollPane = new ScrollPane(daftarCard);
-    scrollPane.setFitToWidth(true);
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-    scrollPane.setStyle(
-            "-fx-background-color: transparent;"
-            + "-fx-background: transparent;"
-            + "-fx-border-color: transparent;"
-    );
+        ScrollPane scrollPane = new ScrollPane(daftarCard);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle(
+                "-fx-background-color: transparent;"
+                        + "-fx-background: transparent;"
+                        + "-fx-border-color: transparent;");
 
-    VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-    semesterBox.setOnAction(e -> {
-        if (semesterBox.getValue() != null) {
+        semesterBox.setOnAction(e -> {
+            if (semesterBox.getValue() != null) {
+                loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
+            }
+        });
+
+        if (!semesterBox.getItems().isEmpty()) {
+            semesterBox.setValue(semesterBox.getItems().get(0));
             loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
         }
-    });
 
-    if (!semesterBox.getItems().isEmpty()) {
-        semesterBox.setValue(semesterBox.getItems().get(0));
-        loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
+        content.getChildren().addAll(title, semesterBox, scrollPane);
+
+        return content;
     }
-
-    content.getChildren().addAll(title, semesterBox, scrollPane);
-
-    return content;
-}
 
     private VBox createCardKelas(KelasAjar kelas) {
         VBox card = new VBox(12);
@@ -106,10 +108,9 @@ public class HalamanDaftarKelas {
         card.setPadding(new Insets(20));
         card.setStyle(
                 "-fx-background-color: #F8FAFC;"
-                + "-fx-background-radius: 14;"
-                + "-fx-border-color: #E2E8F0;"
-                + "-fx-border-radius: 14;"
-        );
+                        + "-fx-background-radius: 14;"
+                        + "-fx-border-color: #E2E8F0;"
+                        + "-fx-border-radius: 14;");
 
         Label namaMK = new Label(kelas.getNamaMK());
         namaMK.setWrapText(true);
@@ -121,8 +122,7 @@ public class HalamanDaftarKelas {
                 createInfoRow("SKS", String.valueOf(kelas.getJumlahSKS())),
                 createInfoRow("Jadwal", capitalize(kelas.getHari()) + ", " + kelas.getWaktuMulai().substring(0, 5)),
                 createInfoRow("Durasi", kelas.getDurasi() + " menit"),
-                createInfoRow("Pertemuan", kelas.getJenisPertemuan() + " - " + kelas.getMetodePertemuan())
-        );
+                createInfoRow("Pertemuan", kelas.getJenisPertemuan() + " - " + kelas.getMetodePertemuan()));
 
         return card;
     }
@@ -131,15 +131,16 @@ public class HalamanDaftarKelas {
         HBox topBar = new HBox(25);
         topBar.setAlignment(Pos.CENTER);
         topBar.setPadding(new Insets(0, 35, 0, 30));
+        topBar.setMinHeight(68);
         topBar.setPrefHeight(68);
+        topBar.setMaxHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
-        Label title = new Label("JADWAL DOSEN");
+        Label title = new Label("DAFTAR KELAS AJAR");
         title.setStyle(
                 "-fx-font-size: 26px;"
-                + "-fx-font-weight: bold;"
-                + "-fx-text-fill: #ffffff;"
-        );
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -172,13 +173,12 @@ public class HalamanDaftarKelas {
 
         tombolDaftarKelas.setStyle(
                 "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #0F2D7A;"
-                + "-fx-background-radius: 12;"
-                + "-fx-border-color: #60A5FA;"
-                + "-fx-border-width: 7;"
-                + "-fx-border-radius: 12;"
-        );
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #0F2D7A;"
+                        + "-fx-background-radius: 12;"
+                        + "-fx-border-color: #60A5FA;"
+                        + "-fx-border-width: 7;"
+                        + "-fx-border-radius: 12;");
 
         tombolBeranda.setOnAction(e -> {
             HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage, dosen);
@@ -192,21 +192,12 @@ public class HalamanDaftarKelas {
             stage.setTitle("Profil Dosen");
         });
 
-        tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage, dosen);
-            stage.setScene(daftarKelas.getScene());
-            stage.setTitle("FRS");
-        });
-
-          tombolJadwal.setOnAction(e -> {
+        tombolJadwal.setOnAction(e -> {
             HalamanJadwalDosen jadwal = new HalamanJadwalDosen(stage, dosen);
             stage.setScene(jadwal.getScene());
-            stage.setTitle("Jadwal");
+            stage.setTitle("Jadwal Dosen");
 
         });
-
-
-
 
         sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
 
@@ -232,12 +223,11 @@ public class HalamanDaftarKelas {
         button.setCursor(Cursor.HAND);
         button.setStyle(
                 "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #1E3A8A;"
-                + "-fx-text-fill: #ffffff;"
-                + "-fx-font-weight: bold;"
-                + "-fx-background-radius: 12;"
-        );
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #1E3A8A;"
+                        + "-fx-text-fill: #ffffff;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-background-radius: 12;");
         return button;
     }
 

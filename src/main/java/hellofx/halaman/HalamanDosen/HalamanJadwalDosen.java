@@ -46,10 +46,6 @@ public class HalamanJadwalDosen {
         HBox header = createTopBar();
         HBox bagianTengah = center();
 
-        // HBox bagianBawah = new HBox();
-        // bagianBawah.setPrefHeight(100);
-        // bagianBawah.setStyle("-fx-background-color: #ffffff;");
-
         layout.getChildren().addAll(header, bagianTengah);
 
         return new Scene(layout, 1200, 750);
@@ -65,8 +61,10 @@ public class HalamanJadwalDosen {
         VBox menu = createSideBar();
 
         TableView<Jadwal> jadwal = new TableView<>();
-        jadwal.setFixedCellSize(55);
+        jadwal.setFixedCellSize(70);
         jadwal.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        jadwal.setMaxWidth(Double.MAX_VALUE);
+        jadwal.setMaxHeight(Double.MAX_VALUE);
 
         TableColumn<Jadwal, String> jam = new TableColumn<>("Jam");
         jam.setCellValueFactory(new PropertyValueFactory<>("jam"));
@@ -90,7 +88,6 @@ public class HalamanJadwalDosen {
         sabtu.setCellValueFactory(new PropertyValueFactory<>("sabtu"));
 
         jadwal.getColumns().addAll(jam, senin, selasa, rabu, kamis, jumat, sabtu);
-        jadwal.setFixedCellSize(70);
 
         jam.setStyle("-fx-alignment: CENTER;");
         senin.setStyle("-fx-alignment: CENTER;");
@@ -100,15 +97,16 @@ public class HalamanJadwalDosen {
         jumat.setStyle("-fx-alignment: CENTER;");
         sabtu.setStyle("-fx-alignment: CENTER;");
 
-        jam.setMaxWidth(80);
         jam.setMinWidth(80);
+        jam.setPrefWidth(80);
+        jam.setMaxWidth(80);
 
-        senin.setMinWidth(150);
-        selasa.setMinWidth(150);
-        rabu.setMinWidth(150);
-        kamis.setMinWidth(150);
-        jumat.setMinWidth(150);
-        sabtu.setMinWidth(150);
+        senin.setMinWidth(120);
+        selasa.setMinWidth(120);
+        rabu.setMinWidth(120);
+        kamis.setMinWidth(120);
+        jumat.setMinWidth(120);
+        sabtu.setMinWidth(120);
 
         setWrapColumn(senin);
         setWrapColumn(selasa);
@@ -119,8 +117,6 @@ public class HalamanJadwalDosen {
 
         HBox.setHgrow(jadwal, Priority.ALWAYS);
         VBox.setVgrow(jadwal, Priority.ALWAYS);
-        jadwal.setMaxHeight(Double.MAX_VALUE);
-        jadwal.setMaxWidth(Double.MAX_VALUE);
 
         ComboBox<Semester> semesterBox = new ComboBox<>();
         semesterBox.setItems(KoneksiDB.getAllSemester());
@@ -141,71 +137,31 @@ public class HalamanJadwalDosen {
 
         HBox topContent = new HBox();
         topContent.setAlignment(Pos.CENTER_LEFT);
-        topContent.getChildren().addAll(title, new Region(), semesterBox);
-        HBox.setHgrow(topContent.getChildren().get(1), Priority.ALWAYS);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        topContent.getChildren().addAll(title, spacer, semesterBox);
 
         VBox cardJadwal = new VBox(20);
         cardJadwal.setPadding(new Insets(35));
+        cardJadwal.setMaxWidth(Double.MAX_VALUE);
+        cardJadwal.setMaxHeight(Double.MAX_VALUE);
         cardJadwal.setStyle(
                 "-fx-background-color: #ffffff;"
-                + "-fx-background-radius: 18;"
-                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);"
-        );
+                        + "-fx-background-radius: 18;"
+                        + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);");
+
         cardJadwal.getChildren().addAll(topContent, jadwal);
 
         VBox.setVgrow(cardJadwal, Priority.ALWAYS);
         VBox.setVgrow(jadwal, Priority.ALWAYS);
-
         HBox.setHgrow(cardJadwal, Priority.ALWAYS);
 
         center.getChildren().addAll(menu, cardJadwal);
         HBox.setHgrow(cardJadwal, Priority.ALWAYS);
 
         return center;
-    }
-
-    private VBox createSideBar() {
-        VBox sidebar = new VBox(20);
-        sidebar.setPadding(new Insets(10, 0, 10, 0));
-        sidebar.setPrefWidth(120);
-        sidebar.setAlignment(Pos.TOP_CENTER);
-
-        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
-        Button tombolProfil = tombolIcon("user (1).png", "Profil");
-        Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
-        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
-
-        tombolJadwal.setStyle(
-                "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #0F2D7A;"
-                + "-fx-background-radius: 12;"
-                + "-fx-border-color: #60A5FA;"
-                + "-fx-border-width: 7;"
-                + "-fx-border-radius: 12;"
-        );
-
-        tombolBeranda.setOnAction(e -> {
-            HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage, dosen);
-            stage.setScene(beranda.getScene());
-            stage.setTitle("Beranda Dosen");
-        });
-
-        tombolProfil.setOnAction(e -> {
-            HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
-            stage.setScene(profil.getScene());
-            stage.setTitle("Profil Dosen");
-        });
-
-        tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage, dosen);
-            stage.setScene(daftarKelas.getScene());
-            stage.setTitle("FRS");
-        });
-
-        sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
-
-        return sidebar;
     }
 
     private void isiJadwal(TableView<Jadwal> jadwal, int idSemester) {
@@ -274,15 +230,16 @@ public class HalamanJadwalDosen {
         HBox topBar = new HBox(25);
         topBar.setAlignment(Pos.CENTER);
         topBar.setPadding(new Insets(0, 35, 0, 30));
+        topBar.setMinHeight(68);
         topBar.setPrefHeight(68);
+        topBar.setMaxHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
         Label title = new Label("JADWAL DOSEN");
         title.setStyle(
                 "-fx-font-size: 26px;"
-                + "-fx-font-weight: bold;"
-                + "-fx-text-fill: #ffffff;"
-        );
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -300,6 +257,51 @@ public class HalamanJadwalDosen {
         topBar.getChildren().addAll(title, spacer, notif, profile);
 
         return topBar;
+    }
+
+    private VBox createSideBar() {
+        VBox sidebar = new VBox(20);
+        sidebar.setPadding(new Insets(10, 0, 10, 0));
+        sidebar.setPrefWidth(120);
+        sidebar.setMinWidth(120);
+        sidebar.setMaxWidth(120);
+        sidebar.setAlignment(Pos.TOP_CENTER);
+
+        Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
+        Button tombolProfil = tombolIcon("user (1).png", "Profil");
+        Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
+        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
+
+        tombolJadwal.setStyle(
+                "-fx-pref-width: 100;"
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #0F2D7A;"
+                        + "-fx-background-radius: 12;"
+                        + "-fx-border-color: #60A5FA;"
+                        + "-fx-border-width: 7;"
+                        + "-fx-border-radius: 12;");
+
+        tombolBeranda.setOnAction(e -> {
+            HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage, dosen);
+            stage.setScene(beranda.getScene());
+            stage.setTitle("Beranda Dosen");
+        });
+
+        tombolProfil.setOnAction(e -> {
+            HalamanProfilDosen profil = new HalamanProfilDosen(stage, dosen);
+            stage.setScene(profil.getScene());
+            stage.setTitle("Profil Dosen");
+        });
+
+        tombolDaftarKelas.setOnAction(e -> {
+            HalamanDaftarKelasDosen daftarKelas = new HalamanDaftarKelasDosen(stage, dosen);
+            stage.setScene(daftarKelas.getScene());
+            stage.setTitle("Daftar Kelas Dosen");
+        });
+
+        sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
+
+        return sidebar;
     }
 
     private Button tombolIcon(String pathIcon, String teks) {
@@ -321,12 +323,12 @@ public class HalamanJadwalDosen {
         button.setCursor(Cursor.HAND);
         button.setStyle(
                 "-fx-pref-width: 100;"
-                + "-fx-pref-height: 100;"
-                + "-fx-background-color: #1E3A8A;"
-                + "-fx-text-fill: #ffffff;"
-                + "-fx-font-weight: bold;"
-                + "-fx-background-radius: 12;"
-        );
+                        + "-fx-pref-height: 100;"
+                        + "-fx-background-color: #1E3A8A;"
+                        + "-fx-text-fill: #ffffff;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-background-radius: 12;");
+
         return button;
     }
 

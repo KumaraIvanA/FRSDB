@@ -126,7 +126,6 @@ public class HalamanProfilDosen {
                         + "-fx-border-width: 7;"
                         + "-fx-border-radius: 12;");
 
-        
         tombolBeranda.setOnAction(e -> {
             HalamanBerandaDosen beranda = new HalamanBerandaDosen(stage, dosen);
             stage.setScene(beranda.getScene());
@@ -140,9 +139,9 @@ public class HalamanProfilDosen {
         });
 
         tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelas daftarKelas = new HalamanDaftarKelas(stage, dosen);
+            HalamanDaftarKelasDosen daftarKelas = new HalamanDaftarKelasDosen(stage, dosen);
             stage.setScene(daftarKelas.getScene());
-            stage.setTitle("FRS");
+            stage.setTitle("Daftar Kelas Dosen");
         });
 
         menu.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
@@ -153,14 +152,16 @@ public class HalamanProfilDosen {
         HBox topBar = new HBox(25);
         topBar.setAlignment(Pos.CENTER);
         topBar.setPadding(new Insets(0, 35, 0, 30));
+        topBar.setMinHeight(68);
         topBar.setPrefHeight(68);
+        topBar.setMaxHeight(68);
         topBar.setStyle("-fx-background-color: #243F91;");
 
         Label title = new Label("PROFIL DOSEN");
         title.setStyle(
-                        "-fx-font-size: 26px;"
+                "-fx-font-size: 26px;"
                         + "-fx-font-weight: bold;"
-                        + "-fx-text-fill: #ffffff;");
+                        + "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);

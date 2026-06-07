@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -53,38 +54,50 @@ public class HalamanDaftarKelas {
         return new Scene(layout, 1200, 750);
     }
 
-    private VBox createContent() {
-        VBox content = new VBox(20);
-        content.setPadding(new Insets(35));
-        content.setStyle(
-                "-fx-background-color: white;"
-                + "-fx-background-radius: 18;"
-                + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);"
-        );
+   private VBox createContent() {
+    VBox content = new VBox(20);
+    content.setPadding(new Insets(35));
+    content.setStyle(
+            "-fx-background-color: white;"
+            + "-fx-background-radius: 18;"
+            + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);"
+    );
 
-        Label title = new Label("Daftar Kelas Ajar");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+    Label title = new Label("Daftar Kelas Ajar");
+    title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
 
-        ComboBox<Semester> semesterBox = new ComboBox<>();
-        semesterBox.setItems(KoneksiDB.getAllSemester());
+    ComboBox<Semester> semesterBox = new ComboBox<>();
+    semesterBox.setItems(KoneksiDB.getAllSemester());
 
-        VBox daftarCard = new VBox(20);
+    VBox daftarCard = new VBox(20);
 
-        semesterBox.setOnAction(e -> {
-            if (semesterBox.getValue() != null) {
-                loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
-            }
-        });
+    ScrollPane scrollPane = new ScrollPane(daftarCard);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setStyle(
+            "-fx-background-color: transparent;"
+            + "-fx-background: transparent;"
+            + "-fx-border-color: transparent;"
+    );
 
-        if (!semesterBox.getItems().isEmpty()) {
-            semesterBox.setValue(semesterBox.getItems().get(0));
+    VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+    semesterBox.setOnAction(e -> {
+        if (semesterBox.getValue() != null) {
             loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
         }
+    });
 
-        content.getChildren().addAll(title, semesterBox, daftarCard);
-
-        return content;
+    if (!semesterBox.getItems().isEmpty()) {
+        semesterBox.setValue(semesterBox.getItems().get(0));
+        loadKelasAjar(daftarCard, semesterBox.getValue().getIdSemester());
     }
+
+    content.getChildren().addAll(title, semesterBox, scrollPane);
+
+    return content;
+}
 
     private VBox createCardKelas(KelasAjar kelas) {
         VBox card = new VBox(12);

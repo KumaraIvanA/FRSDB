@@ -1,7 +1,3 @@
--- ============================================================
---  MASTER DATA
--- ============================================================
-
 -- ----- Jurusan (5) -> id 1..5 -----
 INSERT INTO Jurusan (namaJurusan)
 VALUES
@@ -10,7 +6,7 @@ VALUES
 	('Fisika'),        -- 3
 	('Kimia'),         -- 4
 	('Biologi')        -- 5
-
+ 
 -- ----- Semester (5) -> id 1..5 -----
 INSERT INTO Semester (tahunAjaran, jenis)
 VALUES
@@ -19,7 +15,7 @@ VALUES
 	('2023/2024', 'ganjil'),   -- 3  <-- semester aktif (dipakai FRS/Enroll/Teaches)
 	('2023/2024', 'genap'),    -- 4
 	('2024/2025', 'ganjil')    -- 5
-
+ 
 -- ----- Mahasiswa (5) : 1 per jurusan -----
 INSERT INTO Mahasiswa (npm, nama, email, password, idJurusan)
 VALUES
@@ -28,7 +24,7 @@ VALUES
 	('2301010003', 'Ahmad Fauzi',     'ahmad.fauzi@student.ac.id',   'pass_ahmad03', 3),
 	('2301010004', 'Dewi Lestari',    'dewi.lestari@student.ac.id',  'pass_dewi04',  4),
 	('2301010005', 'Eko Prasetyo',    'eko.prasetyo@student.ac.id',  'pass_eko05',   5)
-
+ 
 -- ----- Dosen (5) : 1 per jurusan -----
 INSERT INTO Dosen (nip, nama, email, password, idJurusan)
 VALUES
@@ -37,7 +33,7 @@ VALUES
 	('197905202003121003', 'Dr. Hendra Gunawan',  'hendra.g@dosen.ac.id',  'pass_dosen03', 3),
 	('198506102010012004', 'Dr. Rina Marlina',    'rina.m@dosen.ac.id',    'pass_dosen04', 4),
 	('198711252012011005', 'Dr. Agus Salim',      'agus.salim@dosen.ac.id','pass_dosen05', 5)
-
+ 
 -- ----- FRS (5) : 1 per mahasiswa, semester aktif = 3 -> id 1..5 -----
 INSERT INTO FRS (idSemester)
 VALUES
@@ -46,7 +42,7 @@ VALUES
 	(3),   -- FRS 3 (Ahmad)
 	(3),   -- FRS 4 (Dewi)
 	(3)    -- FRS 5 (Eko)
-
+ 
 -- ----- MataKuliah (6) : semua di semester aktif = 3 -> kode 1..6 -----
 INSERT INTO MataKuliah (namaMK, jumlahSKS, idJurusan, idSemester)
 VALUES
@@ -56,12 +52,12 @@ VALUES
 	('Biologi Umum',       3, 5, 3),   -- 4
 	('Dasar Pemrograman',  4, 1, 3),   -- 5
 	('Logika Informatika', 3, 1, 3)    -- 6
-
-
+ 
+ 
 -- ============================================================
 --  RELATIONAL DATA
 -- ============================================================
-
+ 
 -- ----- Enroll (30) : tiap mahasiswa ambil 6 MK (5 x 6 = 30) -----
 INSERT INTO Enroll (npm, kodeMK, idSemester, idFRS, tanggalFRS)
 VALUES
@@ -100,7 +96,7 @@ VALUES
 	('2301010005', 4, 3, 5, '2023-07-22 11:20:00'),
 	('2301010005', 5, 3, 5, '2023-07-22 11:20:00'),
 	('2301010005', 6, 3, 5, '2023-07-22 11:20:00')
-
+ 
 -- ----- Teaches (30) : tiap MK diajar 1 dosen (sesuai jurusan), -----
 -- ----- kelas A, Senin-Jumat, jam tetap per MK (tanpa bentrok)  -----
 INSERT INTO Teaches (idSemester, kodeMK, nip, kelas, waktuMulai, durasi, hari, jenisPertemuan, metodePertemuan)

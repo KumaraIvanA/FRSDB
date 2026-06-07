@@ -189,7 +189,7 @@ public class HalamanFRS {
     }
 
     private void loadMataKuliahFromDB(VBox courselist) {
-        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliah();
+        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliahBerdasarkanIdJurusan(mahasiswa.getIdJurusan());
 
         int semesterSebelumnya = -1;
 

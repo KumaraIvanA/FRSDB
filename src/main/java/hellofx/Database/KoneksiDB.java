@@ -235,13 +235,43 @@ public class KoneksiDB {
 
         try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 int kodeMk = rs.getInt("kodeMK");
                 String namaMK = rs.getString("namaMK");
                 int jumlahSKS = rs.getInt("jumlahSKS");
                 int idSemester = rs.getInt("idSemester");
                 int idJurusan = rs.getInt("idJurusan");
+
+                MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
+                list.add(mk);
+            }
+            ;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("gagal");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
+        ObservableList<MataKuliah> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah WHERE idJurusan = ? ORDER BY idSemester, kodeMK";
+
+        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJ);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int kodeMk = rs.getInt("kodeMK");
+                String namaMK = rs.getString("namaMK");
+                int jumlahSKS = rs.getInt("jumlahSKS");
+                int idSemester = rs.getInt("idSemester");
+                int idJurusan = idJ;
 
                 MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
                 list.add(mk);
@@ -285,7 +315,7 @@ public class KoneksiDB {
     }
 
     public static Mahasiswa getDataMahasiswa(String email) {
-        String query = "SELECT nama, npm, namaJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
+        String query = "SELECT nama, npm, Mahasiswa.idJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
         try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(query)) {
 
@@ -295,9 +325,9 @@ public class KoneksiDB {
             if (rs.next()) {
                 String nama = rs.getString("nama");
                 String npm = rs.getString("npm");
-                String namaJurusan = rs.getString("namaJurusan");
+                int idJurusan = rs.getInt("idJurusan");
 
-                return new Mahasiswa(npm, nama, email, namaJurusan);
+                return new Mahasiswa(npm, nama, email, idJurusan);
             } else {
                 System.out.println("Data Mahasiswa Tidak Ditemukan");
                 return null;

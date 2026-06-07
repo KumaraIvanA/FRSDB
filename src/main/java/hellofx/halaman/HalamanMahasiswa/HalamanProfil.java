@@ -141,7 +141,7 @@ public class HalamanProfil {
                 createInfoRow("NPM", mahasiswa.getNPM()),
                 createInfoRow("Nama", mahasiswa.getNama()),
                 createInfoRow("Email", mahasiswa.getEmail()),
-                createInfoRow("Jurusan", mahasiswa.getNamaJurusan()));
+                createInfoRow("Jurusan", String.valueOf(mahasiswa.getIdJurusan())));
 
         container.getChildren().addAll(avatar, identityBox, dataCard);
 

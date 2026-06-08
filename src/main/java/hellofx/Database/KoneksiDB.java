@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -673,7 +674,7 @@ public class KoneksiDB {
 			MataKuliah.namaMK as namaMK,
 			MataKuliah.jumlahSKS as jumlahSKS,
 			MataKuliah.idJurusan as idJurusan,
-			MataKuliah.idSemester as idSemester
+			Enroll.idSemester as idSemester
 		FROM
 			Enroll JOIN MataKuliah ON Enroll.kodeMK = MataKuliah.kodeMK
 		WHERE
@@ -691,14 +692,13 @@ public class KoneksiDB {
 			while (rs.next()) {
 				int currentFRSID = rs.getInt("idFRS");
 				LocalDateTime localDateTime = rs.getObject("tanggalFRS", LocalDateTime.class);
-				Instant time = localDateTime.toInstant(ZoneOffset.UTC);
 
 				if (currentFRS == null || currentFRS.getID() != currentFRSID) {
 					if (currentFRS != null) {
 						list.add(currentFRS);
 					}
 
-					currentFRS = new FRS(currentFRSID, time);
+					currentFRS = new FRS(currentFRSID, localDateTime);
 				}
 
 				MataKuliah mk = new MataKuliah(

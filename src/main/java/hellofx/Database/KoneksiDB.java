@@ -30,7 +30,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
                 + "user=sa;"
-                + "password=Rahasia123;"
+                + "password=passowrd;"
                 + "encrypt=true;"
                 + "trustServerCertificate=true;"
                 + "loginTimeout=30;";
@@ -225,10 +225,10 @@ public class KoneksiDB {
     public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT KodeMataKuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, KodeMataKuliahTerbuka.idSemester\r\n" + //
+        String sql = "SELECT MatakuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, MatakuliahTerbuka.idSemester\r\n" + //
                         "FROM MataKuliah\r\n" + //
-                        "\tJOIN KodeMataKuliahTerbuka ON KodeMataKuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
-                        "\tJOIN Semester ON Semester.idSemester = KodeMataKuliahTerbuka.idSemester\r\n" + //
+                        "JOIN MatakuliahTerbuka ON MatakuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
+                        "JOIN Semester ON Semester.idSemester = MatakuliahTerbuka.idSemester\r\n" + //
                         "WHERE MataKuliah.idJurusan = ?";
 
         try {

@@ -407,13 +407,6 @@ public class KoneksiDB {
                         idSemester, tahunAjaran, jenis
                     FROM
                         Semester
-                    ORDER BY
-                        tahunAjaran,
-                             CASE
-                                WHEN jenis = 'Ganjil' THEN 1
-                                WHEN jenis = 'Genap' THEN 2
-                                ELSE 3
-                             END
                 """;
 
         try {

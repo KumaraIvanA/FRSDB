@@ -1,15 +1,14 @@
-USE FRS;
-GO
-
 -- ---------- DROP (urutan child -> parent) ----------
+DROP TABLE IF EXISTS MatakuliahTerbuka;
 DROP TABLE IF EXISTS Teaches;
 DROP TABLE IF EXISTS Enroll;
-DROP TABLE IF EXISTS MataKuliah;
 DROP TABLE IF EXISTS FRS;
+DROP TABLE IF EXISTS MataKuliah;
 DROP TABLE IF EXISTS Dosen;
 DROP TABLE IF EXISTS Mahasiswa;
 DROP TABLE IF EXISTS Semester;
 DROP TABLE IF EXISTS Jurusan;
+
  
 -- ---------- CREATE TABLE ----------
 CREATE TABLE Jurusan
@@ -54,8 +53,7 @@ CREATE TABLE MataKuliah
 	kodeMK int IDENTITY(1, 1) NOT NULL PRIMARY KEY,
 	namaMK varchar(75) NOT NULL,
 	jumlahSKS int NOT NULL,
-	idJurusan int FOREIGN KEY REFERENCES Jurusan (idJurusan) NOT NULL,
-	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL
+	idJurusan int FOREIGN KEY REFERENCES Jurusan (idJurusan) NOT NULL
 )
  
 CREATE TABLE Enroll

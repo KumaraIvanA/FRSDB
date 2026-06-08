@@ -23,9 +23,9 @@ public class KoneksiDB {
     private static Connection conn = null;
 
     public static Connection hubungkan() {
-        // if (conn != null) {
-        // return conn;
-        // }
+        if (conn != null) {
+        return conn;
+        }
 
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
@@ -541,7 +541,7 @@ public class KoneksiDB {
         try {
             Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(query);
-            
+
             ps.setString(1, nip);
             ps.setInt(2, idSemester);
 

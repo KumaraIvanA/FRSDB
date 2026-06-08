@@ -1,5 +1,6 @@
 package hellofx.halaman.HalamanMahasiswa;
 
+import hellofx.Database.KoneksiDB;
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -141,7 +142,7 @@ public class HalamanProfil {
                 createInfoRow("NPM", mahasiswa.getNPM()),
                 createInfoRow("Nama", mahasiswa.getNama()),
                 createInfoRow("Email", mahasiswa.getEmail()),
-                createInfoRow("Jurusan", String.valueOf(mahasiswa.getIdJurusan())));
+                createInfoRow("Jurusan", KoneksiDB.getNamaJurusanById(mahasiswa.getIdJurusan())));
 
         container.getChildren().addAll(avatar, identityBox, dataCard);
 

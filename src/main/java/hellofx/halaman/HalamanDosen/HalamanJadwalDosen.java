@@ -267,7 +267,7 @@ public class HalamanJadwalDosen {
         Button tombolBeranda = tombolIcon("home (2).png", "Beranda");
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
-        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
+        Button tombolKelolaMatkul = tombolIcon("clipboard.png", "Kelola Matkul");
 
         tombolJadwal.setStyle(
                 "-fx-pref-width: 100;"
@@ -290,13 +290,13 @@ public class HalamanJadwalDosen {
             stage.setTitle("Profil Dosen");
         });
 
-        tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelasDosen daftarKelas = new HalamanDaftarKelasDosen(stage, dosen);
+        tombolKelolaMatkul.setOnAction(e -> {
+            HalamanKelolaMataKuliahDosen daftarKelas = new HalamanKelolaMataKuliahDosen(stage, dosen);
             stage.setScene(daftarKelas.getScene());
-            stage.setTitle("Daftar Kelas Dosen");
+            stage.setTitle("Kelola Matkul");
         });
 
-        sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolDaftarKelas);
+        sidebar.getChildren().addAll(tombolBeranda, tombolProfil, tombolJadwal, tombolKelolaMatkul);
 
         return sidebar;
     }

@@ -20,11 +20,16 @@ public class MataKuliah {
         this.nip = new SimpleStringProperty(nip);
     }
 
+    @Override
+    public String toString() {
+        return getNamaMK();
+    }
+
     public String getNamaMK() {
         return this.namaMk.get();
     }
 
-    public int getkodeMK(){
+    public int getkodeMK() {
         return this.kodeMk.get();
     }
 
@@ -32,21 +37,27 @@ public class MataKuliah {
         return this.jumlahSKS.get();
     }
 
-    public int getIdSemester(){
+    public int getIdSemester() {
         return this.idSemester.get();
     }
 
-    public int getIdJurusan(){
+    public int getIdJurusan() {
         return this.idJurusan.get();
     }
 
-	public String getNip() {
-		return this.nip.get();
-	}
+    public SimpleStringProperty namaMKProperty() {
+        return namaMk;
+    }
 
-	public SimpleStringProperty namaMKProperty() { return namaMk; }
-    public SimpleIntegerProperty kodeMkProperty() {return kodeMk; }
-    public SimpleIntegerProperty jumlahSKSProperty() { return jumlahSKS; }
-    public SimpleIntegerProperty idSemesterProperty() { return idSemester; }
-    public SimpleStringProperty nipProperty() { return nip; }
+    public SimpleIntegerProperty kodeMkProperty() {
+        return kodeMk;
+    }
+
+    public SimpleIntegerProperty jumlahSKSProperty() {
+        return jumlahSKS;
+    }
+
+    public SimpleIntegerProperty idSemesterProperty() {
+        return idSemester;
+    }
 }

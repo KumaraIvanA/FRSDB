@@ -35,7 +35,7 @@ public class HalamanBerandaDosen {
 
         Button tombolProfil = tombolIcon("user (1).png", "Profil");
         Button tombolJadwal = tombolIcon("calendar.png", "Jadwal");
-        Button tombolDaftarKelas = tombolIcon("clipboard.png", "Daftar Kelas");
+        Button tombolKelolaMatkul = tombolIcon("clipboard.png", "Kelola Matkul");
         Button tombolLogout = tombolIcon("logout.png", "Logout");
 
         tombolProfil.setOnAction(e -> {
@@ -51,10 +51,10 @@ public class HalamanBerandaDosen {
 
         });
 
-        tombolDaftarKelas.setOnAction(e -> {
-            HalamanDaftarKelasDosen daftarKelas = new HalamanDaftarKelasDosen(stage, dosen);
+        tombolKelolaMatkul.setOnAction(e -> {
+            HalamanKelolaMataKuliahDosen daftarKelas = new HalamanKelolaMataKuliahDosen(stage, dosen);
             stage.setScene(daftarKelas.getScene());
-            stage.setTitle("Daftar Kelas Dosen");
+            stage.setTitle("Kelola Matkul");
         });
 
         tombolLogout.setOnAction(e -> {
@@ -65,7 +65,7 @@ public class HalamanBerandaDosen {
 
         HBox tombolMenu = new HBox(50);
         tombolMenu.setAlignment(Pos.CENTER);
-        tombolMenu.getChildren().addAll(tombolProfil, tombolJadwal, tombolDaftarKelas, tombolLogout);
+        tombolMenu.getChildren().addAll(tombolProfil, tombolJadwal, tombolKelolaMatkul, tombolLogout);
 
         VBox bagianMenu = new VBox(30);
         bagianMenu.setAlignment(Pos.CENTER);

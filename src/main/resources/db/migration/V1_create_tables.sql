@@ -1,13 +1,15 @@
+USE FRS;
+GO
+
 -- ---------- DROP (urutan child -> parent) ----------
-DROP TABLE IF EXISTS Teaches
-DROP TABLE IF EXISTS Enroll
-DROP TABLE IF EXISTS MataKuliah
-DROP TABLE IF EXISTS FRS
-DROP TABLE IF EXISTS Dosen
-DROP TABLE IF EXISTS Mahasiswa
-DROP TABLE IF EXISTS Semester
-DROP TABLE IF EXISTS Jurusan
- 
+DROP TABLE IF EXISTS Teaches;
+DROP TABLE IF EXISTS Enroll;
+DROP TABLE IF EXISTS MataKuliah;
+DROP TABLE IF EXISTS FRS;
+DROP TABLE IF EXISTS Dosen;
+DROP TABLE IF EXISTS Mahasiswa;
+DROP TABLE IF EXISTS Semester;
+DROP TABLE IF EXISTS Jurusan;
  
 -- ---------- CREATE TABLE ----------
 CREATE TABLE Jurusan
@@ -71,12 +73,11 @@ CREATE TABLE Teaches
 	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL,
 	kodeMK int FOREIGN KEY REFERENCES MataKuliah (kodeMK) NOT NULL,
 	nip char(18) FOREIGN KEY REFERENCES Dosen (nip) NOT NULL,
-	kelas varchar(10) NOT NULL,
 	waktuMulai time,
 	durasi int NULL,
 	hari varchar(10),
 	jenisPertemuan varchar(50) NULL,
 	metodePertemuan varchar(50) NULL,
-	-- natural key lama tetap dijaga unik supaya tidak ada jadwal dobel
-	UNIQUE (idSemester, kodeMK, nip, kelas, hari)
+
+	UNIQUE (idSemester, kodeMK, nip, hari, waktuMulai)
 )

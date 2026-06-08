@@ -30,7 +30,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
                 + "user=sa;"
-                + "password=Rahasia123;"
+                + "password=passowrd;"
                 + "encrypt=true;"
                 + "trustServerCertificate=true;"
                 + "loginTimeout=30;";

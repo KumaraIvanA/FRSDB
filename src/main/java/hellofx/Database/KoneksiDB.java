@@ -6,10 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,37 +183,6 @@ public class KoneksiDB {
         }
     }
 
-	// Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
-	public static String getNamaMKByKodeMK(int kodeMK) {
-        String query = """
-                SELECT
-                    m.namaMK,
-                    m.jumlahSKS,
-                FROM Enroll m
-                JOIN MataKuliah j ON m.kodeMK = j.kodeMK
-                WHERE kodeMK = ?
-                """;
-
-        try  {
-			Connection c = hubungkan();
-			PreparedStatement ps = c.prepareStatement(query);
-			ps.setInt(1, kodeMK);
-
-            ResultSet result = ps.executeQuery();
-
-            if (result.next()) {
-                return result.getString("namaMK");
-            } else {
-                System.out.println("Nama MK tidak ditemukan: " + kodeMK);
-                return null;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("gagal mencari kodeMK");
-            return null;
-        }
-    }
-
 	public static boolean checkLogin(String email, String password) {
         String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 
@@ -256,32 +222,6 @@ public class KoneksiDB {
             return false;
         }
     }
-
-	public static ObservableList<MataKuliah> getAllMatakuliah(){
-		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
-
-		String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK";
-
-		try  {
-			Connection conn = hubungkan();
-            PreparedStatement ps = conn.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
-
-			MataKuliah mk = new MataKuliah(
-				rs.getInt("kodeMK"),
-				rs.getString("namaMK"),
-				rs.getInt("jumlahSKS"),
-				rs.getInt("idJurusan"),
-				rs.getInt("idSemester")
-			);
-
-			list.add(mk);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return list;
-	}
 
 	public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
 		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
@@ -431,28 +371,6 @@ public class KoneksiDB {
                 return null;
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-	public static Integer getIdSemesterFromNamaMK(String namaMK) {
-        String query = "SELECT idSemester FROM Matakuliah WHERE namaMK = ?";
-
-        try {
-            Connection connection = hubungkan();
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, namaMK);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                int idSemester = rs.getInt("idSemester");
-                return idSemester;
-            } else {
-                System.out.println("Tidak ada Matakuliah tersebut");
-                return null;
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

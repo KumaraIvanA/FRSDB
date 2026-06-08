@@ -1,5 +1,5 @@
 -- ---------- DROP (urutan child -> parent) ----------
-DROP TABLE IF EXISTS MatakuliahTerbuka;
+DROP TABLE IF EXISTS MataKuliahTerbuka;
 DROP TABLE IF EXISTS Teaches;
 DROP TABLE IF EXISTS Enroll;
 DROP TABLE IF EXISTS FRS;
@@ -44,8 +44,7 @@ CREATE TABLE Dosen
  
 CREATE TABLE FRS
 (
-	idFRS int IDENTITY(1, 1) NOT NULL PRIMARY KEY,
-	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL
+	idFRS int IDENTITY(1, 1) NOT NULL PRIMARY KEY
 )
  
 CREATE TABLE MataKuliah
@@ -53,7 +52,8 @@ CREATE TABLE MataKuliah
 	kodeMK int IDENTITY(1, 1) NOT NULL PRIMARY KEY,
 	namaMK varchar(75) NOT NULL,
 	jumlahSKS int NOT NULL,
-	idJurusan int FOREIGN KEY REFERENCES Jurusan (idJurusan) NOT NULL
+	idJurusan int FOREIGN KEY REFERENCES Jurusan (idJurusan) NOT NULL,
+	nip char(18) FOREIGN KEY REFERENCES Dosen(nip) NOT NULL
 )
  
 CREATE TABLE Enroll
@@ -68,14 +68,20 @@ CREATE TABLE Enroll
  
 CREATE TABLE Teaches
 (
-	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL,
 	kodeMK int FOREIGN KEY REFERENCES MataKuliah (kodeMK) NOT NULL,
 	nip char(18) FOREIGN KEY REFERENCES Dosen (nip) NOT NULL,
-	waktuMulai time,
+	waktuMulai time NOT NULL,
 	durasi int NULL,
-	hari varchar(10),
+	hari varchar(10) NOT NULL,
 	jenisPertemuan varchar(50) NULL,
 	metodePertemuan varchar(50) NULL,
-	PRIMARY KEY (idSemester, kodeMK, nip, h)
+	PRIMARY KEY (kodeMK, nip, hari, waktuMulai)
 )
 
+CREATE TABLE MataKuliahTerbuka
+(
+	kodeMK int FOREIGN KEY REFERENCES MataKuliah(kodeMK),
+	idSemester int FOREIGN KEY REFERENCES Semester(idSemester)
+
+	PRIMARY KEY(kodeMK , idSemester)
+)

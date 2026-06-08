@@ -24,7 +24,7 @@ public class KoneksiDB {
 
     public static Connection hubungkan() {
         if (conn != null) {
-        return conn;
+            return conn;
         }
 
         String url = "jdbc:sqlserver://localhost:1433;"
@@ -55,7 +55,7 @@ public class KoneksiDB {
     public static String getNamaJurusanById(int idJurusan) {
         String query = "SELECT namaJurusan FROM Jurusan WHERE idJurusan = ?";
 
-        try{
+        try {
             Connection c = hubungkan();
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, idJurusan);
@@ -102,7 +102,7 @@ public class KoneksiDB {
     public static int getKodeMkByNamaMK(String namaMK) {
         String query = "SELECT kodeMK FROM MataKuliah WHERE namaMK = ?";
 
-        try{
+        try {
             Connection c = hubungkan();
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, namaMK);
@@ -121,7 +121,7 @@ public class KoneksiDB {
             return -1;
         }
     }
-    
+
     // Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
     public static String getNamaMKByKodeMK(int kodeMK) {
         String query = """
@@ -156,7 +156,7 @@ public class KoneksiDB {
     public static boolean checkLogin(String email, String password) {
         String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 
-        try{
+        try {
             Connection connection = hubungkan();
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -254,14 +254,43 @@ public class KoneksiDB {
         return list;
     }
 
-    public static ObservableList<JadwalKelas> getAllJadwal(String npm, int idSemester) {
+    public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idSemester);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String namaMk = rs.getString("namaMk");
+                String kelas = rs.getString("kelas");
+                String waktuMulai = rs.getString("waktuMulai");
+                int durasi = rs.getInt("durasi");
+                String hari = rs.getString("hari");
+
+                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                list.add(jadwal);
+            }
+        } catch (Exception e) {
+            System.out.println("gagal");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public static ObservableList<JadwalKelas> getJadwalMahasiswa(String npm, int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari 
+                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari
                 FROM Enroll
-	                    JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
-	                    JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
+                     JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
+                     JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
                 WHERE Enroll.npm = ? AND Teaches.idSemester = ?
                 """;
 
@@ -320,7 +349,7 @@ public class KoneksiDB {
     public static Dosen getDataDosen(String email) {
         String query = "SELECT nama, nip, namaJurusan FROM Dosen JOIN Jurusan ON Dosen.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
-        try{
+        try {
             Connection connection = hubungkan();
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, email);
@@ -369,15 +398,15 @@ public class KoneksiDB {
         ObservableList<Semester> list = FXCollections.observableArrayList();
 
         String sql = """
-                    SELECT 
+                    SELECT
                         idSemester, tahunAjaran, jenis
-                    FROM 
+                    FROM
                         Semester
-                    ORDER BY 
+                    ORDER BY
                         tahunAjaran,
                              CASE
                                 WHEN jenis = 'Ganjil' THEN 1
-                                WHEN jenis = 'Genap' THEN 2 
+                                WHEN jenis = 'Genap' THEN 2
                                 ELSE 3
                              END
                 """;
@@ -406,10 +435,10 @@ public class KoneksiDB {
         String query = "INSERT INTO FRS (idSemester) VALUES (?)";
 
         int idFRS = -1;
-        try{
+        try {
             Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);
-    
+
             ps.setInt(1, idSemester);
             ps.executeUpdate();
 
@@ -454,7 +483,7 @@ public class KoneksiDB {
         String query = "INSERT INTO Enroll (npm, kodeMK, idSemester, idFRS, tanggalFRS) VALUES "
                 + "(? , ? , ? , ? , ?)";
 
-        try{
+        try {
             Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(query);
 
@@ -478,20 +507,20 @@ public class KoneksiDB {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
         String sql = """
-        SELECT 
-            mk.namaMK,
-            t.kelas,
-            t.hari,
-            t.waktuMulai,
-            t.durasi
-        FROM Teaches t
-        JOIN MataKuliah mk 
-            ON t.kodeMK = mk.kodeMK
-        WHERE 
-            t.idSemester = ? AND t.nip = ?
-        ORDER BY 
-            t.hari, t.waktuMulai
-        """;
+                SELECT
+                    mk.namaMK,
+                    t.kelas,
+                    t.hari,
+                    t.waktuMulai,
+                    t.durasi
+                FROM Teaches t
+                JOIN MataKuliah mk
+                    ON t.kodeMK = mk.kodeMK
+                WHERE
+                    t.idSemester = ? AND t.nip = ?
+                ORDER BY
+                    t.hari, t.waktuMulai
+                """;
 
         try {
             Connection conn = hubungkan();
@@ -508,8 +537,7 @@ public class KoneksiDB {
                         rs.getString("kelas"),
                         rs.getString("waktuMulai"),
                         rs.getInt("durasi"),
-                        rs.getString("hari")
-                );
+                        rs.getString("hari"));
 
                 list.add(jadwal);
             }
@@ -525,26 +553,26 @@ public class KoneksiDB {
         ArrayList<KelasAjar> daftarKelas = new ArrayList<>();
 
         String query = """
-            SELECT
-                mk.namaMK,
-                mk.jumlahSKS,
-                t.kelas,
-                t.hari,
-                t.waktuMulai,
-                t.durasi,
-                t.jenisPertemuan,
-                t.metodePertemuan
-            FROM 
-                Teaches t
-            JOIN 
-                MataKuliah mk 
-            ON 
-                t.kodeMK = mk.kodeMK
-            WHERE 
-                t.nip = ? AND t.idSemester = ?
-            ORDER BY 
-                t.hari, t.waktuMulai
-            """;
+                SELECT
+                    mk.namaMK,
+                    mk.jumlahSKS,
+                    t.kelas,
+                    t.hari,
+                    t.waktuMulai,
+                    t.durasi,
+                    t.jenisPertemuan,
+                    t.metodePertemuan
+                FROM
+                    Teaches t
+                JOIN
+                    MataKuliah mk
+                ON
+                    t.kodeMK = mk.kodeMK
+                WHERE
+                    t.nip = ? AND t.idSemester = ?
+                ORDER BY
+                    t.hari, t.waktuMulai
+                """;
 
         try {
             Connection conn = hubungkan();
@@ -564,8 +592,7 @@ public class KoneksiDB {
                         rs.getString("waktuMulai"),
                         rs.getInt("durasi"),
                         rs.getString("jenisPertemuan"),
-                        rs.getString("metodePertemuan")
-                );
+                        rs.getString("metodePertemuan"));
 
                 daftarKelas.add(kelas);
             }

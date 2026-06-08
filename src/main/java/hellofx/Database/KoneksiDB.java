@@ -557,7 +557,6 @@ public class KoneksiDB {
                 SELECT
                     mk.namaMK,
                     mk.jumlahSKS,
-                    t.kelas,
                     t.hari,
                     t.waktuMulai,
                     t.durasi,
@@ -588,7 +587,6 @@ public class KoneksiDB {
                 KelasAjar kelas = new KelasAjar(
                         rs.getString("namaMK"),
                         rs.getInt("jumlahSKS"),
-                        rs.getString("kelas"),
                         rs.getString("hari"),
                         rs.getString("waktuMulai"),
                         rs.getInt("durasi"),

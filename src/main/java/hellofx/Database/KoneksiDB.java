@@ -5,62 +5,90 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
+import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
+import hellofx.kelasData.FRS;
+import hellofx.kelasData.Dosen;
+import hellofx.kelasData.JadwalKelas;
+import hellofx.kelasData.KelasAjar;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
+import hellofx.kelasData.Semester;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class KoneksiDB {
-	private static Connection conn;
-	public static Connection hubungkan() {
-		try {
-			if (conn != null && !conn.isClosed()) {
-				return conn;
-			}
+    private static Connection conn = null;
 
-			String url = "jdbc:sqlserver://localhost:1433;"
-						 + "database=FRS;"
-						 + "user=sa;"
-						 + "password=Rahasia123;"
-						 + "encrypt=true;"
-						 + "trustServerCertificate=true;";
-
-			conn = DriverManager.getConnection(url);
-			System.out.println("Connected to the database");
-		} catch (SQLException e) {
-			System.out.println("Failed to connect to the database");
-			e.printStackTrace();
-		}
-
-		return conn;
-	}
-
-    public static String getNamaJurusanById(int idJurusan) {
-        String query = "SELECT namaJurusan FROM Jurusan WHERE idJurusan = ?";
-
-        try  {
-			Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
-
-			ps.setInt(1, idJurusan);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getString("namaJurusan");
-            } else {
-                return null;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Gagal mengambil nama jurusan");
-            e.printStackTrace();
-            return null;
+    public static Connection hubungkan() {
+        if (conn != null) {
+            return conn;
         }
+
+        String url = "jdbc:sqlserver://localhost:1433;"
+					 + "database=FRS;"
+					 + "user=sa;"
+					 + "password=Rahasia123;"
+					 + "encrypt=true;"
+					 + "trustServerCertificate=true;"
+					 + "loginTimeout=30;";
+
+        try {
+            System.out.println("Mencoba konek...");
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            conn = DriverManager.getConnection(url);
+            System.out.println("Connected to the database");
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Failed to connect to the database");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Failed to connect to the database");
+            e.printStackTrace();
+        }
+        return conn;
     }
 
-    public static void insertMataKuliah(String namaMK, String namaJurusan, int jumlahSKS) {
+	public static void close() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to close the database connection");
+			e.printStackTrace();
+		}
+	}
+
+	public static String getNamaJurusanById(int idJurusan) {
+		String query = "SELECT namaJurusan FROM Jurusan WHERE idJurusan = ?";
+
+		try {
+			Connection c = hubungkan();
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, idJurusan);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return rs.getString("namaJurusan");
+			} else {
+				return null;
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Gagal mengambil nama jurusan");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static void insertMataKuliah(String namaMK, String namaJurusan, int jumlahSKS) {
         int idJurusan = getIdJurusanByNama(namaJurusan);
         if (idJurusan == -1) {
             System.out.println("gagal");
@@ -87,7 +115,7 @@ public class KoneksiDB {
         }
     }
 
-    public static int getIdJurusanByNama(String namaJurusan) {
+	public static int getIdJurusanByNama(String namaJurusan) {
         String query = "SELECT idJurusan FROM Jurusan WHERE namaJurusan = ?";
 
         try  {
@@ -112,14 +140,13 @@ public class KoneksiDB {
         }
     }
 
-    public static int getKodeMkByNamaMK(String namaMK) {
+	public static int getKodeMkByNamaMK(String namaMK) {
         String query = "SELECT kodeMK FROM MataKuliah WHERE namaMK = ?";
 
-        try  {
-			Connection c = hubungkan();
+        try {
+            Connection c = hubungkan();
             PreparedStatement ps = c.prepareStatement(query);
-
-			ps.setString(1, namaMK);
+            ps.setString(1, namaMK);
 
             ResultSet rs = ps.executeQuery();
 
@@ -136,7 +163,7 @@ public class KoneksiDB {
         }
     }
 
-    public static void insertEnroll(String npm, int kodeMK, String kodeSemester, int idFRS, String tanggalFRS) {
+	public static void insertEnroll(String npm, int kodeMK, String kodeSemester, int idFRS, String tanggalFRS) {
         String query = """
                 INSERT INTO Enroll (npm, kodeMK, kodeSemester, idFRS, tanggalFRS)
                 VALUES(?, ?, ?, ?, ?)
@@ -158,8 +185,8 @@ public class KoneksiDB {
         }
     }
 
-    // Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
-    public static String getNamaMKByKodeMK(int kodeMK) {
+	// Mengambil isi dari tabel mata kuliah menggunakan kodeMK dari tabel Enroll
+	public static String getNamaMKByKodeMK(int kodeMK) {
         String query = """
                 SELECT
                     m.namaMK,
@@ -189,7 +216,7 @@ public class KoneksiDB {
         }
     }
 
-    public static boolean checkLogin(String email, String password) {
+	public static boolean checkLogin(String email, String password) {
         String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 
         try  {
@@ -209,7 +236,7 @@ public class KoneksiDB {
         }
     }
 
-    public static boolean checkLoginDosen(String email, String password) {
+	public static boolean checkLoginDosen(String email, String password) {
         String sql = "SELECT 1 FROM Dosen WHERE email = ? AND password = ?";
 
         try  {
@@ -229,14 +256,6 @@ public class KoneksiDB {
         }
     }
 
-	public static ObservableList<MataKuliah> getDaftarMatakuliahFRS(int idMahasiswa, int idSemester) {
-		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
-
-		String sql = "SELECT kodeKM, namaMK, jumlahSKS, idJurusan FROM ";
-
-		return list;
-	}
-
 	public static ObservableList<MataKuliah> getAllMatakuliah(){
 		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
@@ -247,12 +266,39 @@ public class KoneksiDB {
             PreparedStatement ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
+			MataKuliah mk = new MataKuliah(
+				rs.getInt("kodeMK"),
+				rs.getString("namaMK"),
+				rs.getInt("jumlahSKS"),
+				rs.getInt("idJurusan"),
+				rs.getInt("idSemester")
+			);
+
+			list.add(mk);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
+		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
+
+		String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah WHERE idJurusan = ? ORDER BY idSemester, kodeMK";
+
+		try {
+			Connection conn = hubungkan();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, idJ);
+			ResultSet rs = ps.executeQuery();
+
 			while (rs.next()) {
 				int kodeMk = rs.getInt("kodeMK");
 				String namaMK = rs.getString("namaMK");
 				int jumlahSKS = rs.getInt("jumlahSKS");
 				int idSemester = rs.getInt("idSemester");
-				int idJurusan = rs.getInt("idJurusan");
+				int idJurusan = idJ;
 
 				MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
 				list.add(mk);
@@ -267,25 +313,90 @@ public class KoneksiDB {
 
 		return list;
 	}
-    
-    public static Mahasiswa getDataMahasiswa(String email) {
-        String query = "SELECT nama, npm, namaJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
-        try  {
-			Connection connection = hubungkan();
+	public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idSemester);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String namaMk = rs.getString("namaMk");
+                String kelas = rs.getString("kelas");
+                String waktuMulai = rs.getString("waktuMulai");
+                int durasi = rs.getInt("durasi");
+                String hari = rs.getString("hari");
+
+                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                list.add(jadwal);
+            }
+        } catch (Exception e) {
+            System.out.println("gagal");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+	public static ObservableList<JadwalKelas> getJadwalMahasiswa(String npm, int idSemester) {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = """
+                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari
+                FROM Enroll
+                     JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
+                     JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
+                WHERE Enroll.npm = ? AND Teaches.idSemester = ?
+                """;
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, npm);
+            ps.setInt(2, idSemester);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String namaMk = rs.getString("namaMk");
+                String kelas = rs.getString("kelas");
+                String waktuMulai = rs.getString("waktuMulai");
+                int durasi = rs.getInt("durasi");
+                String hari = rs.getString("hari");
+
+                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                list.add(jadwal);
+            }
+        } catch (Exception e) {
+            System.out.println("gagal");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+	public static Mahasiswa getDataMahasiswa(String email) {
+        String query = "SELECT nama, npm, Mahasiswa.idJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
+
+        try {
+            Connection connection = hubungkan();
             PreparedStatement ps = connection.prepareStatement(query);
-
-			ps.setString(1, email);
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String nama = rs.getString("nama");
                 String npm = rs.getString("npm");
-                String namaJurusan = rs.getString("namaJurusan");
+                int idJurusan = rs.getInt("idJurusan");
 
-                return new Mahasiswa(npm, nama, email, namaJurusan);
+                return new Mahasiswa(npm, nama, email, idJurusan);
             } else {
-                System.out.println("Mahasiswa Tidak Ditemukan");
+                System.out.println("Data Mahasiswa Tidak Ditemukan");
                 return null;
             }
 
@@ -294,4 +405,340 @@ public class KoneksiDB {
             return null;
         }
     }
+
+	public static Dosen getDataDosen(String email) {
+        String query = "SELECT nama, nip, namaJurusan FROM Dosen JOIN Jurusan ON Dosen.idJurusan = Jurusan.idJurusan WHERE email = ?";
+
+        try {
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nama = rs.getString("nama");
+                String nip = rs.getString("nip");
+                String namaJurusan = rs.getString("namaJurusan");
+
+                return new Dosen(nip, nama, email, namaJurusan);
+            } else {
+                System.out.println("Data Dosen Tidak Ditemukan");
+                return null;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	public static Integer getIdSemesterFromNamaMK(String namaMK) {
+        String query = "SELECT idSemester FROM Matakuliah WHERE namaMK = ?";
+
+        try {
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, namaMK);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int idSemester = rs.getInt("idSemester");
+                return idSemester;
+            } else {
+                System.out.println("Tidak ada Matakuliah tersebut");
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	public static ObservableList<Semester> getAllSemester() {
+        ObservableList<Semester> list = FXCollections.observableArrayList();
+
+        String sql = """
+                    SELECT
+                        idSemester, tahunAjaran, jenis
+                    FROM
+                        Semester
+                    ORDER BY
+                        tahunAjaran,
+                             CASE
+                                WHEN jenis = 'Ganjil' THEN 1
+                                WHEN jenis = 'Genap' THEN 2
+                                ELSE 3
+                             END
+                """;
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idSemester = rs.getInt("idSemester");
+                String tahunAjaran = rs.getString("tahunAjaran");
+                String jenis = rs.getString("jenis");
+
+                list.add(new Semester(idSemester, tahunAjaran, jenis));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+	public static int makeNewIdFRS(int idSemester) {
+        String query = "INSERT INTO FRS (idSemester) VALUES (?)";
+
+        int idFRS = -1;
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);
+
+            ps.setInt(1, idSemester);
+            ps.executeUpdate();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    idFRS = rs.getInt(1);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idFRS;
+    }
+
+	public static Integer getIdSemester(String tahunAjaran, String jenis) {
+        String query = "SELECT idSemester FROM Semester WHERE tahunAjaran = ? AND jenis = ?";
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, tahunAjaran);
+            ps.setString(2, jenis);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int idSemester = rs.getInt("idSemester");
+                return idSemester;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	public static void isiDataEnroll(ArrayList<HalamanFRS.Course> selectedCourse, String npm, int idSemester,
+		int idFRS) {
+        String query = "INSERT INTO Enroll (npm, kodeMK, idSemester, idFRS, tanggalFRS) VALUES "
+					   + "(? , ? , ? , ? , ?)";
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            for (HalamanFRS.Course c : selectedCourse) {
+                ps.setString(1, npm);
+                ps.setInt(2, c.getKodeMK());
+                ps.setInt(3, idSemester);
+                ps.setInt(4, idFRS);
+                ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            System.out.println("Berhasil insert");
+        } catch (SQLException e) {
+            System.out.println("gagal menambahkan");
+        }
+    }
+
+	public static ObservableList<JadwalKelas> getJadwalDosen(int idSemester, String nip) {
+        ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
+
+        String sql = """
+                SELECT
+                    mk.namaMK,
+                    t.kelas,
+                    t.hari,
+                    t.waktuMulai,
+                    t.durasi
+                FROM Teaches t
+                JOIN MataKuliah mk
+                    ON t.kodeMK = mk.kodeMK
+                WHERE
+                    t.idSemester = ? AND t.nip = ?
+                ORDER BY
+                    t.hari, t.waktuMulai
+                """;
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, idSemester);
+            ps.setString(2, nip);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                JadwalKelas jadwal = new JadwalKelas(
+                    rs.getString("namaMK"),
+                    rs.getString("kelas"),
+                    rs.getString("waktuMulai"),
+                    rs.getInt("durasi"),
+                    rs.getString("hari"));
+
+                list.add(jadwal);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+	public static ArrayList<KelasAjar> getKelasAjarByDosen(String nip, int idSemester) {
+        ArrayList<KelasAjar> daftarKelas = new ArrayList<>();
+
+        String query = """
+                SELECT
+                    mk.namaMK,
+                    mk.jumlahSKS,
+                    t.kelas,
+                    t.hari,
+                    t.waktuMulai,
+                    t.durasi,
+                    t.jenisPertemuan,
+                    t.metodePertemuan
+                FROM
+                    Teaches t
+                JOIN
+                    MataKuliah mk
+                ON
+                    t.kodeMK = mk.kodeMK
+                WHERE
+                    t.nip = ? AND t.idSemester = ?
+                ORDER BY
+                    t.hari, t.waktuMulai
+                """;
+
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ps.setString(1, nip);
+            ps.setInt(2, idSemester);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                KelasAjar kelas = new KelasAjar(
+                    rs.getString("namaMK"),
+                    rs.getInt("jumlahSKS"),
+                    rs.getString("kelas"),
+                    rs.getString("hari"),
+                    rs.getString("waktuMulai"),
+                    rs.getInt("durasi"),
+                    rs.getString("jenisPertemuan"),
+                    rs.getString("metodePertemuan"));
+
+                daftarKelas.add(kelas);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return daftarKelas;
+    }
+
+
+	public static List<FRS> getFRS(String npm, int idSemester) {
+        List<FRS> list = new ArrayList<>();
+
+		String SQL = """
+		SELECT
+			Enroll.idFRS as idFRS,
+			Enroll.tanggalFRS as tanggalFRS,
+			MataKuliah.kodeMK as kodeMK,
+			MataKuliah.namaMK as namaMK,
+			MataKuliah.jumlahSKS as jumlahSKS,
+			MataKuliah.idJurusan as idJurusan,
+			MataKuliah.idSemester as idSemester
+		FROM
+			Enroll JOIN MataKuliah ON Enroll.kodeMK = MataKuliah.kodeMK
+		WHERE
+			Enroll.npm = ? AND Enroll.idSemester = ?
+		""";
+
+		try {
+			Connection conn = hubungkan();
+			PreparedStatement ps = conn.prepareStatement(SQL);
+			ps.setString(1, npm);
+			ps.setInt(2, idSemester);
+
+			ResultSet rs = ps.executeQuery();
+			FRS currentFRS = null;
+			while (rs.next()) {
+				int currentFRSID = rs.getInt("idFRS");
+				LocalDateTime localDateTime = rs.getObject("tanggalFRS", LocalDateTime.class);
+				Instant time = localDateTime.toInstant(ZoneOffset.UTC);
+
+				if (currentFRS == null || currentFRS.getID() != currentFRSID) {
+					if (currentFRS != null) {
+						list.add(currentFRS);
+					}
+
+					currentFRS = new FRS(currentFRSID, time);
+				}
+
+				MataKuliah mk = new MataKuliah(
+					rs.getInt("kodeMK"),
+					rs.getString("namaMK"),
+					rs.getInt("jumlahSKS"),
+					rs.getInt("idJurusan"),
+					rs.getInt("idSemester")
+				);
+
+				currentFRS.addMataKuliah(mk);
+			}
+
+			if (currentFRS != null) {
+				list.add(currentFRS);
+			}
+		} catch (SQLException e) {
+            e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static boolean deleteEnrollment(int idFRS, int kodeMK) {
+		String sql = "DELETE FROM Enroll WHERE idFRS = ? AND kodeMK = ?";
+
+		try {
+			Connection conn = hubungkan();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, idFRS);
+			ps.setInt(2, kodeMK);
+
+			return (ps.executeUpdate() == 1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
 }

@@ -1,5 +1,6 @@
 package hellofx.halaman.HalamanMahasiswa;
 
+import hellofx.Database.KoneksiDB;
 import hellofx.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -60,29 +61,14 @@ public class HalamanProfil {
 
         menu.getChildren().addAll(tombolBeranda, tombolFrs, tombolJadwal);
 
-        VBox profil = new VBox();
-        profil.setSpacing(15);
-        profil.setAlignment(Pos.TOP_CENTER);
-        profil.setPadding(new Insets(100, 40, 30, 40));
+        VBox profil = createProfileContent();
         HBox.setHgrow(profil, Priority.ALWAYS);
-
-        ImageView fotoProfil = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
-        fotoProfil.setFitWidth(200);
-        fotoProfil.setFitHeight(200);
-        fotoProfil.setPreserveRatio(true);
-
-        Label nama = new Label("Nama : " + mahasiswa.getNama());
-        nama.setStyle(setStyle());
-        Label npm = new Label("NPM : " + mahasiswa.getNPM());
-        npm.setStyle(setStyle());
-
-        Label jurusan = new Label("Jurusan : " + mahasiswa.getNamaJurusan());
-        jurusan.setStyle(setStyle());
-
-        profil.getChildren().addAll(fotoProfil, nama, npm, jurusan);
 
         HBox bagianTengah = new HBox();
         bagianTengah.getChildren().addAll(menu, profil);
+        bagianTengah.setPadding(new Insets(25, 35, 25, 0));
+        bagianTengah.setSpacing(30);
+        VBox.setVgrow(bagianTengah, Priority.ALWAYS);
 
         layout.getChildren().addAll(header, bagianTengah);
 
@@ -117,6 +103,65 @@ public class HalamanProfil {
         topBar.getChildren().addAll(title, spacer, notif, profile);
 
         return topBar;
+    }
+
+    private VBox createProfileContent() {
+        VBox container = new VBox(25);
+        container.setPadding(new Insets(35));
+        container.setAlignment(Pos.TOP_CENTER);
+        container.setStyle(
+                "-fx-background-color: white;"
+                        + "-fx-background-radius: 18;"
+                        + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 4);");
+
+        ImageView avatar = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
+        avatar.setFitWidth(120);
+        avatar.setFitHeight(120);
+        avatar.setPreserveRatio(true);
+
+        Label nama = new Label(mahasiswa.getNama());
+        nama.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1E293B;");
+
+        Label role = new Label("Mahasiswa Universitas Jaya Jaya");
+        role.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748B;");
+
+        VBox identityBox = new VBox(5);
+        identityBox.setAlignment(Pos.CENTER);
+        identityBox.getChildren().addAll(nama, role);
+
+        VBox dataCard = new VBox(18);
+        dataCard.setPadding(new Insets(25));
+        dataCard.setMaxWidth(650);
+        dataCard.setStyle(
+                "-fx-background-color: #F8FAFC;"
+                        + "-fx-background-radius: 14;"
+                        + "-fx-border-color: #E2E8F0;"
+                        + "-fx-border-radius: 14;");
+
+        dataCard.getChildren().addAll(
+                createInfoRow("NPM", mahasiswa.getNPM()),
+                createInfoRow("Nama", mahasiswa.getNama()),
+                createInfoRow("Email", mahasiswa.getEmail()),
+                createInfoRow("Jurusan", KoneksiDB.getNamaJurusanById(mahasiswa.getIdJurusan())));
+
+        container.getChildren().addAll(avatar, identityBox, dataCard);
+
+        return container;
+    }
+
+    private HBox createInfoRow(String labelText, String valueText) {
+        HBox row = new HBox(25);
+        row.setAlignment(Pos.CENTER_LEFT);
+
+        Label label = new Label(labelText);
+        label.setPrefWidth(120);
+        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #475569;");
+
+        Label value = new Label(valueText);
+        value.setStyle("-fx-font-size: 14px; -fx-text-fill: #0F172A;");
+
+        row.getChildren().addAll(label, value);
+        return row;
     }
 
     private Button tombolIcon(String pathIcon, String teks) {

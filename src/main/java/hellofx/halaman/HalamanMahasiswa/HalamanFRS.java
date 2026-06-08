@@ -1,11 +1,13 @@
 package hellofx.halaman.HalamanMahasiswa;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import hellofx.Database.KoneksiDB;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
+import hellofx.kelasData.Semester;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,6 +32,7 @@ public class HalamanFRS {
     private Stage stage;
     private Label totalSksValue;
     private Mahasiswa mahasiswa;
+    private ComboBox<Semester> semesterBox;
 
     private final Map<CheckBox, Course> courseMap = new LinkedHashMap<>();
 
@@ -43,8 +46,8 @@ public class HalamanFRS {
 
         BorderPane root = new BorderPane();
         root.setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-font-family: Arial;");
+            "-fx-background-color: white;" +
+            "-fx-font-family: Arial;");
 
         root.setTop(createTopBar());
 
@@ -78,9 +81,9 @@ public class HalamanFRS {
 
         Label title = new Label("FRS");
         title.setStyle(
-                "-fx-font-size: 24px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: white;");
+            "-fx-font-size: 24px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: white;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -137,31 +140,38 @@ public class HalamanFRS {
 
         return sidebar;
     }
-    
+
     private VBox createCenterContent() {
         VBox center = new VBox(12);
         center.setAlignment(Pos.TOP_CENTER);
         center.setPrefWidth(560);
 
-        ComboBox<String> semesterBox = new ComboBox<>();
-        semesterBox.getItems().addAll(
-                "Semester Ganjil 2024",
-                "Semester Genap 2024",
-                "Semester Ganjil 2025");
-        semesterBox.setValue("Semester Ganjil 2024");
-        semesterBox.setPrefWidth(350);
-        semesterBox.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-color: #F8F3F3;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-color: #D6D0D0;" +
-                        "-fx-border-radius: 10;");
+        semesterBox = new ComboBox<>();
+        semesterBox.setItems(KoneksiDB.getAllSemester());
+
+        if (!semesterBox.getItems().isEmpty()) {
+            semesterBox.setValue(semesterBox.getItems().get(0));
+        }
 
         VBox courseList = new VBox(0);
         courseList.setMaxWidth(545);
 
-        loadMataKuliahFromDB(courseList);
+        if (semesterBox.getValue() != null) {
+            loadMataKuliahFromDB(courseList);
+        }
+
+        semesterBox.setOnAction(e -> {
+            courseList.getChildren().clear();
+            courseMap.clear();
+
+            Semester selectedSemester = semesterBox.getValue();
+
+            if (selectedSemester != null) {
+                loadMataKuliahFromDB(courseList);
+            }
+
+            updateTotalSks();
+        });
 
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
@@ -169,9 +179,9 @@ public class HalamanFRS {
         scrollPane.setPrefHeight(410);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-background: transparent;" +
-                        "-fx-border-color: transparent;");
+            "-fx-background-color: transparent;" +
+            "-fx-background: transparent;" +
+            "-fx-border-color: transparent;");
 
         center.getChildren().addAll(semesterBox, scrollPane);
 
@@ -179,7 +189,7 @@ public class HalamanFRS {
     }
 
     private void loadMataKuliahFromDB(VBox courselist) {
-        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliah();
+        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliahBerdasarkanIdJurusan(mahasiswa.getIdJurusan());
 
         int semesterSebelumnya = -1;
 
@@ -191,7 +201,7 @@ public class HalamanFRS {
                 semesterSebelumnya = semesterSekarang;
             }
 
-            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false);
+            Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false, mk.getkodeMK());
             addCourseRow(courselist, course);
         }
 
@@ -203,11 +213,11 @@ public class HalamanFRS {
         header.setPadding(new Insets(0, 0, 0, 20));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle(
-                "-fx-background-color: #AFC2D9;" +
-                        "-fx-background-radius: 7;" +
-                        "-fx-font-size: 19px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: black;");
+            "-fx-background-color: #AFC2D9;" +
+            "-fx-background-radius: 7;" +
+            "-fx-font-size: 19px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: black;");
 
         VBox.setMargin(header, new Insets(8, 0, 0, 0));
         parent.getChildren().add(header);
@@ -219,29 +229,29 @@ public class HalamanFRS {
         row.setPrefHeight(44);
         row.setPadding(new Insets(0, 20, 0, 16));
         row.setStyle(
-                "-fx-background-color: #F8F3F3;" +
-                        "-fx-border-color: #E8E8E8;" +
-                        "-fx-border-width: 0 0 1 0;");
+            "-fx-background-color: #F8F3F3;" +
+            "-fx-border-color: #E8E8E8;" +
+            "-fx-border-width: 0 0 1 0;");
 
         Label nameLabel = new Label(course.namaMK + " (" + course.sks + " SKS)");
         nameLabel.setPrefWidth(330);
         nameLabel.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #1D1D1D;");
+            "-fx-font-size: 18px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: #1D1D1D;");
 
-        Label kodeLabel = new Label(course.kodeMK);
-        kodeLabel.setPrefWidth(105);
-        kodeLabel.setStyle(
-                "-fx-font-size: 18px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #1D1D1D;");
+        // Label kodeLabel = new Label(course.kodeMK);
+        // kodeLabel.setPrefWidth(105);
+        // kodeLabel.setStyle(
+        // "-fx-font-size: 18px;" +
+        // "-fx-font-weight: bold;" +
+        // "-fx-text-fill: #1D1D1D;");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(course.selected);
         checkBox.setStyle(
-                "-fx-mark-color: #6C5EB5;" +
-                        "-fx-cursor: hand;");
+            "-fx-mark-color: #6C5EB5;" +
+            "-fx-cursor: hand;");
 
         courseMap.put(checkBox, course);
 
@@ -249,7 +259,7 @@ public class HalamanFRS {
             updateTotalSks();
         });
 
-        row.getChildren().addAll(nameLabel, kodeLabel, checkBox);
+        row.getChildren().addAll(nameLabel, checkBox);
         parent.getChildren().add(row);
     }
 
@@ -277,27 +287,59 @@ public class HalamanFRS {
 
         Label totalLabel = new Label("Total sks :");
         totalLabel.setStyle(
-                "-fx-font-size: 21px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: black;");
+            "-fx-font-size: 21px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: black;");
 
         totalSksValue = new Label("0");
         totalSksValue.setStyle(
-                "-fx-font-size: 21px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: black;");
+            "-fx-font-size: 21px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: black;");
 
         Button submitButton = new Button("Submit");
         submitButton.setPrefWidth(120);
         submitButton.setPrefHeight(46);
         submitButton.setStyle(
-                "-fx-background-color: #243F91;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 18px;" +
-                        "-fx-cursor: hand;");
+            "-fx-background-color: #243F91;" +
+            "-fx-background-radius: 10;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 18px;" +
+            "-fx-cursor: hand;");
 
         submitButton.setOnAction(e -> {
+            Semester semesterRN = semesterBox.getValue();
+
+            ArrayList<Course> selectedCourse = new ArrayList<>();
+            for (Map.Entry<CheckBox, Course> entry : courseMap.entrySet()) {
+                if (entry.getKey().isSelected()) {
+                    selectedCourse.add(entry.getValue());
+                }
+            }
+
+            if (selectedCourse.isEmpty()) {
+                Alert warn = new Alert(Alert.AlertType.WARNING);
+                warn.initOwner(stage);
+                warn.setHeaderText("Belum ada mata kuliah yang dipilih");
+                warn.showAndWait();
+                return;
+            }
+
+            // dia akan membuat idBaru pada setiap kali submit dipencet
+            int idFRS = KoneksiDB.makeNewIdFRS(semesterRN.getIdSemester());
+
+            // kalo dia gagal
+            if (idFRS == -1) {
+                Alert err = new Alert(Alert.AlertType.ERROR);
+                err.initOwner(stage);
+                err.setHeaderText("Gagal membuat FRS baru");
+                err.setContentText("Data tidak dapat disimpan. Coba lagi.");
+                err.showAndWait();
+                return;
+            }
+
+            KoneksiDB.isiDataEnroll(selectedCourse, mahasiswa.getNPM(), semesterRN.getIdSemester(), idFRS);
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.initOwner(stage);
             alert.setTitle("Submit FRS");
@@ -314,9 +356,9 @@ public class HalamanFRS {
         return right;
     }
 
-     private Button tombolIcon(String pathIcon, String teks) {
+    private Button tombolIcon(String pathIcon, String teks) {
         ImageView image = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/" + pathIcon)));
-        
+
         image.setFitWidth(35);
         image.setFitHeight(35);
         image.setPreserveRatio(true);
@@ -332,7 +374,7 @@ public class HalamanFRS {
         button.setGraphic(isi);
         button.setCursor(Cursor.HAND);
         button.setStyle(
-                "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
+            "-fx-pref-width : 100; -fx-pref-height : 100; -fx-background-color : #1E3A8A; -fx-text-fill : #ffffff; -fx-font-weight : bold; -fx-background-radius: 10;");
 
         return button;
     }
@@ -354,17 +396,29 @@ public class HalamanFRS {
         }
     }
 
-    private static class Course {
+    public static class Course {
+        int kodeMK;
         String namaMK;
-        String kodeMK;
         int sks;
         boolean selected;
 
-        Course(String namaMK, int sks, boolean selected) {
-            this.namaMK = namaMK;
+        Course(String namaMK, int sks, boolean selected, int kodeMK) {
             this.kodeMK = kodeMK;
+            this.namaMK = namaMK;
             this.sks = sks;
             this.selected = selected;
+        }
+
+        public String getNamaMK() {
+            return namaMK;
+        }
+
+        public int getSks() {
+            return sks;
+        }
+
+        public int getKodeMK() {
+            return kodeMK;
         }
     }
 }

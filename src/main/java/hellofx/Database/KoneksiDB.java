@@ -55,8 +55,9 @@ public class KoneksiDB {
     public static String getNamaJurusanById(int idJurusan) {
         String query = "SELECT namaJurusan FROM Jurusan WHERE idJurusan = ?";
 
-        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
-
+        try{
+            Connection c = hubungkan();
+            PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, idJurusan);
 
             ResultSet rs = ps.executeQuery();
@@ -74,36 +75,12 @@ public class KoneksiDB {
         }
     }
 
-    public static void insertMataKuliah(String namaMK, String namaJurusan, int jumlahSKS) {
-        int idJurusan = getIdJurusanByNama(namaJurusan);
-        if (idJurusan == -1) {
-            System.out.println("gagal");
-            return;
-        }
-
-        String query = "INSERT INTO MataKuliah (kodeMK, namaMK, idJurusan, jumlahSKS) "
-                + "VALUES (NEXT VALUE FOR seq_kode_mk, ?, ?, ?)";
-
-        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
-
-            ps.setString(1, namaMK);
-            ps.setInt(2, idJurusan);
-            ps.setInt(3, jumlahSKS);
-
-            ps.executeUpdate();
-            System.out.println("berhasil insert");
-
-        } catch (SQLException e) {
-            System.out.println("gagal insert");
-            e.printStackTrace();
-        }
-    }
-
     public static int getIdJurusanByNama(String namaJurusan) {
         String query = "SELECT idJurusan FROM Jurusan WHERE namaJurusan = ?";
 
-        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
-
+        try {
+            Connection c = hubungkan();
+            PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, namaJurusan);
 
             ResultSet rs = ps.executeQuery();
@@ -125,8 +102,9 @@ public class KoneksiDB {
     public static int getKodeMkByNamaMK(String namaMK) {
         String query = "SELECT kodeMK FROM MataKuliah WHERE namaMK = ?";
 
-        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
-
+        try{
+            Connection c = hubungkan();
+            PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, namaMK);
 
             ResultSet rs = ps.executeQuery();
@@ -155,7 +133,9 @@ public class KoneksiDB {
                 WHERE kodeMK = ?
                 """;
 
-        try (Connection c = hubungkan(); PreparedStatement ps = c.prepareStatement(query)) {
+        try {
+            Connection c = hubungkan();
+            PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, kodeMK);
 
             ResultSet result = ps.executeQuery();
@@ -176,8 +156,9 @@ public class KoneksiDB {
     public static boolean checkLogin(String email, String password) {
         String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 
-        try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(sql)) {
-
+        try{
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
 
@@ -194,8 +175,9 @@ public class KoneksiDB {
     public static boolean checkLoginDosen(String email, String password) {
         String sql = "SELECT 1 FROM Dosen WHERE email = ? AND password = ?";
 
-        try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(sql)) {
-
+        try {
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
 
@@ -214,7 +196,9 @@ public class KoneksiDB {
 
         String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah ORDER BY idSemester, kodeMK";
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -243,7 +227,9 @@ public class KoneksiDB {
 
         String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah WHERE idJurusan = ? ORDER BY idSemester, kodeMK";
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idJ);
             ResultSet rs = ps.executeQuery();
 
@@ -273,7 +259,9 @@ public class KoneksiDB {
 
         String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, idSemester);
             ResultSet rs = ps.executeQuery();
 
@@ -298,8 +286,9 @@ public class KoneksiDB {
     public static Mahasiswa getDataMahasiswa(String email) {
         String query = "SELECT nama, npm, Mahasiswa.idJurusan FROM Mahasiswa JOIN Jurusan ON Mahasiswa.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
-        try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(query)) {
-
+        try {
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
@@ -323,8 +312,9 @@ public class KoneksiDB {
     public static Dosen getDataDosen(String email) {
         String query = "SELECT nama, nip, namaJurusan FROM Dosen JOIN Jurusan ON Dosen.idJurusan = Jurusan.idJurusan WHERE email = ?";
 
-        try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(query)) {
-
+        try{
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
@@ -348,7 +338,9 @@ public class KoneksiDB {
     public static Integer getIdSemesterFromNamaMK(String namaMK) {
         String query = "SELECT idSemester FROM Matakuliah WHERE namaMK = ?";
 
-        try (Connection connection = hubungkan(); PreparedStatement ps = connection.prepareStatement(query)) {
+        try {
+            Connection connection = hubungkan();
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, namaMK);
             ResultSet rs = ps.executeQuery();
 
@@ -382,7 +374,10 @@ public class KoneksiDB {
                              END
                 """;
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 int idSemester = rs.getInt("idSemester");
@@ -403,8 +398,10 @@ public class KoneksiDB {
         String query = "INSERT INTO FRS (idSemester) VALUES (?)";
 
         int idFRS = -1;
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);) {
-
+        try{
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);
+    
             ps.setInt(1, idSemester);
             ps.executeUpdate();
 
@@ -423,8 +420,9 @@ public class KoneksiDB {
     public static Integer getIdSemester(String tahunAjaran, String jenis) {
         String query = "SELECT idSemester FROM Semester WHERE tahunAjaran = ? AND jenis = ?";
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(query)) {
-
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, tahunAjaran);
             ps.setString(2, jenis);
 
@@ -448,7 +446,9 @@ public class KoneksiDB {
         String query = "INSERT INTO Enroll (npm, kodeMK, idSemester, idFRS, tanggalFRS) VALUES "
                 + "(? , ? , ? , ? , ?)";
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(query)) {
+        try{
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
 
             for (HalamanFRS.Course c : selectedCourse) {
                 ps.setString(1, npm);
@@ -485,7 +485,9 @@ public class KoneksiDB {
             t.hari, t.waktuMulai
         """;
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, idSemester);
             ps.setString(2, nip);
@@ -536,8 +538,10 @@ public class KoneksiDB {
                 t.hari, t.waktuMulai
             """;
 
-        try (Connection conn = hubungkan(); PreparedStatement ps = conn.prepareStatement(query)) {
-
+        try {
+            Connection conn = hubungkan();
+            PreparedStatement ps = conn.prepareStatement(query);
+            
             ps.setString(1, nip);
             ps.setInt(2, idSemester);
 

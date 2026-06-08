@@ -233,7 +233,7 @@ public class HalamanJadwal {
             data2.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
         }
 
-        ObservableList<JadwalKelas> list = KoneksiDB.getAllJadwal(idSemester);
+        ObservableList<JadwalKelas> list = KoneksiDB.getAllJadwal(mahasiswa.getNPM(), idSemester);
 
         for (JadwalKelas x : list) {
             ambilJadwal(data2, x);

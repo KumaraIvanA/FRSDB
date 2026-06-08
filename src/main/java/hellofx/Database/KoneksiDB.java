@@ -254,15 +254,23 @@ public class KoneksiDB {
         return list;
     }
 
-    public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
+    public static ObservableList<JadwalKelas> getAllJadwal(String npm, int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+        String sql = """
+                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari 
+                FROM Enroll
+	                    JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
+	                    JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
+                WHERE Enroll.npm = ? AND Teaches.idSemester = ?
+                """;
 
         try {
             Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idSemester);
+            ps.setString(1, npm);
+            ps.setInt(2, idSemester);
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {

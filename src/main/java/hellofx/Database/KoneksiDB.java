@@ -30,7 +30,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
                 + "database=FRS;"
                 + "user=sa;"
-                + "password=passowrd;"
+                + "password=Rahasia123;"
                 + "encrypt=true;"
                 + "trustServerCertificate=true;"
                 + "loginTimeout=30;";
@@ -254,10 +254,11 @@ public class KoneksiDB {
         return list;
     }
 
+    //Jadwal Kelas untuk dosen dan mahasiswa
     public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+        String sql = "SELECT namaMK, waktuMulai, durasi, hari, metodePertemuan FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
 
         try {
             Connection conn = hubungkan();
@@ -267,12 +268,12 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 String namaMk = rs.getString("namaMk");
-                String kelas = rs.getString("kelas");
                 String waktuMulai = rs.getString("waktuMulai");
                 int durasi = rs.getInt("durasi");
                 String hari = rs.getString("hari");
+                String metodePertemuan = rs.getString("metodePertemuan");
 
-                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                JadwalKelas jadwal = new JadwalKelas(namaMk, waktuMulai, durasi, hari, metodePertemuan);
                 list.add(jadwal);
             }
         } catch (Exception e) {
@@ -287,7 +288,7 @@ public class KoneksiDB {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari
+                SELECT MataKuliah.namaMK, Teaches.waktuMulai, Teaches.durasi, Teaches.hari, Teaches.metodePertemuan
                 FROM Enroll
                      JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
                      JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
@@ -304,12 +305,12 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 String namaMk = rs.getString("namaMk");
-                String kelas = rs.getString("kelas");
                 String waktuMulai = rs.getString("waktuMulai");
                 int durasi = rs.getInt("durasi");
                 String hari = rs.getString("hari");
+                String metodePertemuan = rs.getString("metodePertemuan");
 
-                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                JadwalKelas jadwal = new JadwalKelas(namaMk, waktuMulai, durasi, hari, metodePertemuan);
                 list.add(jadwal);
             }
         } catch (Exception e) {
@@ -509,13 +510,16 @@ public class KoneksiDB {
         String sql = """
                 SELECT
                     mk.namaMK,
-                    t.kelas,
                     t.hari,
                     t.waktuMulai,
-                    t.durasi
-                FROM Teaches t
-                JOIN MataKuliah mk
-                    ON t.kodeMK = mk.kodeMK
+                    t.durasi,
+                    t.metodePertemuan
+                FROM 
+                    Teaches t
+                JOIN 
+                    MataKuliah mk
+                ON 
+                    t.kodeMK = mk.kodeMK
                 WHERE
                     t.idSemester = ? AND t.nip = ?
                 ORDER BY
@@ -534,10 +538,10 @@ public class KoneksiDB {
             while (rs.next()) {
                 JadwalKelas jadwal = new JadwalKelas(
                         rs.getString("namaMK"),
-                        rs.getString("kelas"),
                         rs.getString("waktuMulai"),
                         rs.getInt("durasi"),
-                        rs.getString("hari"));
+                        rs.getString("hari"),
+                        rs.getString("metodePertemuan"));
 
                 list.add(jadwal);
             }

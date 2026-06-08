@@ -154,7 +154,7 @@ public class HalamanFRS {
         }
 
         VBox courseList = new VBox(0);
-        courseList.setMaxWidth(545);
+        courseList.setMaxWidth(Double.MAX_VALUE);
 
         if (semesterBox.getValue() != null) {
             loadMataKuliahFromDB(courseList);
@@ -176,7 +176,7 @@ public class HalamanFRS {
         ScrollPane scrollPane = new ScrollPane(courseList);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefWidth(560);
-        scrollPane.setPrefHeight(410);
+        scrollPane.setPrefHeight(800);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle(
             "-fx-background-color: transparent;" +
@@ -209,7 +209,8 @@ public class HalamanFRS {
 
     private void addSemesterHeader(VBox parent, String title) {
         Label header = new Label(title);
-        header.setPrefSize(545, 42);
+        header.setMaxWidth(Double.MAX_VALUE);
+        header.setPrefHeight(42);
         header.setPadding(new Insets(0, 0, 0, 20));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle(
@@ -226,7 +227,7 @@ public class HalamanFRS {
     private void addCourseRow(VBox parent, Course course) {
         HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT);
-        row.setPrefHeight(44);
+        row.setPrefHeight(44);  
         row.setPadding(new Insets(0, 20, 0, 16));
         row.setStyle(
             "-fx-background-color: #F8F3F3;" +
@@ -239,13 +240,6 @@ public class HalamanFRS {
             "-fx-font-size: 18px;" +
             "-fx-font-weight: bold;" +
             "-fx-text-fill: #1D1D1D;");
-
-        // Label kodeLabel = new Label(course.kodeMK);
-        // kodeLabel.setPrefWidth(105);
-        // kodeLabel.setStyle(
-        // "-fx-font-size: 18px;" +
-        // "-fx-font-weight: bold;" +
-        // "-fx-text-fill: #1D1D1D;");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(course.selected);

@@ -118,7 +118,6 @@ public class HalamanDaftarKelasDosen {
 
         card.getChildren().addAll(
                 namaMK,
-                createInfoRow("Kelas", kelas.getKelas()),
                 createInfoRow("SKS", String.valueOf(kelas.getJumlahSKS())),
                 createInfoRow("Jadwal", capitalize(kelas.getHari()) + ", " + kelas.getWaktuMulai().substring(0, 5)),
                 createInfoRow("Durasi", kelas.getDurasi() + " menit"),

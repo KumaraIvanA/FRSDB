@@ -285,7 +285,11 @@ public class KoneksiDB {
 	public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
 		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-		String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah WHERE idJurusan = ? ORDER BY idSemester, kodeMK";
+        String sql = "SELECT MatakuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, MatakuliahTerbuka.idSemester\r\n" + //
+                     "FROM MataKuliah\r\n" + //
+                     "JOIN MatakuliahTerbuka ON MatakuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
+                     "JOIN Semester ON Semester.idSemester = MatakuliahTerbuka.idSemester\r\n" + //
+                     "WHERE MataKuliah.idJurusan = ?";
 
 		try {
 			Connection conn = hubungkan();
@@ -303,7 +307,6 @@ public class KoneksiDB {
 				MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
 				list.add(mk);
 			}
-			;
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -314,10 +317,11 @@ public class KoneksiDB {
 		return list;
 	}
 
-	public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
+
+    public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT namaMK, kelas, waktuMulai, durasi, hari FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+        String sql = "SELECT namaMK, waktuMulai, durasi, hari, metodePertemuan FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
 
         try {
             Connection conn = hubungkan();
@@ -327,12 +331,12 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 String namaMk = rs.getString("namaMk");
-                String kelas = rs.getString("kelas");
                 String waktuMulai = rs.getString("waktuMulai");
                 int durasi = rs.getInt("durasi");
                 String hari = rs.getString("hari");
+                String metodePertemuan = rs.getString("metodePertemuan");
 
-                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                JadwalKelas jadwal = new JadwalKelas(namaMk, waktuMulai, durasi, hari, metodePertemuan);
                 list.add(jadwal);
             }
         } catch (Exception e) {
@@ -347,7 +351,7 @@ public class KoneksiDB {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT MataKuliah.namaMK, Teaches.kelas, Teaches.waktuMulai, Teaches.durasi, Teaches.hari
+                SELECT MataKuliah.namaMK, Teaches.waktuMulai, Teaches.durasi, Teaches.hari, Teaches.metodePertemuan
                 FROM Enroll
                      JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
                      JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
@@ -364,12 +368,12 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 String namaMk = rs.getString("namaMk");
-                String kelas = rs.getString("kelas");
                 String waktuMulai = rs.getString("waktuMulai");
                 int durasi = rs.getInt("durasi");
                 String hari = rs.getString("hari");
+                String metodePertemuan = rs.getString("metodePertemuan");
 
-                JadwalKelas jadwal = new JadwalKelas(namaMk, kelas, waktuMulai, durasi, hari);
+                JadwalKelas jadwal = new JadwalKelas(namaMk, waktuMulai, durasi, hari, metodePertemuan);
                 list.add(jadwal);
             }
         } catch (Exception e) {
@@ -462,13 +466,6 @@ public class KoneksiDB {
                         idSemester, tahunAjaran, jenis
                     FROM
                         Semester
-                    ORDER BY
-                        tahunAjaran,
-                             CASE
-                                WHEN jenis = 'Ganjil' THEN 1
-                                WHEN jenis = 'Genap' THEN 2
-                                ELSE 3
-                             END
                 """;
 
         try {
@@ -569,13 +566,16 @@ public class KoneksiDB {
         String sql = """
                 SELECT
                     mk.namaMK,
-                    t.kelas,
                     t.hari,
                     t.waktuMulai,
-                    t.durasi
-                FROM Teaches t
-                JOIN MataKuliah mk
-                    ON t.kodeMK = mk.kodeMK
+                    t.durasi,
+                    t.metodePertemuan
+                FROM 
+                    Teaches t
+                JOIN 
+                    MataKuliah mk
+                ON 
+                    t.kodeMK = mk.kodeMK
                 WHERE
                     t.idSemester = ? AND t.nip = ?
                 ORDER BY
@@ -594,10 +594,10 @@ public class KoneksiDB {
             while (rs.next()) {
                 JadwalKelas jadwal = new JadwalKelas(
                     rs.getString("namaMK"),
-                    rs.getString("kelas"),
                     rs.getString("waktuMulai"),
                     rs.getInt("durasi"),
-                    rs.getString("hari"));
+                    rs.getString("hari"),
+                    rs.getString("metodePertemuan"));
 
                 list.add(jadwal);
             }
@@ -616,7 +616,6 @@ public class KoneksiDB {
                 SELECT
                     mk.namaMK,
                     mk.jumlahSKS,
-                    t.kelas,
                     t.hari,
                     t.waktuMulai,
                     t.durasi,
@@ -645,6 +644,7 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 KelasAjar kelas = new KelasAjar(
+					<<<<<<< HEAD
                     rs.getString("namaMK"),
                     rs.getInt("jumlahSKS"),
                     rs.getString("kelas"),
@@ -653,6 +653,15 @@ public class KoneksiDB {
                     rs.getInt("durasi"),
                     rs.getString("jenisPertemuan"),
                     rs.getString("metodePertemuan"));
+				=======
+                        rs.getString("namaMK"),
+                        rs.getInt("jumlahSKS"),
+                        rs.getString("hari"),
+                        rs.getString("waktuMulai"),
+                        rs.getInt("durasi"),
+                        rs.getString("jenisPertemuan"),
+                rs.getString("metodePertemuan"));
+				>>>>>>> 717c6cdfb7dc7221988cfb1f745dcc98309a6493
 
                 daftarKelas.add(kelas);
             }

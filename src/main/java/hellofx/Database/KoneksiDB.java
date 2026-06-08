@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
-import hellofx.kelasData.FRS;
 import hellofx.kelasData.Dosen;
+import hellofx.kelasData.FRS;
 import hellofx.kelasData.JadwalKelas;
 import hellofx.kelasData.KelasAjar;
 import hellofx.kelasData.Mahasiswa;
@@ -34,7 +34,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
 					 + "database=FRS;"
 					 + "user=sa;"
-					 + "password=Rahasia123;"
+					 + "password=passowrd;"
 					 + "encrypt=true;"
 					 + "trustServerCertificate=true;"
 					 + "loginTimeout=30;";
@@ -644,24 +644,13 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 KelasAjar kelas = new KelasAjar(
-					<<<<<<< HEAD
                     rs.getString("namaMK"),
                     rs.getInt("jumlahSKS"),
-                    rs.getString("kelas"),
                     rs.getString("hari"),
                     rs.getString("waktuMulai"),
                     rs.getInt("durasi"),
                     rs.getString("jenisPertemuan"),
                     rs.getString("metodePertemuan"));
-				=======
-                        rs.getString("namaMK"),
-                        rs.getInt("jumlahSKS"),
-                        rs.getString("hari"),
-                        rs.getString("waktuMulai"),
-                        rs.getInt("durasi"),
-                        rs.getString("jenisPertemuan"),
-                rs.getString("metodePertemuan"));
-				>>>>>>> 717c6cdfb7dc7221988cfb1f745dcc98309a6493
 
                 daftarKelas.add(kelas);
             }
@@ -685,7 +674,7 @@ public class KoneksiDB {
 			MataKuliah.namaMK as namaMK,
 			MataKuliah.jumlahSKS as jumlahSKS,
 			MataKuliah.idJurusan as idJurusan,
-			MataKuliah.idSemester as idSemester
+			Enroll.idSemester as idSemester
 		FROM
 			Enroll JOIN MataKuliah ON Enroll.kodeMK = MataKuliah.kodeMK
 		WHERE

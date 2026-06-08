@@ -644,25 +644,13 @@ public class KoneksiDB {
 
             while (rs.next()) {
                 KelasAjar kelas = new KelasAjar(
-					<<<<<<< HEAD
                     rs.getString("namaMK"),
                     rs.getInt("jumlahSKS"),
-                    rs.getString("kelas"),
                     rs.getString("hari"),
                     rs.getString("waktuMulai"),
                     rs.getInt("durasi"),
                     rs.getString("jenisPertemuan"),
-                    rs.getString("metodePertemuan"));
-				=======
-                        rs.getString("namaMK"),
-                        rs.getInt("jumlahSKS"),
-                        rs.getString("hari"),
-                        rs.getString("waktuMulai"),
-                        rs.getInt("durasi"),
-                        rs.getString("jenisPertemuan"),
-                rs.getString("metodePertemuan"));
-				>>>>>>> 717c6cdfb7dc7221988cfb1f745dcc98309a6493
-
+					rs.getString("metodePertemuan"));
                 daftarKelas.add(kelas);
             }
 

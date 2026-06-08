@@ -254,7 +254,23 @@ public class HalamanFRS {
     }
 
     private VBox createRightContent() {
-        VBox right = new VBox(8);
+		Button riwayatButton = new Button("Riwayat");
+        riwayatButton.setPrefWidth(120);
+        riwayatButton.setPrefHeight(46);
+        riwayatButton.setStyle(
+            "-fx-background-color: #243F91;" +
+            "-fx-background-radius: 10;" +
+            "-fx-text-fill: white;" +
+            "-fx-font-size: 18px;" +
+            "-fx-cursor: hand;");
+
+		riwayatButton.setOnAction(e -> {
+			HalamanRiwayatFRS riwayat = new HalamanRiwayatFRS(stage, mahasiswa);
+			stage.setScene(riwayat.getScene());
+			stage.setTitle("FRS");
+		});
+
+		VBox right = new VBox(8);
         right.setAlignment(Pos.TOP_CENTER);
         right.setPrefWidth(145);
         right.setPadding(new Insets(230, 0, 0, 0));
@@ -291,8 +307,9 @@ public class HalamanFRS {
         });
 
         VBox.setMargin(submitButton, new Insets(130, 0, 0, 0));
+        VBox.setMargin(riwayatButton, new Insets(0, 0, 130, 0));
 
-        right.getChildren().addAll(totalLabel, totalSksValue, submitButton);
+        right.getChildren().addAll(riwayatButton, totalLabel, totalSksValue, submitButton);
 
         return right;
     }

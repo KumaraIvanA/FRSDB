@@ -2,14 +2,14 @@ package hellofx.kelasData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class FRS {
 	private int id;
-	private Instant datetime;
+	private LocalDateTime datetime;
 	private List<MataKuliah> courseTaken = new ArrayList<>();
 
-	public FRS(int id, Instant datetime) {
+	public FRS(int id, LocalDateTime datetime) {
 		this.id = id;
 		this.datetime = datetime;
 	}
@@ -18,7 +18,7 @@ public class FRS {
 		return id;
 	}
 
-	public Instant getDatetime() {
+	public LocalDateTime getDatetime() {
 		return datetime;
 	}
 

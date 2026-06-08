@@ -6,9 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -692,14 +690,13 @@ public class KoneksiDB {
 			while (rs.next()) {
 				int currentFRSID = rs.getInt("idFRS");
 				LocalDateTime localDateTime = rs.getObject("tanggalFRS", LocalDateTime.class);
-				Instant time = localDateTime.toInstant(ZoneOffset.UTC);
 
 				if (currentFRS == null || currentFRS.getID() != currentFRSID) {
 					if (currentFRS != null) {
 						list.add(currentFRS);
 					}
 
-					currentFRS = new FRS(currentFRSID, time);
+					currentFRS = new FRS(currentFRSID, localDateTime);
 				}
 
 				MataKuliah mk = new MataKuliah(

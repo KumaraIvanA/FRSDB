@@ -1,6 +1,7 @@
 package hellofx.halaman.HalamanMahasiswa;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -90,7 +91,7 @@ class HistoryView extends VBox {
 		vbox.getChildren().add(row);
 	}
 
-	private void addHeader(VBox vbox, Instant time) {
+	private void addHeader(VBox vbox, LocalDateTime time) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             .withZone(ZoneId.systemDefault());
 

@@ -263,7 +263,20 @@ public class KoneksiDB {
     public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT namaMK, waktuMulai, durasi, hari, metodePertemuan FROM Teaches JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk WHERE Teaches.idSemester = ?";
+		String sql = """
+			SELECT
+				namaMK,
+				waktuMulai,
+				durasi,	
+				hari,
+				metodePertemuan
+			FROM
+				Teaches
+				JOIN MataKuliah ON Teaches.kodeMk = MataKuliah.kodeMk
+				JOIN MatakuliahTerbuka ON MataKuliah.kodeMK = MataKuliah.kodeMK
+			WHERE
+				MatakuliahTerbuka.idSemester = ?
+			""";
 
         try {
             Connection conn = hubungkan();
@@ -490,23 +503,21 @@ public class KoneksiDB {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT
-                    mk.namaMK,
-                    t.hari,
-                    t.waktuMulai,
-                    t.durasi,
-                    t.metodePertemuan
-                FROM 
-                    Teaches t
-                JOIN 
-                    MataKuliah mk
-                ON 
-                    t.kodeMK = mk.kodeMK
-                WHERE
-                    t.idSemester = ? AND t.nip = ?
-                ORDER BY
-                    t.hari, t.waktuMulai
-                """;
+			SELECT
+				mk.namaMK,
+				t.hari,
+				t.waktuMulai,
+				t.durasi,
+				t.metodePertemuan
+			FROM 
+				Teaches t
+				JOIN MataKuliah mk ON t.kodeMK = mk.kodeMK
+				JOIN MatakuliahTerbuka mkt ON t.kodeMK = mkt.kodeMK
+			WHERE
+				mkt.idSemester = ? AND t.nip = ?
+			ORDER BY
+				t.hari, t.waktuMulai
+			""";
 
         try {
             Connection conn = hubungkan();
@@ -539,25 +550,23 @@ public class KoneksiDB {
         ArrayList<KelasAjar> daftarKelas = new ArrayList<>();
 
         String query = """
-                SELECT
-                    mk.namaMK,
-                    mk.jumlahSKS,
-                    t.hari,
-                    t.waktuMulai,
-                    t.durasi,
-                    t.jenisPertemuan,
-                    t.metodePertemuan
-                FROM
-                    Teaches t
-                JOIN
-                    MataKuliah mk
-                ON
-                    t.kodeMK = mk.kodeMK
-                WHERE
-                    t.nip = ? AND t.idSemester = ?
-                ORDER BY
-                    t.hari, t.waktuMulai
-                """;
+			SELECT
+				mk.namaMK,
+				mk.jumlahSKS,
+				t.hari,
+				t.waktuMulai,
+				t.durasi,
+				t.jenisPertemuan,
+				t.metodePertemuan
+			FROM
+				Teaches t
+				JOIN MataKuliah mk ON t.kodeMK = mk.kodeMK
+				JOIN MatakuliahTerbuka mkt ON mkt.kodeMK = t.kodeMK
+			WHERE
+				t.nip = ? AND mkt.idSemester = ?
+			ORDER BY
+				t.hari, t.waktuMulai
+			""";
 
         try {
             Connection conn = hubungkan();

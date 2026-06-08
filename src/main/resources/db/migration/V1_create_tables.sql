@@ -62,12 +62,12 @@ CREATE TABLE Enroll
 	kodeMK int FOREIGN KEY REFERENCES MataKuliah (kodeMK) NOT NULL,
 	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL,
 	idFRS int FOREIGN KEY REFERENCES FRS (idFRS) NOT NULL,
-	tanggalFRS datetime NOT NULL
+	tanggalFRS datetime NOT NULL, 
+	PRIMARY KEY (npm, kodeMK, idSemester, idFRS)
 )
  
 CREATE TABLE Teaches
 (
-	idTeaches int IDENTITY(1, 1) NOT NULL PRIMARY KEY,
 	idSemester int FOREIGN KEY REFERENCES Semester (idSemester) NOT NULL,
 	kodeMK int FOREIGN KEY REFERENCES MataKuliah (kodeMK) NOT NULL,
 	nip char(18) FOREIGN KEY REFERENCES Dosen (nip) NOT NULL,
@@ -76,12 +76,6 @@ CREATE TABLE Teaches
 	hari varchar(10),
 	jenisPertemuan varchar(50) NULL,
 	metodePertemuan varchar(50) NULL,
-
-	UNIQUE (idSemester, kodeMK, nip, hari, waktuMulai)
+	PRIMARY KEY (idSemester, kodeMK, nip, h)
 )
 
-CREATE TABLE MatakuliahTerbuka 
-(
-	kodeMK int FOREIGN KEY REFERENCES Matakuliah(kodeMK) NOT NULL,
-	idSemester int FOREIGN KEY REFERENCES Semester(idSemester) NOT NULL
-)

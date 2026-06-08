@@ -348,13 +348,20 @@ public class KoneksiDB {
 	public static ObservableList<JadwalKelas> getJadwalMahasiswa(String npm, int idSemester) {
         ObservableList<JadwalKelas> list = FXCollections.observableArrayList();
 
-        String sql = """
-                SELECT MataKuliah.namaMK, Teaches.waktuMulai, Teaches.durasi, Teaches.hari, Teaches.metodePertemuan
-                FROM Enroll
-                     JOIN Teaches ON Enroll.idSemester = Teaches.idSemester AND Enroll.kodeMK = Teaches.kodeMK
-                     JOIN MataKuliah ON Teaches.kodeMK = MataKuliah.kodeMK
-                WHERE Enroll.npm = ? AND Teaches.idSemester = ?
-                """;
+        String sql = "SELECT \r\n" + //
+                        "    MataKuliah.namaMK, Teaches.waktuMulai, Teaches.durasi, Teaches.hari, Teaches.metodePertemuan\r\n" + //
+                        "FROM \r\n" + //
+                        "(\r\n" + //
+                        "    SELECT \r\n" + //
+                        "        MAX(Enroll.idFRS) as maxIdFrs\r\n" + //
+                        "    FROM \r\n" + //
+                        "        Enroll\r\n" + //
+                        "    JOIN Mahasiswa ON Enroll.npm = Mahasiswa.npm\r\n" + //
+                        "    WHERE Mahasiswa.npm = ? AND Enroll.idSemester = ?\r\n" + //
+                        ") as maxidFrs\r\n" + //
+                        "JOIN Enroll ON Enroll.idFRS = maxidFrs.maxIdFrs\r\n" + //
+                        "JOIN MataKuliah ON MataKuliah.kodeMK = Enroll.kodeMK \r\n" + //
+                        "JOIN Teaches ON Teaches.kodeMK = Enroll.kodeMK";
 
         try {
             Connection conn = hubungkan();
@@ -487,14 +494,13 @@ public class KoneksiDB {
     }
 
 	public static int makeNewIdFRS(int idSemester) {
-        String query = "INSERT INTO FRS (idSemester) VALUES (?)";
+        String query = "INSERT INTO FRS DEFAULT VALUES";
 
         int idFRS = -1;
         try {
             Connection conn = hubungkan();
             PreparedStatement ps = conn.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, idSemester);
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {

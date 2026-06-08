@@ -9,13 +9,15 @@ public class MataKuliah {
     private SimpleIntegerProperty jumlahSKS;
     private SimpleIntegerProperty idJurusan;
     private SimpleIntegerProperty idSemester;
+    private SimpleStringProperty nip;
 
-    public MataKuliah(int kodeMK, String namaMk, int jumlahSKS, int idJurusan, int idSemester) {
+    public MataKuliah(int kodeMK, String namaMk, int jumlahSKS, int idJurusan, int idSemester, String nip) {
         this.namaMk = new SimpleStringProperty(namaMk);
         this.jumlahSKS = new SimpleIntegerProperty(jumlahSKS);
         this.kodeMk = new SimpleIntegerProperty(kodeMK);
         this.idJurusan = new SimpleIntegerProperty(idJurusan);
         this.idSemester = new SimpleIntegerProperty(idSemester);
+        this.nip = new SimpleStringProperty(nip);
     }
 
     public String getNamaMK() {
@@ -38,8 +40,13 @@ public class MataKuliah {
         return this.idJurusan.get();
     }
 
-    public SimpleStringProperty namaMKProperty() { return namaMk; }
-    public SimpleIntegerProperty kodeMkProperty() {return kodeMk;}
+	public String getNip() {
+		return this.nip.get();
+	}
+
+	public SimpleStringProperty namaMKProperty() { return namaMk; }
+    public SimpleIntegerProperty kodeMkProperty() {return kodeMk; }
     public SimpleIntegerProperty jumlahSKSProperty() { return jumlahSKS; }
-    public SimpleIntegerProperty idSemesterProperty() {return idSemester;}
+    public SimpleIntegerProperty idSemesterProperty() { return idSemester; }
+    public SimpleStringProperty nipProperty() { return nip; }
 }

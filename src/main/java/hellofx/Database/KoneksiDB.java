@@ -32,7 +32,7 @@ public class KoneksiDB {
         String url = "jdbc:sqlserver://localhost:1433;"
 					 + "database=FRS;"
 					 + "user=sa;"
-					 + "password=passowrd;"
+					 + "password=Rahasia123;"
 					 + "encrypt=true;"
 					 + "trustServerCertificate=true;"
 					 + "loginTimeout=30;";
@@ -226,7 +226,7 @@ public class KoneksiDB {
 	public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
 		ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT MatakuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, MatakuliahTerbuka.idSemester\r\n" + //
+        String sql = "SELECT MatakuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, MatakuliahTerbuka.idSemester, MataKuliah.nip\r\n" + //
                      "FROM MataKuliah\r\n" + //
                      "JOIN MatakuliahTerbuka ON MatakuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
                      "JOIN Semester ON Semester.idSemester = MatakuliahTerbuka.idSemester\r\n" + //
@@ -244,8 +244,9 @@ public class KoneksiDB {
 				int jumlahSKS = rs.getInt("jumlahSKS");
 				int idSemester = rs.getInt("idSemester");
 				int idJurusan = idJ;
+				String nip = rs.getString("nip");
 
-				MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester);
+				MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester, nip);
 				list.add(mk);
 			}
 
@@ -599,6 +600,7 @@ public class KoneksiDB {
 			MataKuliah.namaMK as namaMK,
 			MataKuliah.jumlahSKS as jumlahSKS,
 			MataKuliah.idJurusan as idJurusan,
+			MataKuliah.nip as nip,
 			Enroll.idSemester as idSemester
 		FROM
 			Enroll JOIN MataKuliah ON Enroll.kodeMK = MataKuliah.kodeMK
@@ -631,7 +633,8 @@ public class KoneksiDB {
 					rs.getString("namaMK"),
 					rs.getInt("jumlahSKS"),
 					rs.getInt("idJurusan"),
-					rs.getInt("idSemester")
+					rs.getInt("idSemester"),
+					rs.getString("nip")
 				);
 
 				currentFRS.addMataKuliah(mk);
@@ -662,5 +665,45 @@ public class KoneksiDB {
 		}
 
 		return false;
+	}
+
+	public static List<MataKuliah> getMataKuliahBySemesterJurusan(int idSemester, int idJurusan) {
+		List<MataKuliah> list = new ArrayList<MataKuliah>();
+
+		String sql = """
+			SELECT
+				MataKuliah.kodeMK,
+				MataKuliah.namaMK,
+				MataKuliah.jumlahSKS,
+				MataKuliah.idJurusan,
+				MataKuliah.nip
+			FROM
+				MatakuliahTerbuka JOIN MataKuliah ON MataKuliahTerbuka.kodeMK = MataKuliah.kodeMK
+			WHERE
+				MatakuliahTerbuka.idSemester = ? AND MataKuliah.idJurusan = ?
+			""";
+
+		try {
+			Connection conn = hubungkan();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, idSemester);
+			ps.setInt(2, idJurusan);
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(new MataKuliah(
+					rs.getInt("kodeMK"),
+					rs.getString("namaMk"),
+					rs.getInt("jumlahSKS"),
+					rs.getInt("idJurusan"),
+					idSemester,
+					rs.getString("nip")
+				));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 }

@@ -2,13 +2,13 @@ package hellofx.halaman.HalamanMahasiswa;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import hellofx.Database.KoneksiDB;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import hellofx.kelasData.Semester;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -157,7 +157,7 @@ public class HalamanFRS {
         courseList.setMaxWidth(Double.MAX_VALUE);
 
         if (semesterBox.getValue() != null) {
-            loadMataKuliahFromDB(courseList);
+            loadMataKuliahFromDB(courseList, semesterBox.getValue());
         }
 
         semesterBox.setOnAction(e -> {
@@ -167,7 +167,7 @@ public class HalamanFRS {
             Semester selectedSemester = semesterBox.getValue();
 
             if (selectedSemester != null) {
-                loadMataKuliahFromDB(courseList);
+                loadMataKuliahFromDB(courseList, selectedSemester);
             }
 
             updateTotalSks();
@@ -188,40 +188,14 @@ public class HalamanFRS {
         return center;
     }
 
-    private void loadMataKuliahFromDB(VBox courselist) {
-        ObservableList<MataKuliah> list = KoneksiDB.getAllMatakuliahBerdasarkanIdJurusan(mahasiswa.getIdJurusan());
-
-        int semesterSebelumnya = -1;
+    private void loadMataKuliahFromDB(VBox courselist, Semester semester) {
+        List<MataKuliah> list = KoneksiDB.getMataKuliahBySemesterJurusan(semester.getIdSemester(), mahasiswa.getIdJurusan());
 
         for (MataKuliah mk : list) {
-            int semesterSekarang = mk.getIdSemester();
-
-            if (semesterSekarang != semesterSebelumnya) {
-                addSemesterHeader(courselist, "Semester " + semesterSekarang);
-                semesterSebelumnya = semesterSekarang;
-            }
-
             Course course = new Course(mk.getNamaMK(), mk.getJumlahSKS(), false, mk.getkodeMK());
             addCourseRow(courselist, course);
         }
 
-    }
-
-    private void addSemesterHeader(VBox parent, String title) {
-        Label header = new Label(title);
-        header.setMaxWidth(Double.MAX_VALUE);
-        header.setPrefHeight(42);
-        header.setPadding(new Insets(0, 0, 0, 20));
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle(
-            "-fx-background-color: #AFC2D9;" +
-            "-fx-background-radius: 7;" +
-            "-fx-font-size: 19px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-text-fill: black;");
-
-        VBox.setMargin(header, new Insets(8, 0, 0, 0));
-        parent.getChildren().add(header);
     }
 
     private void addCourseRow(VBox parent, Course course) {

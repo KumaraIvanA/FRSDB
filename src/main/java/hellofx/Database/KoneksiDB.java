@@ -225,7 +225,11 @@ public class KoneksiDB {
     public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
         ObservableList<MataKuliah> list = FXCollections.observableArrayList();
 
-        String sql = "SELECT kodeMK, namaMK, jumlahSKS, idJurusan, idSemester FROM MataKuliah WHERE idJurusan = ? ORDER BY idSemester, kodeMK";
+        String sql = "SELECT KodeMataKuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, KodeMataKuliahTerbuka.idSemester\r\n" + //
+                        "FROM MataKuliah\r\n" + //
+                        "\tJOIN KodeMataKuliahTerbuka ON KodeMataKuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
+                        "\tJOIN Semester ON Semester.idSemester = KodeMataKuliahTerbuka.idSemester\r\n" + //
+                        "WHERE MataKuliah.idJurusan = ?";
 
         try {
             Connection conn = hubungkan();

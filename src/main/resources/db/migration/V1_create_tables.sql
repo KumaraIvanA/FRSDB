@@ -81,3 +81,9 @@ CREATE TABLE Teaches
 
 	UNIQUE (idSemester, kodeMK, nip, hari, waktuMulai)
 )
+
+CREATE TABLE MatakuliahTerbuka 
+(
+	kodeMK int FOREIGN KEY REFERENCES Matakuliah(kodeMK) NOT NULL,
+	idSemester int FOREIGN KEY REFERENCES Semester(idSemester) NOT NULL
+)

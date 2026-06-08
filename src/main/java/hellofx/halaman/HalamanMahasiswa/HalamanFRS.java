@@ -227,7 +227,7 @@ public class HalamanFRS {
     private void addCourseRow(VBox parent, Course course) {
         HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT);
-        row.setPrefHeight(44);
+        row.setPrefHeight(44);  
         row.setPadding(new Insets(0, 20, 0, 16));
         row.setStyle(
                 "-fx-background-color: #F8F3F3;" +

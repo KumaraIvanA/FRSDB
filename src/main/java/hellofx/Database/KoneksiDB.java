@@ -85,31 +85,6 @@ public class KoneksiDB {
         }
     }
 
-    public static int getIdJurusanByNama(String namaJurusan) {
-        String query = "SELECT idJurusan FROM Jurusan WHERE namaJurusan = ?";
-
-        try {
-            Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
-
-            ps.setString(1, namaJurusan);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("idJurusan");
-            } else {
-                System.out.println("Jurusan tidak ditemukan: " + namaJurusan);
-                return -1;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Gagal mengambil id jurusan");
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
     public static boolean checkLogin(String email, String password) {
         String sql = "SELECT 1 FROM Mahasiswa WHERE email = ? AND password = ?";
 

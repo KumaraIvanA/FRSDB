@@ -231,21 +231,32 @@ public class HalamanJadwal {
         for (int i = 7; i <= 18; i++) {
             String jamValue = String.format("%02d:00", i);
             data2.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
+
+            if (i < 18) {
+                jamValue = String.format("%02d:30", i);
+                data2.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
+            }
         }
 
         ObservableList<JadwalKelas> list = KoneksiDB.getJadwalMahasiswa(mahasiswa.getNPM(), idSemester);
 
         for (JadwalKelas x : list) {
             ambilJadwal(data2, x);
-            int jamSekarang = Integer.parseInt(x.getWaktuMulai().substring(0, 2));
+            String waktu = x.getWaktuMulai().substring(0, 5);
+            int jam = Integer.parseInt(waktu.substring(0, 2));
+            int menit = Integer.parseInt(waktu.substring(3, 5));
+            int totalMenit = jam * 60 + menit;
             int durasi = x.getDurasi();
-            int ct = 60;
+            int ct = 30;
 
             while (ct < durasi) {
-                jamSekarang++;
-                ct += 60;
+                totalMenit += 30;
+                ct += 30;
 
-                String nextJam = String.format("%02d:00", jamSekarang);
+                int jamBerikut = totalMenit / 60;
+                int menitBerikut = totalMenit % 60;
+                String nextJam = String.format("%02d:%02d", jamBerikut, menitBerikut);
+
                 x.setJam(nextJam);
                 ambilJadwal(data2, x);
             }

@@ -204,20 +204,30 @@ public class HalamanJadwalDosen {
         for (int i = 7; i <= 18; i++) {
             String jamValue = String.format("%02d:00", i);
             dataMap.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
+
+            if (i < 18) {
+                jamValue = String.format("%02d:30", i);
+                dataMap.put(jamValue, new Jadwal(jamValue, null, null, null, null, null, null));
+            }
         }
 
         for (JadwalKelas x : list) {
             ambilJadwal(dataMap, x);
-
-            int jamSekarang = Integer.parseInt(x.getWaktuMulai().substring(0, 2));
+            String waktu = x.getWaktuMulai().substring(0, 5);
+            int jam = Integer.parseInt(waktu.substring(0, 2));
+            int menit = Integer.parseInt(waktu.substring(3, 5));
+            int totalMenit = jam * 60 + menit;
             int durasi = x.getDurasi();
-            int totalMenit = 60;
+            int ct = 30;
 
-            while (totalMenit < durasi) {
-                jamSekarang++;
-                totalMenit += 60;
+            while (ct < durasi) {
+                totalMenit += 30;
+                ct += 30;
 
-                String nextJam = String.format("%02d:00", jamSekarang);
+                int jamBerikut = totalMenit / 60;
+                int menitBerikut = totalMenit % 60;
+                String nextJam = String.format("%02d:%02d", jamBerikut, menitBerikut);
+
                 x.setJam(nextJam);
                 ambilJadwal(dataMap, x);
             }

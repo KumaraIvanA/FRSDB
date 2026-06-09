@@ -14,7 +14,6 @@ import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
 import hellofx.kelasData.Dosen;
 import hellofx.kelasData.FRS;
 import hellofx.kelasData.JadwalKelas;
-import hellofx.kelasData.KelasAjar;
 import hellofx.kelasData.Mahasiswa;
 import hellofx.kelasData.MataKuliah;
 import hellofx.kelasData.Semester;
@@ -86,33 +85,6 @@ public class KoneksiDB {
         }
     }
 
-    public static void insertMataKuliah(String namaMK, String namaJurusan, int jumlahSKS) {
-        int idJurusan = getIdJurusanByNama(namaJurusan);
-        if (idJurusan == -1) {
-            System.out.println("gagal");
-            return;
-        }
-
-        String query = "INSERT INTO MataKuliah (kodeMK, namaMK, idJurusan, jumlahSKS) " +
-                "VALUES (NEXT VALUE FOR seq_kode_mk, ?, ?, ?)";
-
-        try {
-            Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
-
-            ps.setString(1, namaMK);
-            ps.setInt(2, idJurusan);
-            ps.setInt(3, jumlahSKS);
-
-            ps.executeUpdate();
-            System.out.println("berhasil insert");
-
-        } catch (SQLException e) {
-            System.out.println("gagal insert");
-            e.printStackTrace();
-        }
-    }
-
     public static int getIdJurusanByNama(String namaJurusan) {
         String query = "SELECT idJurusan FROM Jurusan WHERE namaJurusan = ?";
 
@@ -135,51 +107,6 @@ public class KoneksiDB {
             System.out.println("Gagal mengambil id jurusan");
             e.printStackTrace();
             return -1;
-        }
-    }
-
-    public static int getKodeMkByNamaMK(String namaMK) {
-        String query = "SELECT kodeMK FROM MataKuliah WHERE namaMK = ?";
-
-        try {
-            Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, namaMK);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("kodeMK");
-            } else {
-                System.out.println("Mata kuliah tidak ditemukan : " + namaMK);
-                return -1;
-            }
-        } catch (SQLException e) {
-            System.out.println("Gagal mengambil Kode MK");
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    public static void insertEnroll(String npm, int kodeMK, String kodeSemester, int idFRS, String tanggalFRS) {
-        String query = """
-                INSERT INTO Enroll (npm, kodeMK, kodeSemester, idFRS, tanggalFRS)
-                VALUES(?, ?, ?, ?, ?)
-                """;
-
-        try {
-            Connection c = hubungkan();
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, npm);
-            ps.setInt(2, kodeMK);
-            ps.setString(3, kodeSemester);
-            ps.setInt(4, idFRS);
-            ps.setString(5, tanggalFRS);
-
-            ps.executeUpdate();
-            System.out.println("Berhasil insert");
-        } catch (SQLException e) {
-            System.out.println("gagal menambahkan");
         }
     }
 
@@ -221,43 +148,6 @@ public class KoneksiDB {
             e.printStackTrace();
             return false;
         }
-    }
-
-    public static ObservableList<MataKuliah> getAllMatakuliahBerdasarkanIdJurusan(int idJ) {
-        ObservableList<MataKuliah> list = FXCollections.observableArrayList();
-
-        String sql = "SELECT MatakuliahTerbuka.kodeMK, MataKuliah.namaMK, MataKuliah.jumlahSKS, MataKuliah.idJurusan, MatakuliahTerbuka.idSemester, MataKuliah.nip\r\n"
-                + //
-                "FROM MataKuliah\r\n" + //
-                "JOIN MatakuliahTerbuka ON MatakuliahTerbuka.kodeMK = MataKuliah.kodeMK\r\n" + //
-                "JOIN Semester ON Semester.idSemester = MatakuliahTerbuka.idSemester\r\n" + //
-                "WHERE MataKuliah.idJurusan = ?";
-
-        try {
-            Connection conn = hubungkan();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idJ);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int kodeMk = rs.getInt("kodeMK");
-                String namaMK = rs.getString("namaMK");
-                int jumlahSKS = rs.getInt("jumlahSKS");
-                int idSemester = rs.getInt("idSemester");
-                int idJurusan = idJ;
-                String nip = rs.getString("nip");
-
-                MataKuliah mk = new MataKuliah(kodeMk, namaMK, jumlahSKS, idJurusan, idSemester, nip);
-                list.add(mk);
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("gagal");
-            e.printStackTrace();
-        }
-
-        return list;
     }
 
     public static ObservableList<JadwalKelas> getAllJadwal(int idSemester) {
@@ -450,30 +340,6 @@ public class KoneksiDB {
         return idFRS;
     }
 
-    public static Integer getIdSemester(String tahunAjaran, String jenis) {
-        String query = "SELECT idSemester FROM Semester WHERE tahunAjaran = ? AND jenis = ?";
-
-        try {
-            Connection conn = hubungkan();
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, tahunAjaran);
-            ps.setString(2, jenis);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                int idSemester = rs.getInt("idSemester");
-                return idSemester;
-            } else {
-                return null;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public static void isiDataEnroll(ArrayList<HalamanFRS.Course> selectedCourse, String npm, int idSemester,
             int idFRS) {
         String query = "INSERT INTO Enroll (npm, kodeMK, idSemester, idFRS, tanggalFRS) VALUES "
@@ -544,57 +410,6 @@ public class KoneksiDB {
         }
 
         return list;
-    }
-
-    public static ArrayList<KelasAjar> getKelasAjarByDosen(String nip, int idSemester) {
-        ArrayList<KelasAjar> daftarKelas = new ArrayList<>();
-
-        String query = """
-			SELECT
-				mk.namaMK,
-				mk.jumlahSKS,
-				t.hari,
-				t.waktuMulai,
-				t.durasi,
-				t.jenisPertemuan,
-				t.metodePertemuan
-			FROM
-				Teaches t
-				JOIN MataKuliah mk ON t.kodeMK = mk.kodeMK
-				JOIN MatakuliahTerbuka mkt ON mkt.kodeMK = t.kodeMK
-			WHERE
-				t.nip = ? AND mkt.idSemester = ?
-			ORDER BY
-				t.hari, t.waktuMulai
-			""";
-
-        try {
-            Connection conn = hubungkan();
-            PreparedStatement ps = conn.prepareStatement(query);
-
-            ps.setString(1, nip);
-            ps.setInt(2, idSemester);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                KelasAjar kelas = new KelasAjar(
-                        rs.getString("namaMK"),
-                        rs.getInt("jumlahSKS"),
-                        rs.getString("hari"),
-                        rs.getString("waktuMulai"),
-                        rs.getInt("durasi"),
-                        rs.getString("jenisPertemuan"),
-                        rs.getString("metodePertemuan"));
-
-                daftarKelas.add(kelas);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return daftarKelas;
     }
 
     public static List<FRS> getFRS(String npm, int idSemester) {

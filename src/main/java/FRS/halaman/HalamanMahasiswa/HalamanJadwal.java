@@ -1,10 +1,5 @@
-package hellofx.halaman.HalamanMahasiswa;
+package FRS.halaman.HalamanMahasiswa;
 
-import hellofx.kelasData.JadwalKelas;
-import hellofx.kelasData.Mahasiswa;
-import hellofx.kelasData.Semester;
-import hellofx.Database.KoneksiDB;
-import hellofx.kelasData.Jadwal;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -28,6 +23,12 @@ import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import FRS.Database.KoneksiDB;
+import FRS.kelasData.Jadwal;
+import FRS.kelasData.JadwalKelas;
+import FRS.kelasData.Mahasiswa;
+import FRS.kelasData.Semester;
 
 public class HalamanJadwal {
     private Stage stage;
@@ -71,16 +72,11 @@ public class HalamanJadwal {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
         ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(28);
         profile.setFitHeight(28);
         profile.setPreserveRatio(true);
-        topBar.getChildren().addAll(title, spacer, notif, profile);
+        topBar.getChildren().addAll(title, spacer, profile);
 
         return topBar;
     }

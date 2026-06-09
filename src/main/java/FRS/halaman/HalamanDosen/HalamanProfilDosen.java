@@ -1,6 +1,6 @@
-package hellofx.halaman.HalamanDosen;
+package FRS.halaman.HalamanDosen;
 
-import hellofx.kelasData.Dosen;
+import FRS.kelasData.Dosen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -166,17 +166,12 @@ public class HalamanProfilDosen {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
         ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(32);
         profile.setFitHeight(32);
         profile.setPreserveRatio(true);
 
-        topBar.getChildren().addAll(title, spacer, notif, profile);
+        topBar.getChildren().addAll(title, spacer, profile);
         return topBar;
     }
 

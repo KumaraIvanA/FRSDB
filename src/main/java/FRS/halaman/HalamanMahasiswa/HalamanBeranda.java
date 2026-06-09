@@ -1,7 +1,7 @@
-package hellofx.halaman.HalamanMahasiswa;
+package FRS.halaman.HalamanMahasiswa;
 
-import hellofx.halaman.HalamanLogin;
-import hellofx.kelasData.Mahasiswa;
+import FRS.halaman.HalamanLogin;
+import FRS.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -108,16 +108,12 @@ public class HalamanBeranda {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
+       
         ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(28);
         profile.setFitHeight(28);
         profile.setPreserveRatio(true);
-        topBar.getChildren().addAll(title, spacer, notif, profile);
+        topBar.getChildren().addAll(title, spacer, profile);
 
         return topBar;
     }

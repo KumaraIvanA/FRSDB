@@ -1,4 +1,4 @@
-package hellofx.kelasData;
+package FRS.kelasData;
 
 public class Dosen {
     private String nip;

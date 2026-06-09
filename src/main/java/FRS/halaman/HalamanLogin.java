@@ -1,10 +1,10 @@
-package hellofx.halaman;
+package FRS.halaman;
 
-import hellofx.Database.KoneksiDB;
-import hellofx.halaman.HalamanDosen.HalamanBerandaDosen;
-import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
-import hellofx.kelasData.Dosen;
-import hellofx.kelasData.Mahasiswa;
+import FRS.Database.KoneksiDB;
+import FRS.halaman.HalamanDosen.HalamanBerandaDosen;
+import FRS.halaman.HalamanMahasiswa.HalamanBeranda;
+import FRS.kelasData.Dosen;
+import FRS.kelasData.Mahasiswa;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

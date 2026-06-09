@@ -1,13 +1,13 @@
-package hellofx.halaman.HalamanDosen;
+package FRS.halaman.HalamanDosen;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import hellofx.Database.KoneksiDB;
-import hellofx.kelasData.Dosen;
-import hellofx.kelasData.Jadwal;
-import hellofx.kelasData.JadwalKelas;
-import hellofx.kelasData.Semester;
+import FRS.Database.KoneksiDB;
+import FRS.kelasData.Dosen;
+import FRS.kelasData.Jadwal;
+import FRS.kelasData.JadwalKelas;
+import FRS.kelasData.Semester;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -329,17 +329,12 @@ public class HalamanJadwalDosen {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
         ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(32);
         profile.setFitHeight(32);
         profile.setPreserveRatio(true);
 
-        topBar.getChildren().addAll(title, spacer, notif, profile);
+        topBar.getChildren().addAll(title, spacer, profile);
 
         return topBar;
     }

@@ -1,4 +1,4 @@
-package hellofx.halaman.Common;
+package FRS.halaman.Common;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -26,16 +26,11 @@ public class TopBar {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(obj.getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
         ImageView profile = new ImageView(new Image(obj.getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(28);
         profile.setFitHeight(28);
         profile.setPreserveRatio(true);
-        topBar.getChildren().addAll(titleLabel, spacer, notif, profile);
+        topBar.getChildren().addAll(titleLabel, spacer, profile);
 
         return topBar;
     }

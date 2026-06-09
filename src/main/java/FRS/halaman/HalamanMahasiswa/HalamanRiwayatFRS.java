@@ -1,16 +1,16 @@
-package hellofx.halaman.HalamanMahasiswa;
+package FRS.halaman.HalamanMahasiswa;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import hellofx.Database.KoneksiDB;
-import hellofx.halaman.Common.Sidebar;
-import hellofx.halaman.Common.TopBar;
-import hellofx.kelasData.FRS;
-import hellofx.kelasData.Mahasiswa;
-import hellofx.kelasData.MataKuliah;
-import hellofx.kelasData.Semester;
+import FRS.Database.KoneksiDB;
+import FRS.halaman.Common.Sidebar;
+import FRS.halaman.Common.TopBar;
+import FRS.kelasData.FRS;
+import FRS.kelasData.Mahasiswa;
+import FRS.kelasData.MataKuliah;
+import FRS.kelasData.Semester;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

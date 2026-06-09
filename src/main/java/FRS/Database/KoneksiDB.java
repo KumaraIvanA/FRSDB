@@ -1,4 +1,4 @@
-package hellofx.Database;
+package FRS.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
-import hellofx.kelasData.Dosen;
-import hellofx.kelasData.FRS;
-import hellofx.kelasData.JadwalKelas;
-import hellofx.kelasData.Mahasiswa;
-import hellofx.kelasData.MataKuliah;
-import hellofx.kelasData.Semester;
+import FRS.halaman.HalamanMahasiswa.HalamanFRS;
+import FRS.kelasData.Dosen;
+import FRS.kelasData.FRS;
+import FRS.kelasData.JadwalKelas;
+import FRS.kelasData.Mahasiswa;
+import FRS.kelasData.MataKuliah;
+import FRS.kelasData.Semester;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

@@ -1,6 +1,11 @@
-package hellofx.halaman.Common;
+package FRS.halaman.Common;
 
 import javafx.stage.Stage;
+import FRS.halaman.HalamanMahasiswa.HalamanBeranda;
+import FRS.halaman.HalamanMahasiswa.HalamanFRS;
+import FRS.halaman.HalamanMahasiswa.HalamanJadwal;
+import FRS.halaman.HalamanMahasiswa.HalamanProfil;
+import FRS.kelasData.Mahasiswa;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.layout.VBox;
@@ -8,11 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import hellofx.halaman.HalamanMahasiswa.HalamanProfil;
-import hellofx.halaman.HalamanMahasiswa.HalamanFRS;
-import hellofx.halaman.HalamanMahasiswa.HalamanBeranda;
-import hellofx.halaman.HalamanMahasiswa.HalamanJadwal;
-import hellofx.kelasData.Mahasiswa;
 
 public class Sidebar {
 	public static VBox create(Object obj, Stage stage, Mahasiswa mahasiswa) {

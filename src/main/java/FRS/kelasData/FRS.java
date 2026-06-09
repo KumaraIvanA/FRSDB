@@ -1,4 +1,4 @@
-package hellofx.kelasData;
+package FRS.kelasData;
 
 import java.util.ArrayList;
 import java.util.List;

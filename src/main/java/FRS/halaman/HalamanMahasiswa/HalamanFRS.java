@@ -1,14 +1,14 @@
-package hellofx.halaman.HalamanMahasiswa;
+package FRS.halaman.HalamanMahasiswa;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import hellofx.Database.KoneksiDB;
-import hellofx.kelasData.Mahasiswa;
-import hellofx.kelasData.MataKuliah;
-import hellofx.kelasData.Semester;
+import FRS.Database.KoneksiDB;
+import FRS.kelasData.Mahasiswa;
+import FRS.kelasData.MataKuliah;
+import FRS.kelasData.Semester;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -88,16 +88,12 @@ public class HalamanFRS {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ImageView notif = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/notification.png")));
-        notif.setFitWidth(28);
-        notif.setFitHeight(28);
-        notif.setPreserveRatio(true);
-
+    
         ImageView profile = new ImageView(new Image(getClass().getResourceAsStream("/Gambar/user (2).png")));
         profile.setFitWidth(28);
         profile.setFitHeight(28);
         profile.setPreserveRatio(true);
-        topBar.getChildren().addAll(title, spacer, notif, profile);
+        topBar.getChildren().addAll(title, spacer, profile);
 
         return topBar;
     }
